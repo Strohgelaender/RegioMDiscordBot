@@ -1,13 +1,13 @@
 package de.fll.regiom.io;
 
+import de.fll.regiom.model.Team;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import de.fll.regiom.model.Team;
 
 public class TeamImporter {
 	private final File file;

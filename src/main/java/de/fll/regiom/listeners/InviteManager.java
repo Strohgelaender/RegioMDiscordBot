@@ -49,10 +49,9 @@ public class InviteManager extends ListenerAdapter {
 				System.out.printf("[InviteManager] User %s joined using invite %s, mapped to %s.\n", event.getMember().getEffectiveName(), code, team == null ? "no Team" : team);
 				if (team == null)
 					continue;
-				Role teamRole = event.getGuild().getRoleById(team.getRoleID());
-				if (teamRole == null)
-					continue;
-				event.getGuild().addRoleToMember(event.getMember(), teamRole).reason("Automatische Teamzuweisung durch Bot").queue();
+				Role[] roles = team.getRoles().stream()
+						.map(roleID -> event.getGuild().getRoleById(roleID)).filter(Objects::nonNull).toArray(Role[]::new);
+				event.getGuild().modifyMemberRoles(event.getMember(), roles).reason("Automatische Rollenzuweisung durch Bot").queue();
 			}
 		});
 	}
