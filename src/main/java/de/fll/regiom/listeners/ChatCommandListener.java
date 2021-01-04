@@ -9,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class ChatCommandListener extends ListenerAdapter {
 
+	private final EvaluationSheetMessageSender sheetMessageSender = new EvaluationSheetMessageSender();
+
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (event.isFromType(ChannelType.PRIVATE)) {
@@ -20,8 +22,12 @@ public class ChatCommandListener extends ListenerAdapter {
                     event.getMessage().getContentDisplay());
         }
         //just for testing
+
         if (event.getMessage().getContentRaw().equals("!robotdesign")) {
-            new EvaluationSheetMessageSender().sendSheet(event.getTextChannel(), new RobotDesignEvaluationSheet(null));
+            sheetMessageSender.sendSheet(event.getTextChannel(), new RobotDesignEvaluationSheet(null));
         }
+		if (event.getMessage().getContentRaw().equals("!research")) {
+			sheetMessageSender.sendSheet(event.getTextChannel(), new RobotDesignEvaluationSheet(null));
+		}
     }
 }
