@@ -45,11 +45,10 @@ public class EvaluationSheetMessageSender {
             builder.append("\n");
         }
         CompletableFuture<Message> message = channel.sendMessage(builder.build()).submit();
-        for (int i = 1; i >= 0; i--) {
-            for (int j = 3; j >= 0; j--) {
-                int finalI = i;
-                int finalJ = j;
-                message.thenAccept(msg -> msg.addReaction(indexToReactionEmoji(finalI, finalJ)).submit());
+        for (int i = category.getEntries().length - 1; i >= 0; i--) {
+            for (int j = category.getEntries()[i].getOptions().length - 1; j >= 0; j--) {
+                String emote = indexToReactionEmoji(i, j);
+                message.thenAccept(msg -> msg.addReaction(emote).submit());
             }
         }
 
