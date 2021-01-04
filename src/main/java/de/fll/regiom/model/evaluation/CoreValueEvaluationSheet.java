@@ -1,11 +1,12 @@
 package de.fll.regiom.model.evaluation;
 
-import java.util.List;
-
 import de.fll.regiom.model.Team;
 
+import java.util.List;
+
 public class CoreValueEvaluationSheet extends EvaluationSheet {
-	private static final String[] ENTRIES = {"... Beispiele, die im ganzen Team beobachtet wurden", "Wenige", "Einige", "Mehrere"};
+	private static final String[] ENTRIES = {"... Beispiele, die im ganzen Team beobachtet wurden", "Wenige", "Einige", "Mehrere", null};
+
 	public CoreValueEvaluationSheet(Team team) {
 		super(team, "BEWERTUNGSBOGEN GRUNDWERTE", List.of(
 				EvaluationCategory.of("Entdeckung", "Das Team hat neue Talente und Ideen entdeckt.", ENTRIES),

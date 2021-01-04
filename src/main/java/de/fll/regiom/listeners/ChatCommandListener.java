@@ -7,7 +7,6 @@ import de.fll.regiom.model.evaluation.RobotDesignEvaluationSheet;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-
 import org.jetbrains.annotations.NotNull;
 
 public class ChatCommandListener extends ListenerAdapter {
@@ -28,13 +27,9 @@ public class ChatCommandListener extends ListenerAdapter {
 
 		if (event.getMessage().getContentRaw().equals("!robotdesign")) {
 			sheetMessageSender.sendSheet(event.getTextChannel(), new RobotDesignEvaluationSheet(null));
-			return;
-		}
-		if (event.getMessage().getContentRaw().equals("!research")) {
+		} else if (event.getMessage().getContentRaw().equals("!research")) {
 			sheetMessageSender.sendSheet(event.getTextChannel(), new ResearchEvaluationSheet(null));
-			return;
-		}
-		if (event.getMessage().getContentRaw().equals("!corevalues")) {
+		} else if (event.getMessage().getContentRaw().equals("!corevalues")) {
 			sheetMessageSender.sendSheet(event.getTextChannel(), new CoreValueEvaluationSheet(null));
 		}
 	}
