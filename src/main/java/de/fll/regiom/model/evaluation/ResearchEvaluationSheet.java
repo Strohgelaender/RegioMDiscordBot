@@ -1,10 +1,11 @@
 package de.fll.regiom.model.evaluation;
 
-import java.util.List;
-
 import de.fll.regiom.model.Team;
 
-public class ResearchEvaluationSheet extends EvaluationSheet{
+import java.util.List;
+
+public class ResearchEvaluationSheet extends EvaluationSheet {
+
 	public ResearchEvaluationSheet(Team team) {
 		super(team, "BEWERTUNGSBOGEN FORSCHUNG", List.of(
 				EvaluationCategory.of("Benennen", "Das Team hat ein Problem klar definiert und es gut untersucht.",
