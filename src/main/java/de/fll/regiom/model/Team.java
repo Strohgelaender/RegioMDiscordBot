@@ -1,6 +1,8 @@
 package de.fll.regiom.model;
 
-public class Team {
+import java.util.List;
+
+public class Team implements RoleHolding {
 
 	private final String name;
 	private final int hotID;
@@ -26,5 +28,15 @@ public class Team {
 
 	public void setRoleID(long roleID) {
 		this.roleID = roleID;
+	}
+
+	@Override
+	public List<Long> getRoles() {
+		return List.of(roleID, Constants.TEAM_ROLE_ID);
+	}
+
+	@Override
+	public String toString() {
+		return "[" + hotID + "]" + name;
 	}
 }
