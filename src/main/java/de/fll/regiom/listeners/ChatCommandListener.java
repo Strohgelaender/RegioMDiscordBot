@@ -1,6 +1,6 @@
 package de.fll.regiom.listeners;
 
-import de.fll.regiom.model.evaluation.EvaluationSheetMessageSender;
+import de.fll.regiom.controller.EvaluationSheetMessageSender;
 import de.fll.regiom.model.evaluation.RobotDesignEvaluationSheet;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;

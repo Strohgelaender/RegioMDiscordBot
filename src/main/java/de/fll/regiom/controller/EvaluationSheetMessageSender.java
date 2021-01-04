@@ -1,5 +1,7 @@
-package de.fll.regiom.model.evaluation;
+package de.fll.regiom.controller;
 
+import de.fll.regiom.model.evaluation.EvaluationCategory;
+import de.fll.regiom.model.evaluation.EvaluationSheet;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -8,7 +10,6 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import java.util.concurrent.CompletableFuture;
 
 public class EvaluationSheetMessageSender {
-
 
     public void sendSheet(TextChannel channel, EvaluationSheet sheet) {
         if (channel == null || sheet == null)
@@ -56,21 +57,9 @@ public class EvaluationSheetMessageSender {
 
     private String indexToReactionEmoji(int i, int j) {
         if (i == 0) {
-            return switch (j) {
-                case 0 -> "1\u20E3";
-                case 1 -> "2\u20E3";
-                case 2 -> "3\u20E3";
-                case 3 -> "4\u20E3";
-                default -> "";
-            };
+            return (j + 1) + "\u20E3";
         } else {
-            return switch (j) {
-                case 0 -> "\uD83C\uDDE6";
-                case 1 -> "\uD83C\uDDE7";
-                case 2 -> "\uD83C\uDDE8";
-                case 3 -> "\uD83C\uDDE9";
-                default -> "";
-            };
+            return "\uD83C" + ((char) ('\uDDE6' + j));
         }
     }
 
