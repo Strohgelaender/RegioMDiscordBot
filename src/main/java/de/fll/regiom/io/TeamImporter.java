@@ -16,20 +16,21 @@ public class TeamImporter {
 		this.file = new File(path);
 	}
 
-	public List<Team> importTeams() throws IOException {
+	public List<Team> importTeams() {
 		List<Team> teams = new ArrayList<>();
-		FileReader fileReader = new FileReader(file);
-		BufferedReader bufferedReader = new BufferedReader(fileReader);
-		String line;
-		while ((line = bufferedReader.readLine()) != null) {
-			String[] fields = line.split(";");
-			if (fields[0].trim().equals("Team")) {
+		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+			String line;
+			while ((line = bufferedReader.readLine()) != null) {
+				String[] fields = line.split(";");
+				if (fields.length == 0 || !fields[0].trim().equals("Team"))
+					continue;
 				int hotID = Integer.parseInt(fields[1].substring(0, 4));
 				String name = fields[1].substring(6).trim();
 				teams.add(new Team(name, hotID));
 			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-
 		return teams;
 	}
 
