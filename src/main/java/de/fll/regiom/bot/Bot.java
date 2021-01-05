@@ -10,14 +10,30 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.jetbrains.annotations.NotNull;
 
 import javax.security.auth.login.LoginException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Bot {
 
-	public static void main(String[] args) throws LoginException {
-		JDA jda = JDABuilder.createDefault("")
-				.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_INVITES)
-				.addEventListeners(new ReadyListener())
-				.setActivity(Activity.playing("Eating Pizza")).build();
+	public static void main(String[] args) {
+		String token = "";
+		while (token != null) {
+			try {
+				JDA jda = JDABuilder.createDefault(token)
+						.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_INVITES)
+						.addEventListeners(new ReadyListener())
+						.setActivity(Activity.playing("Eating Pizza")).build();
+				token = null;
+			} catch (LoginException ignore) {
+				System.out.println("Enter Bot Token: ");
+				try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+					token = reader.readLine();
+				} catch (IOException e) {
+					return;
+				}
+			}
+		}
 	}
 
 	private static final class ReadyListener extends ListenerAdapter {
