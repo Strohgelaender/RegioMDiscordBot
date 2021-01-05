@@ -1,6 +1,8 @@
 package de.fll.regiom.listeners;
 
 import de.fll.regiom.controller.EvaluationSheetMessageSender;
+import de.fll.regiom.controller.TeamManager;
+import de.fll.regiom.io.JSONExporter;
 import de.fll.regiom.model.evaluation.CoreValueEvaluationSheet;
 import de.fll.regiom.model.evaluation.ResearchEvaluationSheet;
 import de.fll.regiom.model.evaluation.RobotDesignEvaluationSheet;
@@ -25,11 +27,12 @@ public class ChatCommandListener extends ListenerAdapter {
 		}
 		//just for testing
 
-		if (event.getMessage().getContentRaw().equals("!robotdesign")) {
+		String msg = event.getMessage().getContentRaw();
+		if (msg.equals("!robotdesign")) {
 			sheetMessageSender.sendSheet(event.getTextChannel(), new RobotDesignEvaluationSheet(null));
-		} else if (event.getMessage().getContentRaw().equals("!research")) {
+		} else if (msg.equals("!research")) {
 			sheetMessageSender.sendSheet(event.getTextChannel(), new ResearchEvaluationSheet(null));
-		} else if (event.getMessage().getContentRaw().equals("!corevalues")) {
+		} else if (msg.equals("!corevalues")) {
 			sheetMessageSender.sendSheet(event.getTextChannel(), new CoreValueEvaluationSheet(null));
 		}
 	}
