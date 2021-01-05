@@ -12,14 +12,14 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
-abstract class AbstractIO {
+abstract class AbstractJsonIO {
 
 	protected final File dataDir;
 	protected final File teamFile;
 	protected final File invitesFile;
 	protected final ObjectMapper objectMapper;
 
-	AbstractIO() {
+	AbstractJsonIO() {
 		dataDir = Directories.getDataDir();
 		teamFile = new File(dataDir, "teams.json");
 		invitesFile = new File(dataDir, "invites.json");
@@ -28,7 +28,7 @@ abstract class AbstractIO {
 	}
 
 	public static String readResourceFile(String filename) {
-		InputStream inputStream = AbstractIO.class.getClassLoader().getResourceAsStream(filename);
+		InputStream inputStream = AbstractJsonIO.class.getClassLoader().getResourceAsStream(filename);
 		if (inputStream == null)
 			return "";
 

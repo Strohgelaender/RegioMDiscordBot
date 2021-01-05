@@ -1,8 +1,6 @@
 package de.fll.regiom.listeners;
 
 import de.fll.regiom.controller.EvaluationSheetMessageSender;
-import de.fll.regiom.controller.TeamManager;
-import de.fll.regiom.io.JSONExporter;
 import de.fll.regiom.model.evaluation.CoreValueEvaluationSheet;
 import de.fll.regiom.model.evaluation.ResearchEvaluationSheet;
 import de.fll.regiom.model.evaluation.RobotDesignEvaluationSheet;

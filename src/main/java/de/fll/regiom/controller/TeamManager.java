@@ -1,7 +1,7 @@
 package de.fll.regiom.controller;
 
-import de.fll.regiom.io.JSONImporter;
-import de.fll.regiom.io.TeamImporter;
+import de.fll.regiom.io.JsonImporter;
+import de.fll.regiom.io.CsvTeamImporter;
 import de.fll.regiom.model.Team;
 
 import java.util.List;
@@ -21,9 +21,9 @@ public class TeamManager {
 	private List<Team> teams;
 
 	public void setup() {
-		teams = JSONImporter.getInstance().importTeams();
+		teams = JsonImporter.getInstance().importTeams();
 		if (teams.isEmpty()) //Falback: Read Teams from HoT-Export
-			teams = new TeamImporter("./myregions.csv").importTeams();
+			teams = new CsvTeamImporter("./myregions.csv").importTeams();
 	}
 
 	public List<Team> getTeams() {

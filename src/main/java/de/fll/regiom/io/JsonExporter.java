@@ -8,17 +8,17 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public class JSONExporter extends AbstractIO {
+public class JsonExporter extends AbstractJsonIO {
 
-	private static JSONExporter instance;
+	private static JsonExporter instance;
 
-	public static JSONExporter getInstance() {
+	public static JsonExporter getInstance() {
 		if (instance == null)
-			instance = new JSONExporter();
+			instance = new JsonExporter();
 		return instance;
 	}
 
-	private JSONExporter() {
+	private JsonExporter() {
 	}
 
 	private void exportStuff(File f, Object o) throws IOException {

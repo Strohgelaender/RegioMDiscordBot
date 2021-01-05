@@ -13,12 +13,12 @@ import java.util.List;
  * Imports Teamdata from FLL-CSV.
  * <b>Use this for one-time imports.</b>
  *
- * @see JSONExporter for regualar Imports (on Restarts)
+ * @see JsonExporter for regualar Imports (on Restarts)
  */
-public class TeamImporter {
+public class CsvTeamImporter {
 	private final File file;
 
-	public TeamImporter(String path) {
+	public CsvTeamImporter(String path) {
 		this.file = new File(path);
 	}
 

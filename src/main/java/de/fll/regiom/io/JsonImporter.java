@@ -12,17 +12,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class JSONImporter extends AbstractIO {
+public class JsonImporter extends AbstractJsonIO {
 
-	private static JSONImporter instance;
+	private static JsonImporter instance;
 
-	public static JSONImporter getInstance() {
+	public static JsonImporter getInstance() {
 		if (instance == null)
-			instance = new JSONImporter();
+			instance = new JsonImporter();
 		return instance;
 	}
 
-	private JSONImporter() {
+	private JsonImporter() {
 	}
 
 	private <T> List<T> importStuff(File file, Class<T> tClass) throws IOException {
