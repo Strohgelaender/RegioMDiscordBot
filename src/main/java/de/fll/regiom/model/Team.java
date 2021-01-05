@@ -1,8 +1,16 @@
 package de.fll.regiom.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import java.util.List;
 
-public class Team implements RoleHolding {
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
+public class Team implements Roleable {
 
 	private final String name;
 	private final int hotID;
@@ -13,7 +21,8 @@ public class Team implements RoleHolding {
 		this.hotID = hotID;
 	}
 
-	public Team(String name, long roleID, int hotID) {
+	@JsonCreator
+	public Team(@JsonProperty("name") String name, @JsonProperty("roleID") long roleID, @JsonProperty("hotID") int hotID) {
 		this(name, hotID);
 		this.roleID = roleID;
 	}
@@ -26,10 +35,15 @@ public class Team implements RoleHolding {
 		return roleID;
 	}
 
+	public int getHotID() {
+		return hotID;
+	}
+
 	public void setRoleID(long roleID) {
 		this.roleID = roleID;
 	}
 
+	@JsonIgnore
 	@Override
 	public List<Long> getRoles() {
 		return List.of(roleID, Constants.TEAM_ROLE_ID);
@@ -37,6 +51,6 @@ public class Team implements RoleHolding {
 
 	@Override
 	public String toString() {
-		return "[" + hotID + "]" + name;
+		return "[" + hotID + "] " + name;
 	}
 }

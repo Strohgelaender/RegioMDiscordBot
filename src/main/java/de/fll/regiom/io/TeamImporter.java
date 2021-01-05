@@ -9,6 +9,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Imports Teamdata from FLL-CSV.
+ * <b>Use this for one-time imports.</b>
+ *
+ * @see JSONExporter for regualar Imports (on Restarts)
+ */
 public class TeamImporter {
 	private final File file;
 
