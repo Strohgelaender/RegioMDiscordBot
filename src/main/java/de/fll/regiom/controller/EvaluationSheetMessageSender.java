@@ -5,13 +5,13 @@ import de.fll.regiom.model.evaluation.EvaluationSheet;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.MessageChannel;
 
 import java.util.concurrent.CompletableFuture;
 
 public class EvaluationSheetMessageSender {
 
-	public void sendSheet(TextChannel channel, EvaluationSheet sheet) {
+	public void sendSheet(MessageChannel channel, EvaluationSheet sheet) {
 		if (channel == null || sheet == null)
 			return;
 		sendTitle(channel, sheet);
@@ -20,14 +20,14 @@ public class EvaluationSheetMessageSender {
 		}
 	}
 
-	private void sendTitle(TextChannel channel, EvaluationSheet sheet) {
+	private void sendTitle(MessageChannel channel, EvaluationSheet sheet) {
 		EmbedBuilder builder = new EmbedBuilder();
 		builder.setTitle(sheet.getTitle());
-		builder.setDescription("Hier kommen noch Teaminformationen hin");
+		builder.setDescription(sheet.getTeam().toString());
 		channel.sendMessage(builder.build()).complete();
 	}
 
-	private void sendCategory(TextChannel channel, EvaluationCategory category) {
+	private void sendCategory(MessageChannel channel, EvaluationCategory category) {
 		MessageBuilder builder = new MessageBuilder();
 		builder.append(category.getTitle(), MessageBuilder.Formatting.BOLD);
 		builder.append("\n");

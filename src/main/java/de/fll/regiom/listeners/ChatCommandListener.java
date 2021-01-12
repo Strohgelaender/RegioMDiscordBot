@@ -1,17 +1,26 @@
 package de.fll.regiom.listeners;
 
-import de.fll.regiom.controller.EvaluationSheetMessageSender;
-import de.fll.regiom.model.evaluation.CoreValueEvaluationSheet;
-import de.fll.regiom.model.evaluation.ResearchEvaluationSheet;
-import de.fll.regiom.model.evaluation.RobotDesignEvaluationSheet;
+import de.fll.regiom.commands.Command;
+import de.fll.regiom.commands.EvaluationSheetMessageCommand;
+import de.fll.regiom.model.Constants;
 import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Locale;
+import java.util.Set;
+
 public class ChatCommandListener extends ListenerAdapter {
 
-	private final EvaluationSheetMessageSender sheetMessageSender = new EvaluationSheetMessageSender();
+	private static final String PREFIX = "!";
+
+	private final Set<Command> commands = Set.of(
+			//new CreateStructureCommand(),
+			//new StartRobotGameCommand(),
+			new EvaluationSheetMessageCommand()
+	);
 
 	@Override
 	public void onMessageReceived(@NotNull MessageReceivedEvent event) {
@@ -23,15 +32,23 @@ public class ChatCommandListener extends ListenerAdapter {
 					event.getTextChannel().getName(), event.getMember().getEffectiveName(),
 					event.getMessage().getContentDisplay());
 		}
-		//just for testing
 
-		String msg = event.getMessage().getContentRaw();
-		if (msg.equals("!robotdesign")) {
-			sheetMessageSender.sendSheet(event.getTextChannel(), new RobotDesignEvaluationSheet(null));
-		} else if (msg.equals("!research")) {
-			sheetMessageSender.sendSheet(event.getTextChannel(), new ResearchEvaluationSheet(null));
-		} else if (msg.equals("!corevalues")) {
-			sheetMessageSender.sendSheet(event.getTextChannel(), new CoreValueEvaluationSheet(null));
+		String msg = event.getMessage().getContentRaw().toLowerCase(Locale.ROOT).trim();
+
+		if (!msg.startsWith(PREFIX))
+			return;
+		msg = msg.substring(PREFIX.length());
+
+		Member member = event.getMember();
+		if (member == null) {
+			member = event.getJDA().getGuildById(Constants.GUILD_ID).getMember(event.getAuthor());
 		}
+
+		for (Command command : commands) {
+			if (command.shouldExecute(member, msg)) {
+				command.execute(event, msg);
+			}
+		}
+		//TODO !join teamid
 	}
 }
