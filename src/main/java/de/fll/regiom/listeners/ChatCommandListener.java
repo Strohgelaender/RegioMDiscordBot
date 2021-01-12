@@ -2,6 +2,7 @@ package de.fll.regiom.listeners;
 
 import de.fll.regiom.commands.Command;
 import de.fll.regiom.commands.EvaluationSheetMessageCommand;
+import de.fll.regiom.commands.PizzaCommand;
 import de.fll.regiom.commands.StartRobotGameCommand;
 import de.fll.regiom.model.Constants;
 import net.dv8tion.jda.api.entities.ChannelType;
@@ -20,7 +21,8 @@ public class ChatCommandListener extends ListenerAdapter {
 	private final Set<Command> commands = Set.of(
 			//new CreateStructureCommand(),
 			new StartRobotGameCommand(),
-			new EvaluationSheetMessageCommand()
+			new EvaluationSheetMessageCommand(),
+			new PizzaCommand()
 	);
 
 	@Override
