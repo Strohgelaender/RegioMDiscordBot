@@ -34,7 +34,10 @@ public class PizzaOrder {
 	public PizzaOrder(String orderMessage, int orderID, long orderMaker) {
 		this.orderID = orderID;
 		orderMessage = orderMessage.replaceAll(" mit", "").replaceAll(" und", "");
-		String[] ingredients = orderMessage.split(";");
+		String[] ingredients;
+		if (orderMessage.contains(";"))
+			ingredients = orderMessage.split(";");
+		else ingredients = orderMessage.split(" ");
 		int sum = 0;
 		for (String ingredient : ingredients) {
 			ingredient = ingredient.trim();
