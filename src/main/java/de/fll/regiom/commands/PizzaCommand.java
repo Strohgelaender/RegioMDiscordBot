@@ -13,10 +13,11 @@ public class PizzaCommand implements Command {
 	@Override
 	public boolean execute(@NotNull MessageReceivedEvent event, String command) {
 		MessageChannel channel = event.getGuild().getTextChannelById(channelID);
-		if (manager == null) {
+		if (channel == null)
+			return false;
+		if (manager == null)
 			manager = new OrderManager(channel);
-		}
-		manager.makeOrder(event.getAuthor().getIdLong(), command.substring("order pizza".length()).trim());
+		manager.registerOrder(event.getAuthor().getIdLong(), command.substring("order pizza".length()).trim());
 		channel.sendMessage("Du hast eine Pizza bestellt!").queue();
 		return true;
 	}

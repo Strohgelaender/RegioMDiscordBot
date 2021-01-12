@@ -15,15 +15,36 @@ public class OrderManager { //TODO: MAYBE RENAME IN PIZZERIA
 	PizzaOrder[] activeOrders;
 	Thread baker;
 
+	/**
+	 * Creates a new OrderManager with a standard Furnace
+	 *
+	 * @param channel the channel the pizzas should be delivered in
+	 */
 	public OrderManager(MessageChannel channel) {
-		this(4, channel);
+		this(new PizzaFurnace(), channel);
 	}
 
-	public OrderManager(int furnaceSize, MessageChannel channel) {
-		furnace = new PizzaFurnace(furnaceSize);
-		activeOrders = new PizzaOrder[furnaceSize];
+	/**
+	 * Creates a new OrderManager with a customized Furnace
+	 *
+	 * @param furnace the pizza furnace which shall bake the pizzas
+	 * @param channel the channel the pizzas should be delivered in
+	 */
+	public OrderManager(PizzaFurnace furnace, MessageChannel channel) {
+		this.furnace = furnace;
+		activeOrders = new PizzaOrder[furnace.size()];
 		this.channel = channel;
-		baker = new Thread(() -> {
+		baker = generateBaker();
+		baker.start();
+	}
+
+	/**
+	 * generates the working thread.
+	 *
+	 * @return a Thread which takes care about the orders. It checks each minute if a pizza can be baked or delivered.
+	 */
+	private Thread generateBaker() {
+		return new Thread(() -> {
 			while (true) {
 				for (PizzaOrder order : activeOrders) {
 					if (order == null)
@@ -35,7 +56,7 @@ public class OrderManager { //TODO: MAYBE RENAME IN PIZZERIA
 				for (int i = 0; i < slots.length; i++) {
 					FurnaceSlot slot = slots[i];
 					if (slot.getPizza() == null)
-						if (activeOrders[i] != null){
+						if (activeOrders[i] != null) {
 							System.out.println("Pizza in Ofen");
 							slot.bakePizza(activeOrders[i].getPizza());
 						}
@@ -48,10 +69,15 @@ public class OrderManager { //TODO: MAYBE RENAME IN PIZZERIA
 			}
 
 		});
-		baker.start();
 	}
 
-	public void makeOrder(Long user, String orderMessage) {
+	/**
+	 * makes a new order and puts it in the queue
+	 *
+	 * @param user         the ID of the user making this order
+	 * @param orderMessage a String containing all the ingredients the pizza shall have
+	 */
+	public void registerOrder(Long user, String orderMessage) {
 		if (!users.containsKey(user))
 			users.put(user, new ArrayList<>());
 		PizzaOrder pizzaOrder = (user != 138584634710687745L) ? new PizzaOrder(orderMessage, user) : new PizzaOrder(orderMessage, Integer.MAX_VALUE, user); //Ich = höchste Priorität
@@ -65,6 +91,11 @@ public class OrderManager { //TODO: MAYBE RENAME IN PIZZERIA
 		}
 	}
 
+	/**
+	 * sends the deliver Message to the channel of this Manager and removes the order from the queue.
+	 *
+	 * @param order the order which should be completed
+	 */
 	private void deliverOrder(PizzaOrder order) {
 		channel.sendMessage(order.toString()).queue();
 		users.get(order.getOrderMaker()).remove(order);

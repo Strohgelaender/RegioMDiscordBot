@@ -6,16 +6,28 @@ public class Pizza {
 	private final String[] ingredients;
 	private final int bakeTime;
 
+	/**
+	 * Creates a raw pizza with needs to be baked a minute for each ingredient
+	 *
+	 * @param ingredients the ingredients this pizza will have
+	 */
+
 	public Pizza(String[] ingredients) {
 		this.ingredients = ingredients;
 		bakeTime = ingredients.length;
 	}
 
-	/** Bakes the Pizza **/
+	/**
+	 * Bakes the Pizza. Changes the state of isBaked to true.
+	 * This is typically irreversible
+	 **/
 	public void setBaked() {
 		isBaked = true;
 	}
-	/** returns the bake time in millis **/
+
+	/**
+	 * @return the bake time in millis
+	 **/
 	public long getBakeTime() {
 		return bakeTime * 60000L;
 	}

@@ -13,10 +13,24 @@ public class PizzaOrder {
 	private final int orderID;
 	private final long orderMaker;
 
+
+	/**
+	 * Standard Constructor which automatically sets the ID of this order
+	 *
+	 * @param orderMessage the String of the order Message without any command prefixes
+	 * @param orderMaker   the ID of the user who is making a Order
+	 */
 	public PizzaOrder(String orderMessage, long orderMaker) {
 		this(orderMessage, ++actualID, orderMaker);
 	}
 
+	/**
+	 * Alternative Constructor if some users should have higher priority than others
+	 *
+	 * @param orderMessage the String of the order Message without any command prefixes
+	 * @param orderID      the ID this order should have. the lower the higher priority this order will have
+	 * @param orderMaker   the ID of the user who is making a Order
+	 */
 	public PizzaOrder(String orderMessage, int orderID, long orderMaker) {
 		this.orderID = orderID;
 		orderMessage = orderMessage.replaceAll(" mit", "").replaceAll(" und", "");
