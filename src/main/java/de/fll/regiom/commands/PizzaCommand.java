@@ -13,7 +13,7 @@ public class PizzaCommand implements Command {
 	/**
 	 * creates a PizzaOrder of the Pizza minigame and registers it to the system.
 	 *
-	 * @param command a String containg the names of pizza ingredients, separated either by ';' or by ' '
+	 * @param command a String beginning with "order pizza" and containg the names of pizza ingredients, separated either by ';' or by ' '
 	 */
 	@Override
 	public boolean execute(@NotNull MessageReceivedEvent event, String command) {
