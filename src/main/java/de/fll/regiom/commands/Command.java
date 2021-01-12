@@ -8,18 +8,46 @@ import javax.annotation.CheckReturnValue;
 
 public interface Command {
 
+	/**
+	 * Performs the main functionality of the command.
+	 *
+	 * @param event   the MessageEvent which is calling the command
+	 * @param command the command String without the global command prefix
+	 * @return true, if the command was executed successfully, otherwise false
+	 **/
 	boolean execute(@NotNull MessageReceivedEvent event, String command);
 
+	/**
+	 * Checks if the command should be performed.
+	 * By default, it checks if the combination of permission and correct command syntax is given.
+	 *
+	 * @param command the command String without the global command prefix
+	 * @param member  the guild member who is trying to access the command
+	 * @return true, if the command should be executed, otherwise false
+	 **/
 	@CheckReturnValue
 	default boolean shouldExecute(Member member, String command) {
 		return canBeCalledBy(member) && isCalled(command);
 	}
 
+	/**
+	 * Checks if the given user is allowed to use this command.
+	 * The default implementation always returns true.
+	 *
+	 * @param member The guild member who is trying to access the command
+	 * @return true, if the user is allowed to perform the command, otherwise false
+	 **/
 	@CheckReturnValue
 	default boolean canBeCalledBy(Member member) {
 		return true;
 	}
 
+	/**
+	 * Checks if the command string matches the syntax of this command
+	 *
+	 * @param command the command String without the global command prefix
+	 * @return true, if the given String matches the command syntax, otherwise false
+	 **/
 	@CheckReturnValue
 	boolean isCalled(String command);
 
