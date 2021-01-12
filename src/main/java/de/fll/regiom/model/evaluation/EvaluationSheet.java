@@ -25,6 +25,10 @@ public abstract class EvaluationSheet implements Comparable<EvaluationSheet> {
 		return title;
 	}
 
+	public Team getTeam() {
+		return team;
+	}
+
 	public int evaluate() {
 		int sum = 0;
 		for (EvaluationCategory category : categories) {
