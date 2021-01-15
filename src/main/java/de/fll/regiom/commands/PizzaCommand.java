@@ -30,16 +30,18 @@ public class PizzaCommand implements Command {
 		int forbiddenNameLength = 8;
 		Set<Character> allowed = generateAllowed();
 		Set<Character> forbidden = Set.of('f', 'r', 'i', 'd', 'o', 'l', 'n');
+		for (int i = "order pizza".length(); i < command.length(); i++) {
+			if (!allowed.contains(command.charAt(i))) {
+				sendFailureMessage(channel);
+				return false;
+			}
+		}
 		for (int i = "order pizza".length(); i < command.length() - forbiddenNameLength; i++) {
 			String check = command.substring(i, i + 8);
 			int sum = 0;
 			for (Character c : forbidden) {
 				if (check.contains(String.valueOf(c)))
 					sum++;
-				if (!allowed.contains(c)) {
-					sendFailureMessage(channel);
-					return false;
-				}
 
 			}
 			if (sum >= 5) {
