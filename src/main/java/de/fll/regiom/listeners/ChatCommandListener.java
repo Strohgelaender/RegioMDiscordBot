@@ -8,6 +8,7 @@ import de.fll.regiom.commands.PurgeCommand;
 import de.fll.regiom.commands.RebootCommand;
 import de.fll.regiom.commands.RoleHelper;
 import de.fll.regiom.commands.SaveCommand;
+import de.fll.regiom.commands.SearchTokenCommand;
 import de.fll.regiom.commands.StartRobotGameCommand;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Member;
@@ -27,6 +28,7 @@ public class ChatCommandListener extends ListenerAdapter {
 	private final Set<Command> commands = new HashSet<>(Set.of(
 			//new CreateStructureCommand(),
 			new StartRobotGameCommand(),
+			new SearchTokenCommand(),
 			new EvaluationSheetMessageCommand(),
 			new PurgeCommand(),
 			new SaveCommand(),

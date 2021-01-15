@@ -16,21 +16,20 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
-public class RobotGameStartHandler implements Storable {
+public class RobotGameTokenManager implements Storable {
 
-	private static final long CODE_LOG_CHANNEL = 798316567242735637L;
-	private static final int CODE_LENGTH = 6;
-	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+	public static final int CODE_LENGTH = 6;
+	public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
-	private static RobotGameStartHandler instance;
+	private static RobotGameTokenManager instance;
 
-	public static RobotGameStartHandler getInstance() {
+	public static RobotGameTokenManager getInstance() {
 		if (instance == null)
-			instance = new RobotGameStartHandler();
+			instance = new RobotGameTokenManager();
 		return instance;
 	}
 
-	private RobotGameStartHandler() {
+	private RobotGameTokenManager() {
 		StorageManager.getInstance().register(this);
 		load();
 	}
@@ -38,11 +37,11 @@ public class RobotGameStartHandler implements Storable {
 	private final Random random = new SecureRandom();
 	private final Map<String, RobotGameAttempt> attempts = new HashMap<>();
 
-	public boolean startRobotGame(Member member, MessageChannel answerChannel) {
+	public RobotGameAttempt startRobotGame(Member member, MessageChannel answerChannel) {
 		Optional<Team> team = TeamManager.getInstance().getTeamByMember(member);
 		if (team.isEmpty()) {
 			System.out.println("[StartRobotGame] No Team found for Member " + member.getEffectiveName());
-			return false;
+			return null;
 		}
 		RobotGameAttempt attempt;
 		do {
@@ -50,13 +49,13 @@ public class RobotGameStartHandler implements Storable {
 		} while (attempts.containsKey(attempt.getCode()));
 
 		attempts.put(attempt.getCode(), attempt);
+		System.out.println("[StartRobotGame] Team " + team.get().getName() + " starts at " + attempt.getStartTime().format(FORMATTER) + " with Code " + attempt.getCode());
 
-		String now = attempt.getStartTime().format(FORMATTER);
-		System.out.println("[StartRobotGame] Team " + team.get().getName() + " starts at " + now + " with Code " + attempt.getCode());
+		return attempt;
+	}
 
-		answerChannel.sendMessage("Der Code lautet **" + attempt.getCode() + "**\nViel Erfolg beim Robot Game!\n\uD83D\uDD52 " + now).queue();
-		member.getGuild().getTextChannelById(CODE_LOG_CHANNEL).sendMessage(String.format("Code: %s Team: %s \uD83D\uDD52 %s", attempt.getCode(), team.get().getName(), now)).queue();
-		return true;
+	public RobotGameAttempt findByToken(String token) {
+		return attempts.getOrDefault(token, null);
 	}
 
 	private String generateRandomCode() {
@@ -64,6 +63,10 @@ public class RobotGameStartHandler implements Storable {
 				.limit(CODE_LENGTH)
 				.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
 				.toString();
+	}
+
+	public String formatMessage(RobotGameAttempt attempt) {
+		return String.format("Code: %s Team: %s \uD83D\uDD52 %s", attempt.getCode(), attempt.getTeam().getName(), attempt.getStartTime().format(FORMATTER));
 	}
 
 	@Override

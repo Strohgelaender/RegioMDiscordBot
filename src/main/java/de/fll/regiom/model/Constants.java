@@ -11,6 +11,10 @@ public abstract class Constants {
 
 	public static final long ADMIN_ROLE_ID = 795615662264287242L;
 	public static final long VOLUNTEER_ROLE_ID = 795616244317159424L;
+	public static final long REFEREE_ROLE_ID = 795640807754825739L;
 	public static final long TEAM_ROLE_ID = 795634839381344256L;
 	public static final long SPECTATOR_ROLE_ID = 795641201927651329L;
+
+	public static final long LOG_CHANNEL_ID = 795624150555295775L;
+	public static final long CODE_LOG_CHANNEL = 798316567242735637L;
 }
