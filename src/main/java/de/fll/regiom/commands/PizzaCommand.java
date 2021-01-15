@@ -60,10 +60,10 @@ public class PizzaCommand implements Command {
 		String reason = switch (reasonCode) {
 			case 1 -> "Is there anything left to say?";
 			case 2 -> "Chosen channel doesn't exist! Please let this be fixed by your developers";
-			case 3 -> "Illegal characters! Allowed are: [A-Z],[a-z],[ß.,:;()& ]";
+			case 3 -> "Illegal characters! Allowed are: [A-Z] , [a-z] , [ß.,:;()& öäü]";
 			default -> "Invalid order message!";
 		};
-		channel.sendMessage("failed to make order: " + reason).queue();
+		channel.sendMessage("Failed to make order: " + reason).queue();
 	}
 
 	@Override

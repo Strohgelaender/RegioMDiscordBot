@@ -97,7 +97,8 @@ public class OrderManager { //TODO: MAYBE RENAME IN PIZZERIA
 	 * @param order the order which should be completed
 	 */
 	private void deliverOrder(PizzaOrder order) {
-		channel.sendMessage(order.toString()).queue();
+		long userID = order.getOrderMaker();
+		channel.sendMessage("Hallo <@" + userID + ">, D" + order.toString()).queue();
 		users.get(order.getOrderMaker()).remove(order);
 		for (int i = 0; i < activeOrders.length; i++) {
 			if (activeOrders[i] == order)

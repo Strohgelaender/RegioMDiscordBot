@@ -43,6 +43,9 @@ public class Pizza {
 		if (ingredients.length == 0) {
 			builder.append("mit Tomatensauce, Käse und etwas Basilikum");
 		} else if (ingredients.length == 1) {
+			String ing = ingredients[0];
+			if (ing.contains("extra") || ing.contains("viel"))
+				builder.append("mit ");
 			builder.append(firstToUpperCase(ingredients[0]));
 		} else {
 			builder.append("mit ");
@@ -55,7 +58,21 @@ public class Pizza {
 	}
 
 	private String firstToUpperCase(String old) {
+		boolean extra = old.contains("extra");
+		boolean viel = old.contains("viel");
+		if (extra && !viel) {
+			return "extra " + firstToUpperCase(old.replaceFirst("extra", "").trim());
+		}
+		if (viel && !extra) {
+			return "viel" + firstToUpperCase(old.replaceFirst("viel", "").trim());
+		}
+		if (viel) {
+			return old.substring(0, "extra viel".length()) + " "
+					+ firstToUpperCase(old.replaceFirst("extra", "").replaceFirst("viel", "").trim());
+		}
 		char upper = old.toUpperCase().charAt(0);
 		return old.replaceFirst(String.valueOf(old.charAt(0)), String.valueOf(upper));
 	}
+
+
 }

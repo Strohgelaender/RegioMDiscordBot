@@ -1,7 +1,12 @@
 package de.fll.regiom.pizza;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class PizzaOrder {
 	private static final Map<String, Integer> PRICES = new HashMap<>();
@@ -31,25 +36,41 @@ public class PizzaOrder {
 	 */
 	public PizzaOrder(String orderMessage, int orderID, long orderMaker) {
 		this.orderID = orderID;
-		orderMessage = orderMessage.replaceAll("mit ", "").replaceAll("und ", "").replaceAll(",", "");
-		String[] ingredients;
+		orderMessage = orderMessage.replaceAll("mit ", "").replaceAll("und ", "");
+		orderMessage = orderMessage.replaceAll(", ", ",").replaceAll(",", " ").replaceAll("bitte", "").trim();
+		List<String> ingredients;
 		if (orderMessage.contains(";"))
-			ingredients = orderMessage.split(";");
-		else ingredients = orderMessage.split(" ");
+			ingredients = new ArrayList<>(Arrays.asList(orderMessage.split(";")));
+		else ingredients = new ArrayList<>(Arrays.asList(orderMessage.split(" ")));
 		int sum = 0;
-		for (int i = 0, ingredientsLength = ingredients.length; i < ingredientsLength; i++) {
-			String ingredient = ingredients[i];
-			ingredient = ingredient.trim();
-			if (ingredients[i].equals("extra")) {
-				if (i < ingredientsLength - 1)
-					ingredients[i + 1] = "extra " + ingredients[i + 1];
-				else ingredients[i - 1] = "extra " + ingredients[i - 1];
+		for (int i = 0, ingredientsLength = ingredients.size(); i < ingredientsLength; i++) {
+			ingredients.set(i, ingredients.get(i).trim());
+			if (ingredients.get(i).contains("(")) {
+				ingredients.set(i, null);
 			}
-			sum += PRICES.getOrDefault(ingredient, 4);
+			if (ingredients.get(i).equals("extra")) {
+				mergeWords(ingredients, i, "extra");
+				continue;
+			}
+			if (ingredients.get(i).equals("viel")) {
+				mergeWords(ingredients, i, "viel");
+				continue;
+			}
+			if (ingredients.get(i).equals("extra viel") || ingredients.get(i).equals("viel extra")) {
+				mergeWords(ingredients, i, ingredients.get(i));
+			}
+			sum += PRICES.getOrDefault(ingredients.get(i), 4);
 		}
 		this.price = sum;
-		this.pizza = (orderMessage.length() > 0) ? new Pizza(ingredients) : new Pizza(new String[0]);
+		ingredients.removeIf(Objects::isNull);
+		this.pizza = new Pizza(ingredients.toArray(new String[0]));
 		this.orderMaker = orderMaker;
+	}
+
+	private void mergeWords(List<String> ingredients, int i, String added) {
+		int target = (i < ingredients.size() - 1) ? i + 1 : i - 1;
+		ingredients.set(target, added + " " + ingredients.get(target));
+		ingredients.set(i, null);
 	}
 
 	public long getOrderMaker() {
