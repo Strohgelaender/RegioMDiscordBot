@@ -51,4 +51,15 @@ public interface Command {
 	@CheckReturnValue
 	boolean isCalled(String command);
 
+	/**
+	 * Method adding support for global help-issuing commands.
+	 * The default implementation always returns that no help is available for the command
+	 *
+	 * @return A formatted String which contains helpful information about this command
+	 */
+	@CheckReturnValue
+	default String getInfo() {
+		return "No further information available for this command!";
+	}
+
 }
