@@ -6,7 +6,6 @@ import de.fll.regiom.model.RobotGameAttempt;
 import de.fll.regiom.model.Storable;
 import de.fll.regiom.model.Team;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.MessageChannel;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -37,7 +36,7 @@ public class RobotGameTokenManager implements Storable {
 	private final Random random = new SecureRandom();
 	private final Map<String, RobotGameAttempt> attempts = new HashMap<>();
 
-	public RobotGameAttempt startRobotGame(Member member, MessageChannel answerChannel) {
+	public RobotGameAttempt startRobotGame(Member member) {
 		Optional<Team> team = TeamManager.getInstance().getTeamByMember(member);
 		if (team.isEmpty()) {
 			System.out.println("[StartRobotGame] No Team found for Member " + member.getEffectiveName());
