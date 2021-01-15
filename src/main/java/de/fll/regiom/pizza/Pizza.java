@@ -43,14 +43,19 @@ public class Pizza {
 		if (ingredients.length == 0) {
 			builder.append("mit Tomatensauce, Käse und etwas Basilikum");
 		} else if (ingredients.length == 1) {
-			builder.append(ingredients[0]);
+			builder.append(firstToUpperCase(ingredients[0]));
 		} else {
 			builder.append("mit ");
 			for (int i = 0, ingredientsLength = ingredients.length - 1; i < ingredientsLength; i++) {
-				builder.append(ingredients[i]).append(", ");
+				builder.append(firstToUpperCase(ingredients[i])).append(", ");
 			}
-			builder.append("und ").append(ingredients[ingredients.length - 1]);
+			builder.deleteCharAt(builder.length() - 2).append("und ").append(firstToUpperCase(ingredients[ingredients.length - 1]));
 		}
 		return builder.toString();
+	}
+
+	private String firstToUpperCase(String old) {
+		char upper = old.toUpperCase().charAt(0);
+		return old.replaceFirst(String.valueOf(old.charAt(0)), String.valueOf(upper));
 	}
 }

@@ -5,8 +5,6 @@ import java.util.Map;
 
 public class PizzaOrder {
 	private static final Map<String, Integer> PRICES = new HashMap<>();
-
-
 	private final Pizza pizza;
 	private static int actualID = 0;
 	private final int price;
@@ -33,18 +31,24 @@ public class PizzaOrder {
 	 */
 	public PizzaOrder(String orderMessage, int orderID, long orderMaker) {
 		this.orderID = orderID;
-		orderMessage = orderMessage.replaceAll(" mit", "").replaceAll(" und", "");
+		orderMessage = orderMessage.replaceAll("mit ", "").replaceAll("und ", "").replaceAll(",", "");
 		String[] ingredients;
 		if (orderMessage.contains(";"))
 			ingredients = orderMessage.split(";");
 		else ingredients = orderMessage.split(" ");
 		int sum = 0;
-		for (String ingredient : ingredients) {
+		for (int i = 0, ingredientsLength = ingredients.length; i < ingredientsLength; i++) {
+			String ingredient = ingredients[i];
 			ingredient = ingredient.trim();
+			if (ingredients[i].equals("extra")) {
+				if (i < ingredientsLength - 1)
+					ingredients[i + 1] = "extra " + ingredients[i + 1];
+				else ingredients[i - 1] = "extra " + ingredients[i - 1];
+			}
 			sum += PRICES.getOrDefault(ingredient, 4);
 		}
 		this.price = sum;
-		this.pizza = new Pizza(ingredients);
+		this.pizza = (orderMessage.length() > 0) ? new Pizza(ingredients) : new Pizza(new String[0]);
 		this.orderMaker = orderMaker;
 	}
 
