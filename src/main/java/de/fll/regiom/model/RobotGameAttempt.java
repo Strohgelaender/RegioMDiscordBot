@@ -1,5 +1,8 @@
 package de.fll.regiom.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDateTime;
 
 public class RobotGameAttempt {
@@ -8,7 +11,8 @@ public class RobotGameAttempt {
 	private final Team team;
 	private final LocalDateTime startTime;
 
-	public RobotGameAttempt(String code, Team team, LocalDateTime startTime) {
+	@JsonCreator
+	public RobotGameAttempt(@JsonProperty("code") String code, @JsonProperty("team") Team team, @JsonProperty("startTime") LocalDateTime startTime) {
 		this.code = code;
 		this.team = team;
 		this.startTime = startTime;

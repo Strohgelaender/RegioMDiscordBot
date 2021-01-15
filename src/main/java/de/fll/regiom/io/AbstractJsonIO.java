@@ -2,6 +2,7 @@ package de.fll.regiom.io;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.DefaultBaseTypeLimitingValidator;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.fll.regiom.util.Directories;
 
 import java.io.BufferedReader;
@@ -27,6 +28,7 @@ abstract class AbstractJsonIO {
 		tokensFile = new File(dataDir, "robotGameTokens.json");
 		objectMapper = new ObjectMapper();
 		objectMapper.activateDefaultTyping(new DefaultBaseTypeLimitingValidator(), ObjectMapper.DefaultTyping.EVERYTHING);
+		objectMapper.registerModule(new JavaTimeModule());
 	}
 
 	public static String readResourceFile(String filename) {
