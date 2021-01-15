@@ -1,5 +1,6 @@
 package de.fll.regiom.io;
 
+import de.fll.regiom.model.RobotGameAttempt;
 import de.fll.regiom.model.Roleable;
 import de.fll.regiom.model.Team;
 
@@ -28,6 +29,8 @@ public class JsonExporter extends AbstractJsonIO {
 		objectMapper.writeValue(f, o);
 	}
 
+	//TODO Refactor - every class has its own method here!
+
 	public void exportTeams(List<Team> teams) {
 		try {
 			exportStuff(teamFile, teams);
@@ -39,6 +42,14 @@ public class JsonExporter extends AbstractJsonIO {
 	public void exportInvites(Map<String, Roleable> roles) {
 		try {
 			exportStuff(invitesFile, roles);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void exportTokens(Map<String, RobotGameAttempt> attempts) {
+		try {
+			exportStuff(tokensFile, attempts);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -1,6 +1,7 @@
 package de.fll.regiom.io;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import de.fll.regiom.model.RobotGameAttempt;
 import de.fll.regiom.model.Roleable;
 import de.fll.regiom.model.Team;
 
@@ -25,17 +26,27 @@ public class JsonImporter extends AbstractJsonIO {
 	private JsonImporter() {
 	}
 
-	private <T> List<T> importStuff(File file, Class<T> tClass) throws IOException {
+	private <T> List<T> importList(File file, Class<T> tClass) throws IOException {
 		if (file.exists()) {
 			TypeFactory typeFactory = TypeFactory.defaultInstance();
 			return objectMapper.readValue(file, typeFactory.constructCollectionType(ArrayList.class, tClass));
 		}
-		return Collections.emptyList();
+		return new ArrayList<>();
 	}
+
+	private <K, V> Map<K, V> importMap(File file, Class<K> keyClass, Class<V> valueClass) throws IOException {
+		if (file.exists()) {
+			TypeFactory typeFactory = TypeFactory.defaultInstance();
+			return objectMapper.readValue(file, typeFactory.constructMapType(HashMap.class, keyClass, valueClass));
+		}
+		return new HashMap<>();
+	}
+
+	//TODO Refactor!!!!
 
 	public List<Team> importTeams() {
 		try {
-			return importStuff(teamFile, Team.class);
+			return importList(teamFile, Team.class);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -44,10 +55,16 @@ public class JsonImporter extends AbstractJsonIO {
 
 	public Map<String, Roleable> importInvites() {
 		try {
-			if (invitesFile.exists()) {
-				TypeFactory typeFactory = TypeFactory.defaultInstance();
-				return objectMapper.readValue(invitesFile, typeFactory.constructMapType(HashMap.class, String.class, Roleable.class));
-			}
+			return importMap(invitesFile, String.class, Roleable.class);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return new HashMap<>();
+	}
+
+	public Map<String, RobotGameAttempt> loadTokens() {
+		try {
+			return importMap(tokensFile, String.class, RobotGameAttempt.class);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

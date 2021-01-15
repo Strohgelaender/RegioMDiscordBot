@@ -1,7 +1,10 @@
 package de.fll.regiom.controller;
 
-import de.fll.regiom.io.JsonImporter;
 import de.fll.regiom.io.CsvTeamImporter;
+import de.fll.regiom.io.JsonExporter;
+import de.fll.regiom.io.JsonImporter;
+import de.fll.regiom.model.Constants;
+import de.fll.regiom.model.Storable;
 import de.fll.regiom.model.Team;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
@@ -21,16 +24,21 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class TeamManager {
+public class TeamManager implements Storable {
+
 
 	private static TeamManager instance;
 
 	public static TeamManager getInstance() {
 		if (instance == null) {
 			instance = new TeamManager();
-			instance.setup();
 		}
 		return instance;
+	}
+
+	private TeamManager() {
+		StorageManager.getInstance().register(this);
+		load();
 	}
 
 	private List<Team> teams;
@@ -53,5 +61,20 @@ public class TeamManager {
 			}
 		}
 		return Optional.empty();
+	}
+
+	@Override
+	public boolean save() {
+		JsonExporter exporter = JsonExporter.getInstance();
+		exporter.exportTeams(teams);
+		//exporter.exportInvites();
+		return true;
+	}
+
+	@Override
+	public void load() {
+		teams = JsonImporter.getInstance().importTeams();
+		if (teams.isEmpty()) //Falback: Read Teams from HoT-Export
+			teams = new CsvTeamImporter("./myregions.csv").importTeams();
 	}
 }
