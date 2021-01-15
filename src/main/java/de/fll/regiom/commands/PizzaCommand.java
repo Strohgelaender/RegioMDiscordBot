@@ -74,7 +74,7 @@ public class PizzaCommand implements Command {
 	private static Set<Character> generateAllowed() {
 		Set<Character> allowed = new HashSet<>();
 		String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		String special = "ß.,:;()& ";
+		String special = "ß.,:;()& öäü";
 		List<String> allowedStrings = List.of(alphabet, alphabet.toLowerCase(), special);
 		for (String s : allowedStrings) {
 			char[] chars = s.toCharArray();
