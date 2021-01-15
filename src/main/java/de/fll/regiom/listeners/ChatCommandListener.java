@@ -1,40 +1,47 @@
 package de.fll.regiom.listeners;
 
 import de.fll.regiom.commands.Command;
-import de.fll.regiom.commands.EvaluationSheetMessageCommand;
 import de.fll.regiom.commands.HelpCommand;
-import de.fll.regiom.commands.PizzaCommand;
-import de.fll.regiom.commands.PurgeCommand;
-import de.fll.regiom.commands.RebootCommand;
 import de.fll.regiom.commands.RoleHelper;
-import de.fll.regiom.commands.SaveCommand;
-import de.fll.regiom.commands.SearchTokenCommand;
-import de.fll.regiom.commands.StartRobotGameCommand;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+import org.reflections.Reflections;
 
-import java.util.HashSet;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ChatCommandListener extends ListenerAdapter {
 
 	private static final String PREFIX = "!";
 
 	//TODO find better way for this!
-	private final Set<Command> commands = new HashSet<>(Set.of(
-			//new CreateStructureCommand(),
-			new StartRobotGameCommand(),
-			new SearchTokenCommand(),
-			new EvaluationSheetMessageCommand(),
-			new PurgeCommand(),
-			new SaveCommand(),
-			new RebootCommand(),
-			new PizzaCommand()
-	));
+	private final Set<Command> commands = setupCommands();
+
+	private static Set<Command> setupCommands() {
+		Reflections reflections = new Reflections("de.fll.regiom.commands");
+		return reflections.getSubTypesOf(Command.class).stream()
+				//make sure the default constructor exists (to remove classes like HelpCommand)
+				.filter(command -> Stream.of(command.getDeclaredConstructors()).anyMatch(constructor -> constructor.getParameterCount() == 0))
+				//create a new instance using this constructor
+				.map(commandClass -> {
+					try {
+						return commandClass.getDeclaredConstructor().newInstance();
+					} catch (ReflectiveOperationException e) {
+						e.printStackTrace();
+						return null;
+					}
+				})
+				//everything should have worked fine.
+				//If not, we should fix this bug! But to continue here we just remove this null-Object.
+				.filter(Objects::nonNull)
+				.collect(Collectors.toSet());
+	}
 
 	ChatCommandListener() {
 		commands.add(new HelpCommand(commands));
