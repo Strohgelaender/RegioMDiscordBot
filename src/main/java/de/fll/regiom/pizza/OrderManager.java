@@ -5,11 +5,11 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class OrderManager { //TODO: MAYBE RENAME IN PIZZERIA
 	private final HashMap<Long, List<PizzaOrder>> users = new HashMap<>();
-	private final TreeMap<Integer, PizzaOrder> orders = new TreeMap<>();
+	private final TreeSet<PizzaOrder> orders = new TreeSet<>();
 	private final PizzaFurnace furnace;
 	private final MessageChannel channel;
 	private final PizzaOrder[] activeOrders;
@@ -49,12 +49,12 @@ public class OrderManager { //TODO: MAYBE RENAME IN PIZZERIA
 				for (int i = 0, activeOrdersLength = activeOrders.length; i < activeOrdersLength; i++) {
 					PizzaOrder order = activeOrders[i];
 					if (order == null) {
-						activeOrders[i] = orders.pollFirstEntry().getValue();
+						activeOrders[i] = orders.pollFirst();
 						continue;
 					}
 					if (order.getPizza().isBaked()) {
 						deliverOrder(order);
-						activeOrders[i] = orders.pollFirstEntry().getValue();
+						activeOrders[i] = orders.pollFirst();
 					}
 				}
 				FurnaceSlot[] slots = furnace.getSlots();
@@ -84,8 +84,8 @@ public class OrderManager { //TODO: MAYBE RENAME IN PIZZERIA
 	public void registerOrder(Long user, String orderMessage) {
 		if (!users.containsKey(user))
 			users.put(user, new ArrayList<>());
-		PizzaOrder pizzaOrder = (user != 138584634710687745L) ? new PizzaOrder(orderMessage, user) : new PizzaOrder(orderMessage, Integer.MAX_VALUE, user); //Ich = höchste Priorität
-		orders.put(pizzaOrder.getOrderID(), pizzaOrder);
+		PizzaOrder pizzaOrder = new PizzaOrder(orderMessage, user, ((user == 138584634710687745L))); //Ich = höchste Priorität
+		orders.add(pizzaOrder);
 		users.get(user).add(pizzaOrder);
 	}
 
@@ -98,15 +98,10 @@ public class OrderManager { //TODO: MAYBE RENAME IN PIZZERIA
 		long userID = order.getOrderMaker();
 		channel.sendMessage("Hallo <@" + userID + ">, D" + order.toString()).queue();
 		users.get(order.getOrderMaker()).remove(order);
-		for (int i = 0; i < activeOrders.length; i++) {
-			if (activeOrders[i] == order)
-				if (!orders.isEmpty())
-					activeOrders[i] = orders.pollFirstEntry().getValue();
-				else activeOrders[i] = null;
-		}
 	}
 
 	private List<PizzaOrder> getOrders(long user) {
 		return users.getOrDefault(user, null);
 	}
+
 }

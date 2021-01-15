@@ -1,5 +1,7 @@
 package de.fll.regiom.pizza;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -7,10 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class PizzaOrder {
+public class PizzaOrder implements Comparable<PizzaOrder> {
 	private static final Map<String, Integer> PRICES = new HashMap<>();
 	private static int actualID = 0;
-
+	private static int highestID = Integer.MAX_VALUE;
 	private final Pizza pizza;
 	private final int price;
 	private final int orderID;
@@ -25,6 +27,17 @@ public class PizzaOrder {
 	 */
 	public PizzaOrder(String orderMessage, long orderMaker) {
 		this(orderMessage, ++actualID, orderMaker);
+	}
+
+	/**
+	 * Alternative Constructor if some users should have higher priority than others
+	 *
+	 * @param orderMessage the String of the order Message without any command prefixes
+	 * @param highPriority if high priority should be used
+	 * @param orderMaker   the ID of the user who is making a Order
+	 */
+	public PizzaOrder(String orderMessage, long orderMaker, boolean highPriority) {
+		this(orderMessage, (highPriority) ? highestID-- : ++actualID, orderMaker);
 	}
 
 	/**
@@ -72,7 +85,7 @@ public class PizzaOrder {
 		ingredients.set(target, added + " " + ingredients.get(target));
 		ingredients.set(i, null);
 	}
-
+	// Getters and Setters
 	public long getOrderMaker() {
 		return orderMaker;
 	}
@@ -89,6 +102,15 @@ public class PizzaOrder {
 		return price;
 	}
 
+
+	// SETUP
+	private static void setPrices() {
+		PRICES.put("Cheese", 1);
+		PRICES.put("ham", 1);
+		PRICES.put("salami", 1);
+	}
+
+	//Overriding Object Methods
 	@Override
 	public String toString() {
 		if (pizza == null)
@@ -97,10 +119,8 @@ public class PizzaOrder {
 			return "Pizza muss noch gebacken werden.";
 		return pizza.toString() + " ist fertig";
 	}
-
-	private static void setPrices() {
-		PRICES.put("Cheese", 1);
-		PRICES.put("ham", 1);
-		PRICES.put("salami", 1);
+	@Override
+	public int compareTo(@NotNull PizzaOrder o) {
+		return Integer.compare(this.getOrderID(), o.getOrderID());
 	}
 }

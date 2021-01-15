@@ -61,8 +61,8 @@ public class PizzaFurnace {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		for (int i = 1; i < slots.length; i++) {
-			builder.append("Slot ").append(i).append(": ");
+		for (int i = 0; i < slots.length; i++) {
+			builder.append("Slot ").append(i + 1).append(": ");
 			if (slots[i].getPizza() == null) {
 				builder.append("frei!");
 			} else builder.append("Bäckt ").append(slots[i].getPizza().toString());

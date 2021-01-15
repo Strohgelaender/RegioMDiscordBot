@@ -12,7 +12,7 @@ import java.util.Set;
 public class PizzaCommand implements Command {
 
 	private static final long channelID = 798356509583081513L;
-	private OrderManager manager;
+	private static OrderManager manager;
 
 	/**
 	 * creates a PizzaOrder of the Pizza minigame and registers it to the system.
