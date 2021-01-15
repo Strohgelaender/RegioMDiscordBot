@@ -28,6 +28,7 @@ public class ChatCommandListener extends ListenerAdapter {
 			new EvaluationSheetMessageCommand(),
 			new PurgeCommand(),
 			new SaveCommand(),
+			new RebootCommand(),
 			new PizzaCommand()
 	);
 
