@@ -43,6 +43,11 @@ public class EvaluationSheetMessageCommand implements Command {
 		return Set.of("robotdesign", "research", "corevalues").stream().anyMatch(command::startsWith);
 	}
 
+	@Override
+	public String getInfo() {
+		return "**robotdesign | research | corevalues**\n\tSendet einen Bewertungsbogen in den Channel.\n\tNutzt diesen, um eure Gedanken festzuhalten und um euch abzustimmen. **Judge only**";
+	}
+
 	Team getRandomTeam() {
 		List<Team> teams = TeamManager.getInstance().getTeams();
 		return teams.get(random.nextInt(teams.size()));

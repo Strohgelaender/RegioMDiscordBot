@@ -58,8 +58,6 @@ public interface Command {
 	 * @return A formatted String which contains helpful information about this command
 	 */
 	@CheckReturnValue
-	default String getInfo() {
-		return "No further information available for this command!";
-	}
+	String getInfo();
 
 }

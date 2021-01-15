@@ -2,18 +2,20 @@ package de.fll.regiom.listeners;
 
 import de.fll.regiom.commands.Command;
 import de.fll.regiom.commands.EvaluationSheetMessageCommand;
+import de.fll.regiom.commands.HelpCommand;
 import de.fll.regiom.commands.PizzaCommand;
 import de.fll.regiom.commands.PurgeCommand;
 import de.fll.regiom.commands.RebootCommand;
+import de.fll.regiom.commands.RoleHelper;
 import de.fll.regiom.commands.SaveCommand;
 import de.fll.regiom.commands.StartRobotGameCommand;
-import de.fll.regiom.model.Constants;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
@@ -22,7 +24,7 @@ public class ChatCommandListener extends ListenerAdapter {
 	private static final String PREFIX = "!";
 
 	//TODO find better way for this!
-	private final Set<Command> commands = Set.of(
+	private final Set<Command> commands = new HashSet<>(Set.of(
 			//new CreateStructureCommand(),
 			new StartRobotGameCommand(),
 			new EvaluationSheetMessageCommand(),
@@ -30,7 +32,11 @@ public class ChatCommandListener extends ListenerAdapter {
 			new SaveCommand(),
 			new RebootCommand(),
 			new PizzaCommand()
-	);
+	));
+
+	ChatCommandListener() {
+		commands.add(new HelpCommand(commands));
+	}
 
 	@Override
 	public void onMessageReceived(@NotNull MessageReceivedEvent event) {
@@ -51,7 +57,7 @@ public class ChatCommandListener extends ListenerAdapter {
 
 		Member member = event.getMember();
 		if (member == null) {
-			member = event.getJDA().getGuildById(Constants.GUILD_ID).getMember(event.getAuthor());
+			member = RoleHelper.toMember(event.getAuthor());
 		}
 
 		for (Command command : commands) {

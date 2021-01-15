@@ -43,4 +43,9 @@ public class RebootCommand implements Command {
 	public boolean isCalled(String command) {
 		return command.equals("restart") || command.equals("reboot");
 	}
+
+	@Override
+	public String getInfo() {
+		return "**restart**\n\tStartet den Bot neu. **Admin only**";
+	}
 }

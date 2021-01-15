@@ -27,4 +27,9 @@ public class SaveCommand implements Command {
 	public boolean canBeCalledBy(Member member) {
 		return RoleHelper.isAdmin(member);
 	}
+
+	@Override
+	public String getInfo() {
+		return "**save**\n\tSpeichert alle Daten. **Admin only**";
+	}
 }

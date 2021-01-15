@@ -23,4 +23,9 @@ public class StartRobotGameCommand implements Command {
 	public boolean isCalled(String command) {
 		return Set.of("startgame", "startrobotgame").stream().anyMatch(command::startsWith);
 	}
+
+	@Override
+	public String getInfo() {
+		return "**startgame**\n\tVerwendet diesen Command, um eine neue RobotGame-Runde zu registrieren.\n\tDie Erstellung des Tokens sowie das Token selbst müssen im Video zu sehen sein.";
+	}
 }

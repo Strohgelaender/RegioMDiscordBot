@@ -59,6 +59,11 @@ public class PizzaCommand implements Command {
 		return command.startsWith("order pizza");
 	}
 
+	@Override
+	public String getInfo() {
+		return "**order pizza** ingredients\n\tIn unser eigenen Pizzaria Discordio wird dir eine leckere Pizza zubereitet und von unserem Lieferdienst ausgeliefert. Guten Appetit!";
+	}
+
 	private static Set<Character> generateAllowed() {
 		Set<Character> allowed = new HashSet<>();
 		String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

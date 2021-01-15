@@ -39,4 +39,9 @@ public class PurgeCommand implements Command {
 	public boolean isCalled(String command) {
 		return command.matches(COMMAND + " \\d+");
 	}
+
+	@Override
+	public String getInfo() {
+		return "**" + COMMAND + "** amount\n\tLöscht die letzten n Nachrichten in diesem Channel. **Admin only**";
+	}
 }
