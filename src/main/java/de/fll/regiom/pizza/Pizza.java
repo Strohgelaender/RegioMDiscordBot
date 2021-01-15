@@ -46,7 +46,7 @@ public class Pizza {
 			String ing = ingredients[0];
 			if (ing.contains("extra") || ing.contains("viel"))
 				builder.append("mit ");
-			builder.append(firstToUpperCase(ingredients[0]));
+			builder.append(firstToUpperCase(ing));
 		} else {
 			builder.append("mit ");
 			for (int i = 0, ingredientsLength = ingredients.length - 1; i < ingredientsLength; i++) {

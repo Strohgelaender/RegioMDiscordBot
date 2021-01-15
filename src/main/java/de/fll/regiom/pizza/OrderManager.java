@@ -12,8 +12,8 @@ public class OrderManager { //TODO: MAYBE RENAME IN PIZZERIA
 	private final TreeMap<Integer, PizzaOrder> orders = new TreeMap<>();
 	private final PizzaFurnace furnace;
 	private final MessageChannel channel;
-	PizzaOrder[] activeOrders;
-	Thread baker;
+	private final PizzaOrder[] activeOrders;
+	private Thread baker;
 
 	/**
 	 * Creates a new OrderManager with a standard Furnace
@@ -69,10 +69,9 @@ public class OrderManager { //TODO: MAYBE RENAME IN PIZZERIA
 				try {
 					Thread.sleep(60000L);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					return;
 				}
 			}
-
 		});
 	}
 

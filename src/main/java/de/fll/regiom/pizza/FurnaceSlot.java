@@ -9,7 +9,7 @@ public class FurnaceSlot {
 	 * @param pizza The pizza which should be baked
 	 **/
 	public void bakePizza(Pizza pizza) {
-		if (this.pizza != null) {
+		if (this.pizza != null || pizza == null) {
 			System.out.println("An illegal attempt to bake a pizza has happened!");
 			return;
 		}
@@ -20,9 +20,9 @@ public class FurnaceSlot {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			pizza.setBaked();
+			this.pizza = null;
 		}).start();
-		pizza.setBaked();
-		this.pizza = null;
 	}
 
 	public Pizza getPizza() {

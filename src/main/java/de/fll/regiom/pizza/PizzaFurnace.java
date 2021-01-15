@@ -30,7 +30,7 @@ public class PizzaFurnace {
 	public PizzaFurnace(int size, int maxTemperature) {
 		if (size == 0)
 			size = 4;
-		if (size < 0)
+		else if (size < 0)
 			size = -size;
 		this.slots = new FurnaceSlot[size];
 		for (int i = 0; i < size; i++)
@@ -44,10 +44,10 @@ public class PizzaFurnace {
 	 * @return false, if all slots are full, otherwise true
 	 */
 	public boolean hasSpace() {
-		boolean hasSpace = false;
 		for (FurnaceSlot slot : slots)
-			hasSpace |= slot.getPizza() == null;
-		return hasSpace;
+			if (slot.getPizza() == null)
+				return true;
+		return false;
 	}
 
 	public int size() {
