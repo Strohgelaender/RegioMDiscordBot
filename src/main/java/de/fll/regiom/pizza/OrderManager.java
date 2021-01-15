@@ -46,11 +46,16 @@ public class OrderManager { //TODO: MAYBE RENAME IN PIZZERIA
 	private Thread generateBaker() {
 		return new Thread(() -> {
 			while (true) {
-				for (PizzaOrder order : activeOrders) {
-					if (order == null)
+				for (int i = 0, activeOrdersLength = activeOrders.length; i < activeOrdersLength; i++) {
+					PizzaOrder order = activeOrders[i];
+					if (order == null) {
+						activeOrders[i] = orders.pollFirstEntry().getValue();
 						continue;
-					if (order.getPizza().isBaked())
+					}
+					if (order.getPizza().isBaked()) {
 						deliverOrder(order);
+						activeOrders[i] = orders.pollFirstEntry().getValue();
+					}
 				}
 				FurnaceSlot[] slots = furnace.getSlots();
 				for (int i = 0; i < slots.length; i++) {
@@ -83,12 +88,6 @@ public class OrderManager { //TODO: MAYBE RENAME IN PIZZERIA
 		PizzaOrder pizzaOrder = (user != 138584634710687745L) ? new PizzaOrder(orderMessage, user) : new PizzaOrder(orderMessage, Integer.MAX_VALUE, user); //Ich = höchste Priorität
 		orders.put(pizzaOrder.getOrderID(), pizzaOrder);
 		users.get(user).add(pizzaOrder);
-		for (int i = 0; i < activeOrders.length; i++) {
-			if (activeOrders[i] == null) {
-				activeOrders[i] = orders.pollFirstEntry().getValue();
-				break;
-			}
-		}
 	}
 
 	/**
