@@ -1,5 +1,6 @@
 package de.fll.regiom.bot;
 
+import de.fll.regiom.io.TextImporter;
 import de.fll.regiom.listeners.ListenerManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -7,18 +8,18 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-
 import org.jetbrains.annotations.NotNull;
 
 import javax.security.auth.login.LoginException;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Bot {
 
 	public static void main(String[] args) {
-		String token = "";
+		String token = TextImporter.readFile(new File("token.txt"));
 		while (token != null) {
 			try {
 				JDA jda = JDABuilder.createDefault(token)
