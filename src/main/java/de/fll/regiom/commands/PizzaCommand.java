@@ -5,7 +5,6 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,28 +28,17 @@ public class PizzaCommand implements Command {
 		}
 		if (manager == null)
 			manager = new OrderManager(channel);
-		int forbiddenNameLength = 8;
-		Set<Character> allowed = generateAllowed();
-		Set<Character> forbidden = Set.of('f', 'r', 'i', 'd', 'o', 'l', 'n');
+
+		if (!command.matches("[A-Za-zäüöß.,:;()& ]+")) {
+			sendFailureMessage(channel, 3);
+			return false;
+		}
+		if (command.matches(".*f.*r.*i.*d.*o.*l.*i.*n.*")) {
+			sendFailureMessage(channel, 1);
+			return false;
+		}
+
 		int prefixLength = "order pizza".length();
-		for (int i = prefixLength; i < command.length(); i++) {
-			if (!allowed.contains(command.charAt(i))) {
-				sendFailureMessage(channel, 3);
-				return false;
-			}
-		}
-		for (int i = "order pizza".length(); i < command.length() - forbiddenNameLength; i++) {
-			String check = command.substring(i, i + 8);
-			int sum = 0;
-			for (Character c : forbidden) {
-				if (check.contains(String.valueOf(c)))
-					sum++;
-			}
-			if (sum >= 5) {
-				sendFailureMessage(channel, 1);
-				return false;
-			}
-		}
 		manager.registerOrder(event.getAuthor().getIdLong(), command.substring(prefixLength).trim());
 		channel.sendMessage("Du hast eine Pizza bestellt!").queue();
 		return true;
