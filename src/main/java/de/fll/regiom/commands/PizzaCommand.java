@@ -23,16 +23,19 @@ public class PizzaCommand implements Command {
 	@Override
 	public boolean execute(@NotNull MessageReceivedEvent event, String command) {
 		MessageChannel channel = event.getGuild().getTextChannelById(channelID);
-		if (channel == null)
+		if (channel == null) {
+			sendFailureMessage(event.getChannel(), 2);
 			return false;
+		}
 		if (manager == null)
 			manager = new OrderManager(channel);
 		int forbiddenNameLength = 8;
 		Set<Character> allowed = generateAllowed();
 		Set<Character> forbidden = Set.of('f', 'r', 'i', 'd', 'o', 'l', 'n');
-		for (int i = "order pizza".length(); i < command.length(); i++) {
+		int prefixLength = "order pizza".length();
+		for (int i = prefixLength; i < command.length(); i++) {
 			if (!allowed.contains(command.charAt(i))) {
-				sendFailureMessage(channel);
+				sendFailureMessage(channel, 3);
 				return false;
 			}
 		}
@@ -42,21 +45,25 @@ public class PizzaCommand implements Command {
 			for (Character c : forbidden) {
 				if (check.contains(String.valueOf(c)))
 					sum++;
-
 			}
 			if (sum >= 5) {
-				sendFailureMessage(channel);
+				sendFailureMessage(channel, 1);
 				return false;
 			}
-
 		}
-		manager.registerOrder(event.getAuthor().getIdLong(), command.substring("order pizza".length()).trim());
+		manager.registerOrder(event.getAuthor().getIdLong(), command.substring(prefixLength).trim());
 		channel.sendMessage("Du hast eine Pizza bestellt!").queue();
 		return true;
 	}
 
-	private void sendFailureMessage(MessageChannel channel) {
-		channel.sendMessage("failed to make Order: Invalid order Message!").queue();
+	private void sendFailureMessage(MessageChannel channel, int reasonCode) {
+		String reason = switch (reasonCode) {
+			case 1 -> "Is there anything left to say?";
+			case 2 -> "Chosen channel doesn't exist! Please let this be fixed by your developers";
+			case 3 -> "Illegal characters! Allowed are: [A-Z],[a-z],[ß.,:;()& ]";
+			default -> "Invalid order message!";
+		};
+		channel.sendMessage("failed to make order: " + reason).queue();
 	}
 
 	@Override
@@ -67,7 +74,7 @@ public class PizzaCommand implements Command {
 	private static Set<Character> generateAllowed() {
 		Set<Character> allowed = new HashSet<>();
 		String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		String special = "ß.,:()&";
+		String special = "ß.,:;()& ";
 		List<String> allowedStrings = List.of(alphabet, alphabet.toLowerCase(), special);
 		for (String s : allowedStrings) {
 			char[] chars = s.toCharArray();
