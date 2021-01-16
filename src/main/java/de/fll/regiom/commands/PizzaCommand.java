@@ -1,6 +1,7 @@
 package de.fll.regiom.commands;
 
 import de.fll.regiom.pizza.OrderManager;
+import de.fll.regiom.pizza.PizzaFurnace;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
@@ -26,8 +27,8 @@ public class PizzaCommand implements Command {
 			sendFailureMessage(event.getChannel(), 2);
 			return false;
 		}
-		if (manager == null)
-			manager = new OrderManager(channel);
+		if (manager == null) // Create Manager with whatever size you choose
+			manager = new OrderManager(new PizzaFurnace(8), channel);
 
 		if (!command.matches("[A-Za-zäüöß.,:;()& ]+")) {
 			sendFailureMessage(channel, 3);
