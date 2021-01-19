@@ -6,8 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
-
-import java.util.concurrent.CompletableFuture;
+import net.dv8tion.jda.internal.utils.tuple.Pair;
 
 public class EvaluationSheetMessageSender {
 
@@ -44,14 +43,28 @@ public class EvaluationSheetMessageSender {
 			builder.append(category.getEntries()[i].getTitle());
 			builder.append("\n");
 		}
-		CompletableFuture<Message> message = channel.sendMessage(builder.build()).submit();
-		for (int i = category.getEntries().length - 1; i >= 0; i--) {
-			for (int j = category.getEntries()[i].getOptions().length - 1; j >= 0; j--) {
-				String emote = indexToReactionEmoji(i, j);
-				message.thenAccept(msg -> msg.addReaction(emote).submit());
-			}
-		}
+		channel.sendMessage(builder.build()).queue(message -> addVotingReactions(category, message));
+	}
 
+	private void addVotingReactions(EvaluationCategory category, Message message) {
+		addVotingReaction(category, message, 0, 0);
+	}
+
+	private void addVotingReaction(EvaluationCategory category, Message message, int i, int j) {
+		Pair<Integer, Integer> nextIndex = nextIndex(category, i, j);
+		if (nextIndex == null)
+			message.addReaction(indexToReactionEmoji(i, j)).queue();
+		else
+			message.addReaction(indexToReactionEmoji(i, j)).queue(v ->
+					addVotingReaction(category, message, nextIndex.getLeft(), nextIndex.getRight()));
+	}
+
+	private Pair<Integer, Integer> nextIndex(EvaluationCategory category, int i, int j) {
+		if (j < category.getEntries()[i].getOptions().length - 1) {
+			return Pair.of(i, j + 1);
+		} else if (i < category.getEntries().length - 1)
+			return Pair.of(i + 1, 0);
+		return null;
 	}
 
 	private String indexToReactionEmoji(int i, int j) {
