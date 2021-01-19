@@ -58,6 +58,8 @@ public class Pizza {
 	}
 
 	private String firstToUpperCase(String old) {
+		if (old.isEmpty())
+			return old;
 		boolean extra = old.contains("extra");
 		boolean viel = old.contains("viel");
 		if (extra && !viel) {

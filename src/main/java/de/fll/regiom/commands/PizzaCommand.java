@@ -34,7 +34,7 @@ public class PizzaCommand implements Command {
 			sendFailureMessage(channel, 3);
 			return false;
 		}
-		if (command.matches(".*f.*r.*i.*d.*o.*l.*i.*n.*")) {
+		if (command.matches(".*f.*r.*i.*d.*o.*l?.*i?.*n?.*")) {
 			sendFailureMessage(channel, 1);
 			return false;
 		}

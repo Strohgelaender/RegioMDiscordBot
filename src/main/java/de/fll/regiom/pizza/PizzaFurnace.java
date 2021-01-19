@@ -9,7 +9,7 @@ public class PizzaFurnace {
 	 * Creates a furnace with 300°C maximum temperature and 4 slots
 	 */
 	public PizzaFurnace() {
-		this(4);
+		this(8);
 	}
 
 	/**
@@ -29,7 +29,7 @@ public class PizzaFurnace {
 	 */
 	public PizzaFurnace(int size, int maxTemperature) {
 		if (size == 0)
-			size = 4;
+			size = 8;
 		else if (size < 0)
 			size = -size;
 		this.slots = new FurnaceSlot[size];
