@@ -5,15 +5,8 @@ import de.fll.regiom.model.Storable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class StorageManager {
-
-	private static StorageManager instance;
-
-	public static StorageManager getInstance() {
-		if (instance == null)
-			instance = new StorageManager();
-		return instance;
-	}
+public enum StorageManager {
+	INSTANCE;
 
 	private final Set<Storable> storage = new HashSet<>();
 

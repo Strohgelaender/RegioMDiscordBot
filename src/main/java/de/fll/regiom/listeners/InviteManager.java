@@ -26,7 +26,6 @@ public class InviteManager extends ListenerAdapter {
 	public InviteManager(Map<String, Roleable> roles) {
 		this.roles = roles;
 		this.inviteUses = new HashMap<>();
-		;
 	}
 
 	public void setup(JDA jda) {

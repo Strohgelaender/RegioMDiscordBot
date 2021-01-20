@@ -24,20 +24,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class TeamManager implements Storable {
-
-
-	private static TeamManager instance;
-
-	public static TeamManager getInstance() {
-		if (instance == null) {
-			instance = new TeamManager();
-		}
-		return instance;
-	}
+public enum TeamManager implements Storable {
+	INSTANCE;
 
 	private TeamManager() {
-		StorageManager.getInstance().register(this);
+		StorageManager.INSTANCE.register(this);
 		load();
 	}
 

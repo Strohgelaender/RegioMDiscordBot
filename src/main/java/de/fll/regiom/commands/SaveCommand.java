@@ -9,7 +9,7 @@ public class SaveCommand implements Command {
 
 	@Override
 	public boolean execute(@NotNull MessageReceivedEvent event, String command) {
-		if (StorageManager.getInstance().saveAll()) {
+		if (StorageManager.INSTANCE.saveAll()) {
 			event.getChannel().sendMessage("Data saved successfully").queue();
 			return true;
 		} else {

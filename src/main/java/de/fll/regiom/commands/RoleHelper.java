@@ -25,7 +25,7 @@ public final class RoleHelper {
 	}
 
 	static boolean isTeam(@NotNull Member member) {
-		return TeamManager.getInstance().getTeamByMember(member).isPresent();
+		return TeamManager.INSTANCE.getTeamByMember(member).isPresent();
 	}
 
 	static boolean isReferee(@NotNull Member member) {

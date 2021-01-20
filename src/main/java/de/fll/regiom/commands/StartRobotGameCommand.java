@@ -15,7 +15,7 @@ public class StartRobotGameCommand implements Command {
 
 	@Override
 	public boolean execute(@NotNull MessageReceivedEvent event, String command) {
-		RobotGameTokenManager manager = RobotGameTokenManager.getInstance();
+		RobotGameTokenManager manager = RobotGameTokenManager.INSTANCE;
 		RobotGameAttempt attempt = manager.startRobotGame(event.getMember());
 
 		String now = attempt.getStartTime().format(FORMATTER);

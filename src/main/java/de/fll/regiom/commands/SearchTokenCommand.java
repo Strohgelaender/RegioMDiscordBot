@@ -25,7 +25,7 @@ public class SearchTokenCommand implements Command {
 			token = parts[2].toUpperCase(Locale.ROOT);
 		}
 
-		RobotGameTokenManager manager = RobotGameTokenManager.getInstance();
+		RobotGameTokenManager manager = RobotGameTokenManager.INSTANCE;
 		RobotGameAttempt attempt = manager.findByToken(token);
 		if (attempt == null)
 			return false;
