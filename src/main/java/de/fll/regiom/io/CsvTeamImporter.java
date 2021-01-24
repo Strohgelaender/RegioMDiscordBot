@@ -7,7 +7,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Imports Teamdata from FLL-CSV.
@@ -23,21 +25,20 @@ public class CsvTeamImporter {
 	}
 
 	public List<Team> importTeams() {
-		List<Team> teams = new ArrayList<>();
 		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
-			String line;
-			while ((line = bufferedReader.readLine()) != null) {
-				String[] fields = line.split(";");
-				if (fields.length == 0 || !fields[0].trim().equals("Team"))
-					continue;
-				int hotID = Integer.parseInt(fields[1].substring(0, 4));
-				String name = fields[1].substring(6).trim();
-				teams.add(new Team(name, hotID));
-			}
+			return bufferedReader.lines().map(s -> s.split(";"))
+					.filter(a -> a.length != 0 && a[0].trim().equals("Team"))
+					.map(this::fromStrings).collect(Collectors.toList());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return teams;
+		return Collections.emptyList();
+	}
+
+	private Team fromStrings(String... fields) {
+		int hotID = Integer.parseInt(fields[1].substring(0, 4));
+		String name = fields[1].substring(6).trim();
+		return new Team(name, hotID);
 	}
 
 }
