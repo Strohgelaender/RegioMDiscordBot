@@ -49,7 +49,7 @@ public class EvaluationSheetMessageCommand implements Command {
 	}
 
 	Team getRandomTeam() {
-		List<Team> teams = TeamManager.getInstance().getTeams();
+		List<Team> teams = TeamManager.INSTANCE.getTeams();
 		return teams.get(random.nextInt(teams.size()));
 	}
 }

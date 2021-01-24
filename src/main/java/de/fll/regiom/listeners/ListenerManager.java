@@ -1,6 +1,5 @@
 package de.fll.regiom.listeners;
 
-import de.fll.regiom.controller.TeamManager;
 import de.fll.regiom.io.JsonImporter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.hooks.EventListener;
@@ -14,8 +13,6 @@ public final class ListenerManager {
 	}
 
 	public Object[] createAllEventListeners() {
-		//setup Teams
-		TeamManager.getInstance();
 		InviteManager inviteManager = new InviteManager(JsonImporter.getInstance().importInvites());
 		inviteManager.setup(jda);
 		return new EventListener[]{
