@@ -26,7 +26,7 @@ public class CsvTeamImporter {
 	public List<Team> importTeams() {
 		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
 			return bufferedReader.lines().map(s -> s.split(";"))
-					.filter(a -> a.length != 0 && a[0].trim().equals("Team"))
+					.filter(a -> a.length != 0 && a[0].strip().equals("Team"))
 					.map(this::fromStrings).collect(Collectors.toList());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -36,7 +36,7 @@ public class CsvTeamImporter {
 
 	private Team fromStrings(String... fields) {
 		int hotID = Integer.parseInt(fields[1].substring(0, 4));
-		String name = fields[1].substring(6).trim();
+		String name = fields[1].substring(6).strip();
 		return new Team(name, hotID);
 	}
 

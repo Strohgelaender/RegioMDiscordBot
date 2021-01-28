@@ -58,7 +58,7 @@ public class ChatCommandListener extends ListenerAdapter {
 					event.getMessage().getContentDisplay());
 		}
 
-		String msg = event.getMessage().getContentRaw().toLowerCase(Locale.ROOT).trim();
+		String msg = event.getMessage().getContentRaw().toLowerCase(Locale.ROOT).strip();
 
 		if (!msg.startsWith(PREFIX))
 			return;
