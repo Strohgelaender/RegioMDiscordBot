@@ -53,7 +53,6 @@ public interface Command {
 
 	/**
 	 * Method adding support for global help-issuing commands.
-	 * The default implementation always returns that no help is available for the command
 	 *
 	 * @return A formatted String which contains helpful information about this command
 	 */
