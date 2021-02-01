@@ -15,6 +15,7 @@ public class Team implements Roleable {
 	private final String name;
 	private final int hotID;
 	private long roleID;
+	private long categoryID;
 	private long textChannelID;
 	private long voiceChannelID;
 	private long evaluationChannelID;
@@ -58,6 +59,10 @@ public class Team implements Roleable {
 		return evaluationChannelID;
 	}
 
+	public long getCategoryID() {
+		return categoryID;
+	}
+
 	public void setTextChannelID(long textChannelID) {
 		this.textChannelID = textChannelID;
 	}
@@ -68,6 +73,10 @@ public class Team implements Roleable {
 
 	public void setEvaluationChannelID(long evaluationChannelID) {
 		this.evaluationChannelID = evaluationChannelID;
+	}
+
+	public void setCategoryID(long categoryID) {
+		this.categoryID = categoryID;
 	}
 
 	@JsonIgnore
