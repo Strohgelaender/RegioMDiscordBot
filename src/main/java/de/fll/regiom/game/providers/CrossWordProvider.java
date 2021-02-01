@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class CrossWordProvider implements RiddleProvider<CrossWordRiddle> {
-	private static List<CrossWordRiddle> riddles; //TODO: CREATE RIDDLES AND HARDCODE THEM HERE
+	private static List<CrossWordRiddle> riddles; //TODO: CREATE RIDDLES AND LET THEM BE IMPORTED FROM A FILE
 	private Iterator<CrossWordRiddle> provider;
 
 	@Override

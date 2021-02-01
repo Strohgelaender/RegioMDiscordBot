@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class BlanksProvider implements RiddleProvider<BlanksRiddle> {
-	private static List<BlanksRiddle> riddles; //TODO: CREATE RIDDLES AND HARDCODE THEM HERE
+	private static List<BlanksRiddle> riddles; //TODO: CREATE RIDDLES AND LET THEM BE IMPORTED FROM A FILE
 	private Iterator<BlanksRiddle> provider;
 
 	@Override
