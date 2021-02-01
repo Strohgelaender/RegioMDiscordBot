@@ -14,11 +14,11 @@ public class Team implements Roleable {
 
 	private final String name;
 	private final int hotID;
-	private long roleID;
-	private long categoryID;
-	private long textChannelID;
-	private long voiceChannelID;
-	private long evaluationChannelID;
+	private long roleID = -1;
+	private long categoryID = -1;
+	private long textChannelID = -1;
+	private long voiceChannelID = -1;
+	private long evaluationChannelID = -1;
 
 	public Team(String name, int hotID) {
 		this.name = name;

@@ -37,7 +37,7 @@ public enum TeamManager implements Storable {
 
 	private static final String TEAM_CHANNEL_TOPIC_TEXT = "Dieser Channel ist nur für euch. Hier könnt ihr euch unterhalten, eine kleine Linkliste führen oder, oder, oder ... Einfach worauf auch immer ihr gerade Lust habt.";
 	private static final String TEAM_WELCOME_TEXT = """
-			Liebes Team *%s*
+			Liebes Team **%s**
 
 			dieser Channel ist privat und nur für euch!
 			Keine Juroren können lesen, was ihr hier schreibt oder hören, was ihr in eurem Sprachkanal besprecht.
@@ -128,7 +128,13 @@ public enum TeamManager implements Storable {
 			guild.getTextChannelById(team.getTextChannelID()).delete().queue();
 			guild.getVoiceChannelById(team.getVoiceChannelID()).delete().queue();
 			guild.getVoiceChannelById(team.getEvaluationChannelID()).delete().queue();
+
+			team.setCategoryID(-1);
+			team.setTextChannelID(-1);
+			team.setVoiceChannelID(-1);
+			team.setEvaluationChannelID(-1);
 		}
+		save();
 	}
 
 	public List<Team> getTeams() {
