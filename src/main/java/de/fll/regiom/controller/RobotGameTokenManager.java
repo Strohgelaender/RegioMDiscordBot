@@ -63,6 +63,11 @@ public enum RobotGameTokenManager implements Storable {
 		return String.format("Code: %s Team: %s \uD83D\uDD52 %s", attempt.getCode(), attempt.getTeam().getName(), attempt.getStartTime().format(FORMATTER));
 	}
 
+	public void clear() {
+		attempts.clear();
+		save();
+	}
+
 	@Override
 	public boolean save() {
 		JsonExporter.getInstance().exportTokens(attempts);

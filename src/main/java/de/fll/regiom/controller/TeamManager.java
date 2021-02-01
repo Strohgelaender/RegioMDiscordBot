@@ -63,6 +63,7 @@ public enum TeamManager implements Storable {
 		}
 	}
 
+	//TODO save team data after creation is done
 	public void createAllTeamareas(JDA jda) {
 		Guild guild = jda.getGuildById(Constants.GUILD_ID);
 		Category teamarea = jda.getCategoryById(Constants.TEAMAREA_CATEGORY_ID);

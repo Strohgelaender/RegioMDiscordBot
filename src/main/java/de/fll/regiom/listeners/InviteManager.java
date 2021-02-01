@@ -14,7 +14,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+//TODO implement Storeable and use StorageManager
 public class InviteManager extends ListenerAdapter {
+
+	private static InviteManager INSTANCE;
+
+	public static InviteManager getInstance() {
+		return INSTANCE;
+	}
 
 	private final Map<String, Roleable> roles;
 	private final Map<String, Integer> inviteUses;
@@ -24,8 +31,11 @@ public class InviteManager extends ListenerAdapter {
 	}
 
 	public InviteManager(Map<String, Roleable> roles) {
+		if (INSTANCE != null)
+			throw new IllegalStateException();
 		this.roles = roles;
 		this.inviteUses = new HashMap<>();
+		INSTANCE = this;
 	}
 
 	public void setup(JDA jda) {
@@ -71,6 +81,11 @@ public class InviteManager extends ListenerAdapter {
 
 	public void putInvite(String code, Roleable roleable) {
 		roles.put(code, roleable);
+		JsonExporter.getInstance().exportInvites(getRoles());
+	}
+
+	public void clear() {
+		roles.clear();
 		JsonExporter.getInstance().exportInvites(getRoles());
 	}
 }
