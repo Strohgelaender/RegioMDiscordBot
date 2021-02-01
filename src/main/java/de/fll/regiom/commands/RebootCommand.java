@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class RebootCommand implements Command {
 
@@ -41,7 +42,7 @@ public class RebootCommand implements Command {
 
 	@Override
 	public boolean isCalled(String command) {
-		return command.equals("restart") || command.equals("reboot");
+		return Stream.of("restart", "reboot").anyMatch(command::startsWith);
 	}
 
 	@Override

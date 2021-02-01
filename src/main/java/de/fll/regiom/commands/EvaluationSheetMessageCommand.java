@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
+import java.util.stream.Stream;
 
 public class EvaluationSheetMessageCommand implements Command {
 
@@ -40,7 +40,7 @@ public class EvaluationSheetMessageCommand implements Command {
 
 	@Override
 	public boolean isCalled(String command) {
-		return Set.of("robotdesign", "research", "corevalues").stream().anyMatch(command::startsWith);
+		return Stream.of("robotdesign", "research", "corevalues").anyMatch(command::startsWith);
 	}
 
 	@Override

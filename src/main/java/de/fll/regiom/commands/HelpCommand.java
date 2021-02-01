@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
+import java.util.stream.Stream;
 
 public class HelpCommand implements Command {
 
@@ -37,7 +38,7 @@ public class HelpCommand implements Command {
 
 	@Override
 	public boolean isCalled(String command) {
-		return command.startsWith("help");
+		return Stream.of("help", "hilfe").anyMatch(command::startsWith);
 	}
 
 	@Override

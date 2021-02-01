@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Set;
+import java.util.stream.Stream;
 
 import static de.fll.regiom.controller.RobotGameTokenManager.FORMATTER;
 import static de.fll.regiom.model.Constants.CODE_LOG_CHANNEL;
@@ -32,7 +32,7 @@ public class StartRobotGameCommand implements Command {
 
 	@Override
 	public boolean isCalled(String command) {
-		return Set.of("startgame", "startrobotgame", "robotgame").stream().anyMatch(command::startsWith);
+		return Stream.of("startgame", "startrobotgame", "robotgame").anyMatch(command::startsWith);
 	}
 
 	@Override
