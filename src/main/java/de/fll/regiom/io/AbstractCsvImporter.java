@@ -8,16 +8,16 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public abstract class AbstractCsvIN<T> {
+public abstract class AbstractCsvImporter<T> {
 	private final Path filePath;
 	private final String regex;
 
-	protected AbstractCsvIN(Path filePath, String splitter) {
+	protected AbstractCsvImporter(Path filePath, String splitter) {
 		this.filePath = filePath;
 		regex = splitter;
 	}
 
-	protected boolean filterer(String[] line) {
+	protected boolean filter(String[] line) {
 		return true;
 	}
 
@@ -30,7 +30,7 @@ public abstract class AbstractCsvIN<T> {
 
 	public List<T> fromLines() {
 		try {
-			return Files.lines(filePath).map(s -> s.split(regex)).filter(this::filterer)
+			return Files.lines(filePath).map(s -> s.split(regex)).filter(this::filter)
 					.map(this::fromStrings).filter(Objects::nonNull).collect(Collectors.toList());
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @see JsonExporter for regualar Imports (on Restarts)
  */
-public class CsvTeamImporter extends AbstractCsvIN<Team> {
+public class CsvTeamImporter extends AbstractCsvImporter<Team> {
 
 	public CsvTeamImporter(String path) {
 		super(Path.of(path), ";");
@@ -22,7 +22,7 @@ public class CsvTeamImporter extends AbstractCsvIN<Team> {
 	}
 
 	@Override
-	protected final boolean filterer(String[] line) {
+	protected final boolean filter(String[] line) {
 		return line.length != 0 && line[0].strip().equals("Team");
 	}
 
