@@ -1,18 +1,12 @@
 package de.fll.regiom.controller;
 
-import de.fll.regiom.io.CsvTeamImporter;
-import de.fll.regiom.io.JsonExporter;
-import de.fll.regiom.io.JsonImporter;
 import de.fll.regiom.model.Constants;
-import de.fll.regiom.model.Storable;
 import de.fll.regiom.model.Team;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Category;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildChannel;
-import net.dv8tion.jda.api.entities.ISnowflake;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.requests.restaction.ChannelAction;
 
@@ -21,18 +15,10 @@ import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
-public enum TeamManager implements Storable {
+public enum DiscordTeamStructureManager {
 	INSTANCE;
-
-	TeamManager() {
-		StorageManager.INSTANCE.register(this);
-		load();
-	}
 
 	private static final EnumSet<Permission> PERMISSIONS_VIEW_TEXT_AND_VOICE_CHANNEL = EnumSet.of(Permission.VIEW_CHANNEL, Permission.VOICE_CONNECT);
 
@@ -51,49 +37,87 @@ public enum TeamManager implements Storable {
 
 			Viel Spaß und Erfolg wünscht euch das Team der FLL München!""".formatted(Constants.SUPPORT_CHANNEL);
 
-	private List<Team> teams;
-
-	public void createAllTeamRoles(JDA jda) {
+	public void createAllTeamRoles(JDA jda, List<Team> teams) {
 		Guild guid = jda.getGuildById(Constants.GUILD_ID);
-		Role teamBaseRole = guid.getRoleById(Constants.TEAM_ROLE_ID);
 		Objects.requireNonNull(guid);
+		Role teamBaseRole = guid.getRoleById(Constants.TEAM_ROLE_ID);
 		Objects.requireNonNull(teamBaseRole);
 		for (Team team : teams) {
-			guid.createCopyOfRole(teamBaseRole)
-					.setName(team.getName())
-					.setColor((Integer) null)
-					.queue(role -> team.setRoleID(role.getIdLong()));
+			createTeamRole(guid, team, teamBaseRole);
 		}
 	}
 
-	//TODO save team data after creation is done
-	public void createAllTeamareas(JDA jda) {
+	public CompletableFuture<?> createAllTeamareas(JDA jda, List<Team> teams) {
 		Guild guild = jda.getGuildById(Constants.GUILD_ID);
 		Category teamarea = jda.getCategoryById(Constants.TEAMAREA_CATEGORY_ID);
 		Objects.requireNonNull(guild);
 		Objects.requireNonNull(teamarea);
 
 		int teamsSize = teams.size();
-
 		var allFutures = new CompletableFuture[teamsSize];
 
 		teams.sort(Comparator.comparingInt(Team::getHotID));
 		for (int i = 0; i < teamsSize; i++) {
-			Team team = teams.get(i);
-			allFutures[i] = creatTeamCategory(guild, teamarea, team, i).thenComposeAsync(category -> {
-				team.setCategoryID(category.getIdLong());
-
-				return CompletableFuture.allOf(createTeamTextChannel(category, team),
-						createTeamPrivateVoiceChannel(category, team),
-						createTeamEvaluationVoiceChannel(category, team));
-
-			});
+			allFutures[i] = createTeamArea(guild, teamarea, teams.get(i), i);
 		}
 
-		CompletableFuture.allOf(allFutures)
-				.thenAcceptAsync(v -> save())
+		return CompletableFuture.allOf(allFutures)
 				.thenComposeAsync(v -> guild.getTextChannelById(Constants.LOG_CHANNEL_ID)
 						.sendMessage("All Teamareas created successfully.").submit());
+	}
+
+	/**
+	 * Updates the welcome text which was sent to every channel of every team.
+	 */
+	public void updateAllWelcomeMessages(JDA jda, List<Team> teams) {
+		Guild guild = jda.getGuildById(Constants.GUILD_ID);
+		Objects.requireNonNull(jda);
+		for (Team team : teams) {
+			if (team.getTextChannelID() <= 0)
+				continue;
+
+			guild.getTextChannelById(team.getTextChannelID()).getHistoryFromBeginning(1).queue(messageHistory -> {
+				if (messageHistory.getRetrievedHistory().isEmpty())
+					return;
+				messageHistory.getRetrievedHistory().get(0).editMessage(createWelcomeTeamText(team)).queue();
+			});
+		}
+	}
+
+	public void removeAllTeamareas(JDA jda, List<Team> teams) {
+		Guild guild = jda.getGuildById(Constants.GUILD_ID);
+		Objects.requireNonNull(guild);
+		for (Team team : teams) {
+			if (team.getCategoryID() <= 0)
+				continue;
+
+			guild.getCategoryById(team.getCategoryID()).delete().queue();
+			guild.getTextChannelById(team.getTextChannelID()).delete().queue();
+			guild.getVoiceChannelById(team.getVoiceChannelID()).delete().queue();
+			guild.getVoiceChannelById(team.getEvaluationChannelID()).delete().queue();
+
+			team.setCategoryID(-1);
+			team.setTextChannelID(-1);
+			team.setVoiceChannelID(-1);
+			team.setEvaluationChannelID(-1);
+		}
+	}
+
+	public void createTeamRole(Guild guild, Team team, Role teamBaseRole) {
+		guild.createCopyOfRole(teamBaseRole)
+				.setName(team.getName())
+				.setColor((Integer) null)
+				.queue(role -> team.setRoleID(role.getIdLong()));
+	}
+
+	public CompletableFuture<?> createTeamArea(Guild guild, Category teamarea, Team team, int i) {
+		return creatTeamCategory(guild, teamarea, team, i).thenComposeAsync(category -> {
+			team.setCategoryID(category.getIdLong());
+			return CompletableFuture.allOf(createTeamTextChannel(category, team),
+					createTeamPrivateVoiceChannel(category, team),
+					createTeamEvaluationVoiceChannel(category, team));
+
+		});
 	}
 
 	private CompletableFuture<Category> creatTeamCategory(Guild guild, Category teamarea, Team team, int offset) {
@@ -122,22 +146,7 @@ public enum TeamManager implements Storable {
 				.submit().thenAccept(channel -> team.setEvaluationChannelID(channel.getIdLong()));
 	}
 
-	/**
-	 * Updates the welcome text which was sent to every channel of every team.
-	 */
-	public void updateAllWelcomeMessages(JDA jda) {
-		Guild guild = jda.getGuildById(Constants.GUILD_ID);
-		Objects.requireNonNull(jda);
-		for (Team team : teams) {
-			guild.getTextChannelById(team.getTextChannelID()).getHistoryFromBeginning(1).queue(messageHistory -> {
-				if (messageHistory.getRetrievedHistory().isEmpty())
-					return;
-				messageHistory.getRetrievedHistory().get(0).editMessage(createWelcomeTeamText(team)).queue();
-			});
-		}
-	}
-
-	private static String createWelcomeTeamText(Team team) {
+	private String createWelcomeTeamText(Team team) {
 		return String.format(TEAM_WELCOME_TEXT, team.getName());
 	}
 
@@ -151,53 +160,5 @@ public enum TeamManager implements Storable {
 
 	private <T extends GuildChannel> ChannelAction<T> setEveryonePermission(ChannelAction<T> channelAction) {
 		return channelAction.addRolePermissionOverride(channelAction.getGuild().getPublicRole().getIdLong(), Collections.emptySet(), PERMISSIONS_VIEW_TEXT_AND_VOICE_CHANNEL);
-	}
-
-	public void removeAllTeamareas(JDA jda) {
-		Guild guild = jda.getGuildById(Constants.GUILD_ID);
-		Objects.requireNonNull(guild);
-		for (Team team : teams) {
-			if (team.getCategoryID() <= 0)
-				continue;
-			guild.getCategoryById(team.getCategoryID()).delete().queue();
-			guild.getTextChannelById(team.getTextChannelID()).delete().queue();
-			guild.getVoiceChannelById(team.getVoiceChannelID()).delete().queue();
-			guild.getVoiceChannelById(team.getEvaluationChannelID()).delete().queue();
-
-			team.setCategoryID(-1);
-			team.setTextChannelID(-1);
-			team.setVoiceChannelID(-1);
-			team.setEvaluationChannelID(-1);
-		}
-		save();
-	}
-
-	public List<Team> getTeams() {
-		return teams;
-	}
-
-	public Optional<Team> getTeamByMember(Member member) {
-		Set<Long> roles = member.getRoles().stream().map(ISnowflake::getIdLong).collect(Collectors.toSet());
-		for (Team team : teams) {
-			if (roles.contains(team.getRoleID())) {
-				return Optional.of(team);
-			}
-		}
-		return Optional.empty();
-	}
-
-	@Override
-	public boolean save() {
-		JsonExporter exporter = JsonExporter.getInstance();
-		exporter.exportTeams(teams);
-		//exporter.exportInvites();
-		return true;
-	}
-
-	@Override
-	public void load() {
-		teams = JsonImporter.getInstance().importTeams();
-		if (teams.isEmpty()) //Falback: Read Teams from HoT-Export
-			teams = new CsvTeamImporter("./myregions.csv").importTeams();
 	}
 }

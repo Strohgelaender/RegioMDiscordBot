@@ -1,6 +1,6 @@
 package de.fll.regiom.commands;
 
-import de.fll.regiom.controller.TeamManager;
+import de.fll.regiom.controller.TeamRepository;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -15,9 +15,9 @@ public class CreateStructureCommand implements Command {
 	private static final String COMMAND = "create ";
 
 	private final Map<Set<String>, Consumer<JDA>> actions = Map.of(
-			Set.of("roles"), TeamManager.INSTANCE::createAllTeamRoles,
-			Set.of("channels", "teamareas"), TeamManager.INSTANCE::createAllTeamareas,
-			Set.of("welcometext", "teammessage", "text", "message"), TeamManager.INSTANCE::updateAllWelcomeMessages
+			Set.of("roles"), TeamRepository.INSTANCE::createAllTeamRoles,
+			Set.of("channels", "teamareas"), TeamRepository.INSTANCE::createAllTeamareas,
+			Set.of("welcometext", "teammessage", "text", "message"), TeamRepository.INSTANCE::updateAllWelcomeMessages
 	);
 
 	@Override

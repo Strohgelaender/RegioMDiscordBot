@@ -1,6 +1,6 @@
 package de.fll.regiom.commands;
 
-import de.fll.regiom.controller.RobotGameTokenManager;
+import de.fll.regiom.controller.RobotGameTokenRepository;
 import de.fll.regiom.model.RobotGameAttempt;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -8,20 +8,19 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Stream;
 
-import static de.fll.regiom.controller.RobotGameTokenManager.FORMATTER;
+import static de.fll.regiom.controller.RobotGameTokenRepository.FORMATTER;
 import static de.fll.regiom.model.Constants.CODE_LOG_CHANNEL;
 
 public class StartRobotGameCommand implements Command {
 
 	@Override
 	public boolean execute(@NotNull MessageReceivedEvent event, String command) {
-		RobotGameTokenManager manager = RobotGameTokenManager.INSTANCE;
-		RobotGameAttempt attempt = manager.startRobotGame(event.getMember());
+		RobotGameAttempt attempt = RobotGameTokenRepository.INSTANCE.startRobotGame(event.getMember());
 
 		String now = attempt.getStartTime().format(FORMATTER);
 
 		event.getChannel().sendMessage("Der Code lautet **" + attempt.getCode() + "**\nViel Erfolg beim Robot Game!\n\uD83D\uDD52 " + now).queue();
-		event.getGuild().getTextChannelById(CODE_LOG_CHANNEL).sendMessage(manager.formatMessage(attempt)).queue();
+		event.getGuild().getTextChannelById(CODE_LOG_CHANNEL).sendMessage(RobotGameTokenRepository.INSTANCE.formatMessage(attempt)).queue();
 		return true;
 	}
 

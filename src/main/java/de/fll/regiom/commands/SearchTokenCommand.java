@@ -1,6 +1,6 @@
 package de.fll.regiom.commands;
 
-import de.fll.regiom.controller.RobotGameTokenManager;
+import de.fll.regiom.controller.RobotGameTokenRepository;
 import de.fll.regiom.model.RobotGameAttempt;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -17,7 +17,7 @@ public class SearchTokenCommand implements Command {
 			return false;
 
 		String token;
-		if (parts[1].length() == RobotGameTokenManager.CODE_LENGTH)
+		if (parts[1].length() == RobotGameTokenRepository.CODE_LENGTH)
 			token = parts[1].toUpperCase(Locale.ROOT);
 		else {
 			if (parts.length < 3)
@@ -25,12 +25,11 @@ public class SearchTokenCommand implements Command {
 			token = parts[2].toUpperCase(Locale.ROOT);
 		}
 
-		RobotGameTokenManager manager = RobotGameTokenManager.INSTANCE;
-		RobotGameAttempt attempt = manager.findByToken(token);
+		RobotGameAttempt attempt = RobotGameTokenRepository.INSTANCE.findByToken(token);
 		if (attempt == null)
 			return false;
 
-		event.getChannel().sendMessage(manager.formatMessage(attempt)).queue();
+		event.getChannel().sendMessage(RobotGameTokenRepository.INSTANCE.formatMessage(attempt)).queue();
 		return true;
 	}
 
@@ -41,7 +40,7 @@ public class SearchTokenCommand implements Command {
 
 	@Override
 	public boolean isCalled(String command) {
-		return command.matches(String.format("((search|find)? ?(token|game)) [A-Za-z]{%d}", RobotGameTokenManager.CODE_LENGTH));
+		return command.matches(String.format("((search|find)? ?(token|game)) [A-Za-z]{%d}", RobotGameTokenRepository.CODE_LENGTH));
 	}
 
 	@Override
