@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public abstract class RiddleCommand implements Command {
 
-	protected static final String PREFIX = "riddle ";
+	protected static final String RIDDLE_PREFIX = "riddle ";
 
 	@Override
 	public boolean canBeCalledBy(Member member) {
@@ -23,7 +23,7 @@ public abstract class RiddleCommand implements Command {
 		return team.isPresent();
 	}
 
-	protected GameController.GameProgressState stateFromMember(@NotNull MessageReceivedEvent event){
+	protected GameController.GameProgressState stateFromMember(@NotNull MessageReceivedEvent event) {
 		Member member = RoleHelper.toMember(event.getAuthor());
 		Optional<Team> team = TeamRepository.INSTANCE.getTeamByMember(member);
 		assert team.isPresent();

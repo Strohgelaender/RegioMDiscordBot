@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class RiddleSolveCommand extends RiddleCommand {
 
-	private static final String COMMAND = PREFIX + "solve ";
+	private static final String COMMAND = RIDDLE_PREFIX + "solve ";
 
 	@Override
 	public boolean execute(@NotNull MessageReceivedEvent event, String command) {
@@ -17,7 +17,7 @@ public class RiddleSolveCommand extends RiddleCommand {
 			event.getChannel().sendMessage("Es gibt keine Lösung für dieses \"Rätsel\"").queue();
 			return true;
 		}
-		String solution = command.substring(COMMAND.length());
+		String solution = command.substring(COMMAND.length()).strip();
 		boolean correct = riddle.checkSolution(solution);
 		if (correct)
 			state.makeProgress();
