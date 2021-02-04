@@ -1,5 +1,6 @@
-package de.fll.regiom.commands;
+package de.fll.regiom.commands.riddleCommands;
 
+import de.fll.regiom.commands.Command;
 import de.fll.regiom.controller.GameController;
 import de.fll.regiom.controller.TeamRepository;
 import de.fll.regiom.game.Riddle;
@@ -8,33 +9,24 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class RiddleSolveCommand implements Command {
+public class RiddleSolveCommand extends RiddleCommand {
 
-	private static final String COMMAND = "solveriddle ";
+	private static final String COMMAND = PREFIX + "solve ";
 
 	@Override
 	public boolean execute(@NotNull MessageReceivedEvent event, String command) {
-		Member member = event.getMember();
-		if (member == null)
-			return false;
-		Team team = TeamRepository.INSTANCE.getTeamByMember(member).orElse(null);
-		if (team == null) {
-			event.getChannel().sendMessage("Du bist kein Teammitglied und nimmst nicht am Rätselspiel teil").queue();
-			return true;
-		}
-		GameController.GameProgressState state = GameController.INSTANCE.getStateOfTeam(team);
+		GameController.GameProgressState state = stateFromMember(event);
 		Riddle riddle = state.getActualRiddle();
 		if (riddle == null) {
 			event.getChannel().sendMessage("Es gibt keine Lösung für dieses \"Rätsel\"").queue();
 			return true;
 		}
 		String solution = command.substring(COMMAND.length());
-		if (riddle.checkSolution(solution)) {
+		boolean correct = riddle.checkSolution(solution);
+		if (correct)
 			state.makeProgress();
-			event.getChannel().sendMessage("Eure Lösung " + solution + " ist richtig!").queue();
-		} else {
-			event.getChannel().sendMessage("Eure Lösung " + solution + " ist leider falsch!").queue();
-		}
+		String message = "Eure Lösung " + solution + " ist " + (correct ? " richtig!" : " leider falsch!");
+		event.getChannel().sendMessage(message).queue();
 		return true;
 	}
 
