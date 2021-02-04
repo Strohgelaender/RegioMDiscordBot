@@ -71,7 +71,7 @@ public enum TeamRepository implements Storable {
 	@Override
 	public void load() {
 		teams = JsonImporter.getInstance().importTeams();
-		if (teams.isEmpty()) //Falback: Read Teams from HoT-Export
+		if (teams.isEmpty()) //Fallback: Read Teams from HoT-Export
 			teams = new CsvTeamImporter("./myregions.csv").importTeams();
 	}
 }
