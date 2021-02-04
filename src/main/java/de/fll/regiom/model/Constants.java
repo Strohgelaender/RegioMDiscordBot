@@ -17,4 +17,5 @@ public abstract class Constants {
 
 	public static final long LOG_CHANNEL_ID = 795624150555295775L;
 	public static final long CODE_LOG_CHANNEL = 798316567242735637L;
+	public static final long SUPPORT_CHANNEL = 795648383309578240L;
 }

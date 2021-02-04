@@ -38,16 +38,18 @@ public enum TeamManager implements Storable {
 
 	private static final String TEAM_CHANNEL_TOPIC_TEXT = "Dieser Channel ist nur für euch. Hier könnt ihr euch unterhalten, eine kleine Linkliste führen oder, oder, oder ... Einfach worauf auch immer ihr gerade Lust habt.";
 	private static final String TEAM_WELCOME_TEXT = """
-			Liebes Team **%s**
+			Liebes Team **%%s**
 
 			dieser Channel ist privat und nur für euch!
 			Keine Juroren können lesen, was ihr hier schreibt oder hören, was ihr in eurem Sprachkanal besprecht.
 			Nutzt diesen Channel für alles, was gerade anfällt. Ihr könnt Notizen schreiben, Linklisten führen oder einfach Emotes spammen.
-						
+
 			Im anderen Sprachkanal "Bewertung" findet eure Jury-Session statt. Dort wird die Jury euch besuchen kommen.
 			Sobald ihr bereit seid, tretet einfach diesem Sprachkanal bei oder nutzt den Bot-Command '!ready', um euch verschieben zu lassen, falls ihr im Team-Sprachkanal seid.
-						
-			Viel Spaß und Erfolg wünscht euch das Team der FLL München!""";
+
+			Bei Fragen oder Problemen könnt ihr den <#%d>-Channel nutzen. Dort findet ihr auch ein FAQ.
+
+			Viel Spaß und Erfolg wünscht euch das Team der FLL München!""".formatted(Constants.SUPPORT_CHANNEL);
 
 	private List<Team> teams;
 
