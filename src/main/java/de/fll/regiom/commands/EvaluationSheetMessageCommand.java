@@ -1,7 +1,7 @@
 package de.fll.regiom.commands;
 
 import de.fll.regiom.controller.EvaluationSheetMessageSender;
-import de.fll.regiom.controller.TeamManager;
+import de.fll.regiom.controller.TeamRepository;
 import de.fll.regiom.model.Team;
 import de.fll.regiom.model.evaluation.CoreValueEvaluationSheet;
 import de.fll.regiom.model.evaluation.ResearchEvaluationSheet;
@@ -49,7 +49,7 @@ public class EvaluationSheetMessageCommand implements Command {
 	}
 
 	Team getRandomTeam() {
-		List<Team> teams = TeamManager.INSTANCE.getTeams();
+		List<Team> teams = TeamRepository.INSTANCE.getTeams();
 		return teams.get(random.nextInt(teams.size()));
 	}
 }

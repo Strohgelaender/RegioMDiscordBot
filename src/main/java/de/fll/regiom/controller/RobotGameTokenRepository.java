@@ -15,15 +15,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
-public enum RobotGameTokenManager implements Storable {
+public enum RobotGameTokenRepository implements Storable {
 	INSTANCE;
 
 	public static final int CODE_LENGTH = 6;
 	public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
-	private static RobotGameTokenManager instance;
-
-	private RobotGameTokenManager() {
+	RobotGameTokenRepository() {
 		StorageManager.INSTANCE.register(this);
 		load();
 	}
@@ -32,7 +30,7 @@ public enum RobotGameTokenManager implements Storable {
 	private final Map<String, RobotGameAttempt> attempts = new HashMap<>();
 
 	public RobotGameAttempt startRobotGame(Member member) {
-		Optional<Team> team = TeamManager.INSTANCE.getTeamByMember(member);
+		Optional<Team> team = TeamRepository.INSTANCE.getTeamByMember(member);
 		if (team.isEmpty()) {
 			System.out.println("[StartRobotGame] No Team found for Member " + member.getEffectiveName());
 			return null;

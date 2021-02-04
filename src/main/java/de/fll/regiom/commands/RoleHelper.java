@@ -1,6 +1,6 @@
 package de.fll.regiom.commands;
 
-import de.fll.regiom.controller.TeamManager;
+import de.fll.regiom.controller.TeamRepository;
 import de.fll.regiom.model.Constants;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -25,7 +25,7 @@ public final class RoleHelper {
 	}
 
 	static boolean isTeam(@NotNull Member member) {
-		return TeamManager.INSTANCE.getTeamByMember(member).isPresent();
+		return TeamRepository.INSTANCE.getTeamByMember(member).isPresent();
 	}
 
 	static boolean isReferee(@NotNull Member member) {

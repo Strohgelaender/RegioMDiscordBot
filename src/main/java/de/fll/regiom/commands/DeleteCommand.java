@@ -1,7 +1,7 @@
 package de.fll.regiom.commands;
 
-import de.fll.regiom.controller.RobotGameTokenManager;
-import de.fll.regiom.controller.TeamManager;
+import de.fll.regiom.controller.RobotGameTokenRepository;
+import de.fll.regiom.controller.TeamRepository;
 import de.fll.regiom.listeners.InviteManager;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -15,9 +15,9 @@ public class DeleteCommand implements Command {
 	private static final String COMMAND = "delete ";
 
 	private final Map<String, Consumer<MessageReceivedEvent>> actions = Map.of(
-			"tokens", e -> RobotGameTokenManager.INSTANCE.clear(),
-			"channels", e -> TeamManager.INSTANCE.removeAllTeamareas(e.getJDA()),
-			"teamareas", e -> TeamManager.INSTANCE.removeAllTeamareas(e.getJDA()),
+			"tokens", e -> RobotGameTokenRepository.INSTANCE.clear(),
+			"channels", e -> TeamRepository.INSTANCE.removeAllTeamareas(e.getJDA()),
+			"teamareas", e -> TeamRepository.INSTANCE.removeAllTeamareas(e.getJDA()),
 			"invites", e -> InviteManager.getInstance().clear()
 	);
 
