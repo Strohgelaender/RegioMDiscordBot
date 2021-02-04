@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public enum TeamManager implements Storable {
@@ -70,14 +71,27 @@ public enum TeamManager implements Storable {
 		Objects.requireNonNull(guild);
 		Objects.requireNonNull(teamarea);
 
-		teams.stream().sorted(Comparator.comparingInt(Team::getHotID)).forEachOrdered(team -> {
-			Category category = creatTeamCategory(guild, teamarea, team);
-			team.setCategoryID(category.getIdLong());
+		int teamsSize = teams.size();
 
-			createTeamTextChannel(category, team);
-			createTeamPrivateVoiceChannel(category, team);
-			createTeamEvaluationVoiceChannel(category, team);
-		});
+		var allFutures = new CompletableFuture[teamsSize];
+
+		teams.sort(Comparator.comparingInt(Team::getHotID));
+		for (int i = 0; i < teamsSize; i++) {
+			Team team = teams.get(i);
+			allFutures[i] = creatTeamCategory(guild, teamarea, team, i).thenComposeAsync(category -> {
+				team.setCategoryID(category.getIdLong());
+
+				return CompletableFuture.allOf(createTeamTextChannel(category, team),
+						createTeamPrivateVoiceChannel(category, team),
+						createTeamEvaluationVoiceChannel(category, team));
+
+			});
+		}
+
+		CompletableFuture.allOf(allFutures)
+				.thenAcceptAsync(v -> save())
+				.thenComposeAsync(v -> guild.getTextChannelById(Constants.LOG_CHANNEL_ID)
+						.sendMessage("All Teamareas created successfully.").submit());
 	}
 
 	private Category creatTeamCategory(Guild guild, Category teamarea, Team team) {
