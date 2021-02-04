@@ -108,7 +108,7 @@ public enum TeamManager implements Storable {
 				.setTopic(TEAM_CHANNEL_TOPIC_TEXT)
 				.submit().thenComposeAsync(channel -> {
 					team.setTextChannelID(channel.getIdLong());
-					return channel.sendMessage(String.format(TEAM_WELCOME_TEXT, team.getName())).submit();
+					return channel.sendMessage(createWelcomeTeamText(team)).submit();
 				});
 	}
 
@@ -120,6 +120,25 @@ public enum TeamManager implements Storable {
 	private CompletableFuture<?> createTeamEvaluationVoiceChannel(Category teamCategory, Team team) {
 		return setPermissions(teamCategory.createVoiceChannel("\uD83D\uDCCB┇Bewertung"), team, true)
 				.submit().thenAccept(channel -> team.setEvaluationChannelID(channel.getIdLong()));
+	}
+
+	/**
+	 * Updates the welcome text which was sent to every channel of every team.
+	 */
+	public void updateAllWelcomeMessages(JDA jda) {
+		Guild guild = jda.getGuildById(Constants.GUILD_ID);
+		Objects.requireNonNull(jda);
+		for (Team team : teams) {
+			guild.getTextChannelById(team.getTextChannelID()).getHistoryFromBeginning(1).queue(messageHistory -> {
+				if (messageHistory.getRetrievedHistory().isEmpty())
+					return;
+				messageHistory.getRetrievedHistory().get(0).editMessage(createWelcomeTeamText(team)).queue();
+			});
+		}
+	}
+
+	private static String createWelcomeTeamText(Team team) {
+		return String.format(TEAM_WELCOME_TEXT, team.getName());
 	}
 
 	private <T extends GuildChannel> ChannelAction<T> setPermissions(ChannelAction<T> channelAction, Team team, boolean volunteerAccess) {
