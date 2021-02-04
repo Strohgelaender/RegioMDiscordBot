@@ -67,14 +67,6 @@ public enum GameController implements Storable {
 		private Riddle actual;
 		private Phase phase;
 
-		public Riddle getActualRiddle() {
-			if (phase == SOLVED)
-				return null;
-			if (actual == null)
-				actual = INSTANCE.phaseProviders.get(phase).getNewRiddle();
-			return actual;
-		}
-
 		public GameProgressState() {
 			this(CROSSWORD);
 		}
@@ -82,6 +74,14 @@ public enum GameController implements Storable {
 		public GameProgressState(Phase phase) {
 			this.phase = phase;
 			actual = null;
+		}
+
+		public Riddle getActualRiddle() {
+			if (phase == SOLVED)
+				return null;
+			if (actual == null)
+				actual = INSTANCE.phaseProviders.get(phase).getNewRiddle();
+			return actual;
 		}
 
 		public Phase getPhase() {
@@ -92,12 +92,13 @@ public enum GameController implements Storable {
 			if (phase == SOLVED)
 				return false;
 			phase = Phase.values()[phase.ordinal() + 1];
-			actual = INSTANCE.phaseProviders.get(phase).getNewRiddle();
+			if (phase != SOLVED)
+				actual = INSTANCE.phaseProviders.get(phase).getNewRiddle();
 			return true;
 		}
 	}
 
-	public Riddle getRiddleOfTeam(Team team) {
+	public GameProgressState getStateOfTeam(Team team) {
 		if (team == null)
 			return null;
 		GameProgressState state;
@@ -105,7 +106,11 @@ public enum GameController implements Storable {
 			state = new GameProgressState();
 			gameState.put(team, state);
 		} else state = gameState.get(team);
-		return state.getActualRiddle();
+		return state;
+	}
+
+	public static void main(String[] args) {
+		System.out.println(INSTANCE.phaseProviders.get(DECRYPT).getNewRiddle());
 	}
 
 }
