@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class RiddleSendCommand extends RiddleCommand {
 
-	private static final String COMMAND = PREFIX + "current ";
+	private static final String COMMAND = PREFIX + "current";
 
 	@Override
 	public boolean execute(@NotNull MessageReceivedEvent event, String command) {

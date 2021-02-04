@@ -4,7 +4,6 @@ import de.fll.regiom.commands.Command;
 import de.fll.regiom.commands.RoleHelper;
 import de.fll.regiom.controller.GameController;
 import de.fll.regiom.controller.TeamRepository;
-import de.fll.regiom.game.Riddle;
 import de.fll.regiom.model.Team;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;

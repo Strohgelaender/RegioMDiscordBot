@@ -1,11 +1,7 @@
 package de.fll.regiom.commands.riddleCommands;
 
-import de.fll.regiom.commands.Command;
 import de.fll.regiom.controller.GameController;
-import de.fll.regiom.controller.TeamRepository;
 import de.fll.regiom.game.Riddle;
-import de.fll.regiom.model.Team;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +21,7 @@ public class RiddleSolveCommand extends RiddleCommand {
 		boolean correct = riddle.checkSolution(solution);
 		if (correct)
 			state.makeProgress();
-		String message = "Eure Lösung " + solution + " ist " + (correct ? " richtig!" : " leider falsch!");
+		String message = "Eure Lösung " + solution + " ist" + (correct ? " richtig!" : " leider falsch!");
 		event.getChannel().sendMessage(message).queue();
 		return true;
 	}

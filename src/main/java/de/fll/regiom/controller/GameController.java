@@ -84,7 +84,6 @@ public enum GameController implements Storable {
 			return actual;
 		}
 
-
 		public Phase getPhase() {
 			return phase;
 		}
