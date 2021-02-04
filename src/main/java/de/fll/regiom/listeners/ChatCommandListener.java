@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
 
+import java.lang.reflect.Modifier;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
@@ -26,6 +27,8 @@ public class ChatCommandListener extends ListenerAdapter {
 	private static Set<Command> setupCommands() {
 		Reflections reflections = new Reflections("de.fll.regiom.commands");
 		return reflections.getSubTypesOf(Command.class).stream()
+				//remove abstract classes
+				.filter(command -> !Modifier.isAbstract(command.getModifiers()))
 				//make sure the default constructor exists (to remove classes like HelpCommand)
 				.filter(command -> Stream.of(command.getDeclaredConstructors()).anyMatch(constructor -> constructor.getParameterCount() == 0))
 				//create a new instance using this constructor
