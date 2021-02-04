@@ -24,7 +24,7 @@ public class RiddleSendCommand implements Command {
 			event.getChannel().sendMessage("Du bist kein Teammitglied und nimmst nicht am Rätselspiel teil").queue();
 			return true;
 		}
-		Riddle riddle = GameController.INSTANCE.getRiddleOfTeam(team.get());
+		Riddle riddle = GameController.INSTANCE.getStateOfTeam(team.get()).getActualRiddle();
 		if (riddle == null) {
 			event.getChannel().sendMessage("Glückwunsch! Ihr seid schon mit dem Rätsel fertig!").queue();
 			return true;

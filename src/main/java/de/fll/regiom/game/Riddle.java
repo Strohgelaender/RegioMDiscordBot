@@ -12,16 +12,16 @@ public abstract class Riddle {
 		this.url = url;
 	}
 
-	abstract boolean checkSolution(String s);
+	public abstract boolean checkSolution(String s);
 
 	public String getRiddleUrl() {
 		return url;
 	}
 
-	public MessageEmbed getMessage(){
+	public MessageEmbed getMessage() {
 		EmbedBuilder builder = new EmbedBuilder();
 		builder.setTitle("EUER RÄTSEL");
-		builder.setImage("https://cdn.discordapp.com/attachments/795627126232449034/806979930910228580/unknown.png");
+		builder.setImage(url);
 		return builder.build();
 	}
 }

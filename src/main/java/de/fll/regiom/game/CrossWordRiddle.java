@@ -12,8 +12,8 @@ public class CrossWordRiddle extends Riddle {
 	}
 
 	@Override
-	boolean checkSolution(String s) {
-		return solution.equals(s);
+	public boolean checkSolution(String s) {
+		return solution.equalsIgnoreCase(s);
 	}
 
 }

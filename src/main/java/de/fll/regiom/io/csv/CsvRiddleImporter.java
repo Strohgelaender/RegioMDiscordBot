@@ -27,6 +27,7 @@ public class CsvRiddleImporter extends AbstractCsvImporter<Riddle> {
 	protected Riddle fromStrings(String[] line) {
 		try {
 			String url = line[1];
+			System.out.println(line[2]);
 			return switch (Phase.valueOf(line[0])) {
 				case BLANKS -> new BlanksRiddle(url,
 						Arrays.stream(Arrays.copyOfRange(line, 2, line.length)).

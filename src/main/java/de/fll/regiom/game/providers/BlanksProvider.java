@@ -18,5 +18,6 @@ public class BlanksProvider implements RiddleProvider<BlanksRiddle> {
 
 	public void setRiddles(List<BlanksRiddle> riddles) {
 		this.riddles = riddles;
+		this.provider = riddles.listIterator();
 	}
 }

@@ -13,7 +13,7 @@ public class BlanksRiddle extends Riddle {
 	}
 
 	@Override
-	boolean checkSolution(String s) {
+	public boolean checkSolution(String s) {
 		try {
 			Set<Integer> attempt = Arrays.stream(s.split(" ")).map(Integer::parseInt).collect(Collectors.toSet());
 			return attempt.equals(solutionNumbers);
