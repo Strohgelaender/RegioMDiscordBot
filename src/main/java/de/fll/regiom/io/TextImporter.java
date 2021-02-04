@@ -27,7 +27,7 @@ public final class TextImporter {
 	}
 
 	public static String readResourceFile(String filename) {
-		InputStream inputStream = AbstractJsonIO.class.getClassLoader().getResourceAsStream(filename);
+		InputStream inputStream = TextImporter.class.getClassLoader().getResourceAsStream(filename);
 		return read(inputStream);
 	}
 

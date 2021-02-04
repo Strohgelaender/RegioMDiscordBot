@@ -1,4 +1,4 @@
-package de.fll.regiom.io;
+package de.fll.regiom.io.csv;
 
 import de.fll.regiom.controller.GameController.GameProgressState.Phase;
 import de.fll.regiom.game.BlanksRiddle;
@@ -25,7 +25,6 @@ public class CsvRiddleImporter extends AbstractCsvImporter<Riddle> {
 
 	@Override
 	protected Riddle fromStrings(String[] line) {
-
 		try {
 			String url = line[1];
 			return switch (Phase.valueOf(line[0])) {

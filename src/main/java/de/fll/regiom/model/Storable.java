@@ -1,10 +1,12 @@
 package de.fll.regiom.model;
 
+import de.fll.regiom.io.json.JsonExporter;
+
 /**
  * Used to save data to storage
  *
  * @see de.fll.regiom.commands.SaveCommand
- * @see de.fll.regiom.io.JsonExporter
+ * @see JsonExporter
  */
 public interface Storable {
 

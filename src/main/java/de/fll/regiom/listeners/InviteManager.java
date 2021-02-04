@@ -1,6 +1,6 @@
 package de.fll.regiom.listeners;
 
-import de.fll.regiom.io.JsonExporter;
+import de.fll.regiom.io.json.JsonExporter;
 import de.fll.regiom.model.Constants;
 import de.fll.regiom.model.Roleable;
 import net.dv8tion.jda.api.JDA;

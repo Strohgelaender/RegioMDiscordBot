@@ -1,8 +1,8 @@
 package de.fll.regiom.controller;
 
-import de.fll.regiom.io.CsvTeamImporter;
-import de.fll.regiom.io.JsonExporter;
-import de.fll.regiom.io.JsonImporter;
+import de.fll.regiom.io.csv.CsvTeamImporter;
+import de.fll.regiom.io.json.JsonExporter;
+import de.fll.regiom.io.json.JsonImporter;
 import de.fll.regiom.model.Storable;
 import de.fll.regiom.model.Team;
 import net.dv8tion.jda.api.JDA;

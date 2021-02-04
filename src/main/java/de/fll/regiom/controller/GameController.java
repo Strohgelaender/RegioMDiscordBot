@@ -8,7 +8,7 @@ import de.fll.regiom.game.providers.BlanksProvider;
 import de.fll.regiom.game.providers.CrossWordProvider;
 import de.fll.regiom.game.providers.DecryptProvider;
 import de.fll.regiom.game.providers.RiddleProvider;
-import de.fll.regiom.io.CsvRiddleImporter;
+import de.fll.regiom.io.csv.CsvRiddleImporter;
 import de.fll.regiom.model.Storable;
 import de.fll.regiom.model.Team;
 
@@ -20,7 +20,13 @@ import java.util.stream.Collectors;
 import static de.fll.regiom.controller.GameController.GameProgressState.Phase.*;
 
 public enum GameController implements Storable {
-	INSTANCE();
+	INSTANCE;
+
+	private final Map<Team, GameProgressState> gameState;
+	private final CrossWordProvider crossWordProvider;
+	private final BlanksProvider blanksProvider;
+	private final DecryptProvider decryptProvider;
+	private final Map<GameProgressState.Phase, RiddleProvider<? extends Riddle>> phaseProviders;
 
 	GameController() {
 		StorageManager.INSTANCE.register(this);
@@ -31,12 +37,6 @@ public enum GameController implements Storable {
 		phaseProviders = Map.of(CROSSWORD, crossWordProvider, BLANKS, blanksProvider, DECRYPT, decryptProvider);
 		load();
 	}
-
-	private final Map<Team, GameProgressState> gameState;
-	private final CrossWordProvider crossWordProvider;
-	private final BlanksProvider blanksProvider;
-	private final DecryptProvider decryptProvider;
-	private final Map<GameProgressState.Phase, RiddleProvider<? extends Riddle>> phaseProviders;
 
 	@Override
 	public boolean save() {
@@ -76,8 +76,7 @@ public enum GameController implements Storable {
 		}
 
 		public GameProgressState() {
-			phase = CROSSWORD;
-			actual = null;
+			this(CROSSWORD);
 		}
 
 		public GameProgressState(Phase phase) {

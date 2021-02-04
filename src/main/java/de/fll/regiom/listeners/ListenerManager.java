@@ -1,6 +1,6 @@
 package de.fll.regiom.listeners;
 
-import de.fll.regiom.io.JsonImporter;
+import de.fll.regiom.io.json.JsonImporter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.hooks.EventListener;
 

@@ -1,4 +1,4 @@
-package de.fll.regiom.io;
+package de.fll.regiom.io.json;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import de.fll.regiom.model.RobotGameAttempt;

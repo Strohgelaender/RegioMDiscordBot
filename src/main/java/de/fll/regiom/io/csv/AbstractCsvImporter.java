@@ -1,4 +1,4 @@
-package de.fll.regiom.io;
+package de.fll.regiom.io.csv;
 
 import java.io.IOException;
 import java.nio.file.Files;

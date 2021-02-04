@@ -1,4 +1,4 @@
-package de.fll.regiom.io;
+package de.fll.regiom.io.json;
 
 import de.fll.regiom.model.RobotGameAttempt;
 import de.fll.regiom.model.Roleable;

@@ -1,7 +1,7 @@
 package de.fll.regiom.controller;
 
-import de.fll.regiom.io.JsonExporter;
-import de.fll.regiom.io.JsonImporter;
+import de.fll.regiom.io.json.JsonExporter;
+import de.fll.regiom.io.json.JsonImporter;
 import de.fll.regiom.model.RobotGameAttempt;
 import de.fll.regiom.model.Storable;
 import de.fll.regiom.model.Team;
