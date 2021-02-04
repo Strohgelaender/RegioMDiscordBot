@@ -3,8 +3,8 @@ package de.fll.regiom.game;
 public class DecryptRiddle extends Riddle {
 	private final String solution;
 
-	protected DecryptRiddle(String riddle, String solution) {
-		super(riddle);
+	public DecryptRiddle(String url, String solution) {
+		super(url);
 		this.solution = solution;
 	}
 

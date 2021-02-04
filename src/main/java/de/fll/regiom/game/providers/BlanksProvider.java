@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class BlanksProvider implements RiddleProvider<BlanksRiddle> {
-	private static List<BlanksRiddle> riddles; //TODO: CREATE RIDDLES AND LET THEM BE IMPORTED FROM A FILE
+	private List<BlanksRiddle> riddles;
 	private Iterator<BlanksRiddle> provider;
 
 	@Override
@@ -14,5 +14,9 @@ public class BlanksProvider implements RiddleProvider<BlanksRiddle> {
 		if (!provider.hasNext())
 			provider = riddles.listIterator();
 		return provider.next();
+	}
+
+	public void setRiddles(List<BlanksRiddle> riddles) {
+		this.riddles = riddles;
 	}
 }

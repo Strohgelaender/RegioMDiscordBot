@@ -7,9 +7,9 @@ import java.util.stream.Collectors;
 public class BlanksRiddle extends Riddle {
 	private final Set<Integer> solutionNumbers;
 
-	protected BlanksRiddle(String riddle, Integer... solutionNumbers) {
-		super(riddle);
-		this.solutionNumbers = Set.of(solutionNumbers);
+	public BlanksRiddle(String url, Set<Integer> solutionNumbers) {
+		super(url);
+		this.solutionNumbers = solutionNumbers;
 	}
 
 	@Override

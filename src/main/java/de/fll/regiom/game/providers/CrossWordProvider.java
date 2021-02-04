@@ -6,7 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 
 public class CrossWordProvider implements RiddleProvider<CrossWordRiddle> {
-	private static List<CrossWordRiddle> riddles; //TODO: CREATE RIDDLES AND LET THEM BE IMPORTED FROM A FILE
+
+	private List<CrossWordRiddle> riddles;
 	private Iterator<CrossWordRiddle> provider;
 
 	@Override
@@ -14,5 +15,10 @@ public class CrossWordProvider implements RiddleProvider<CrossWordRiddle> {
 		if (!provider.hasNext())
 			provider = riddles.listIterator();
 		return provider.next();
+	}
+
+	public void setRiddles(List<CrossWordRiddle> riddles) {
+		this.riddles = riddles;
+		provider = riddles.listIterator();
 	}
 }

@@ -1,28 +1,42 @@
 package de.fll.regiom.controller;
 
+import de.fll.regiom.game.BlanksRiddle;
+import de.fll.regiom.game.CrossWordRiddle;
+import de.fll.regiom.game.DecryptRiddle;
+import de.fll.regiom.game.Riddle;
 import de.fll.regiom.game.providers.BlanksProvider;
 import de.fll.regiom.game.providers.CrossWordProvider;
 import de.fll.regiom.game.providers.DecryptProvider;
+import de.fll.regiom.game.providers.RiddleProvider;
+import de.fll.regiom.io.CsvRiddleImporter;
 import de.fll.regiom.model.Storable;
 import de.fll.regiom.model.Team;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static de.fll.regiom.controller.GameController.GameProgressState.Phase.*;
 
 public enum GameController implements Storable {
-	INSTANCE;
+	INSTANCE();
 
 	GameController() {
 		StorageManager.INSTANCE.register(this);
+		gameState = new HashMap<>();
+		crossWordProvider = new CrossWordProvider();
+		blanksProvider = new BlanksProvider();
+		decryptProvider = new DecryptProvider();
+		phaseProviders = Map.of(CROSSWORD, crossWordProvider, BLANKS, blanksProvider, DECRYPT, decryptProvider);
 		load();
 	}
 
-	private final Map<Team, GameProgressState> gameState = new HashMap<>();
-	private final CrossWordProvider provider = new CrossWordProvider();
-	private final BlanksProvider blanksProvider = new BlanksProvider();
-	private final DecryptProvider decryptProvider = new DecryptProvider();
+	private final Map<Team, GameProgressState> gameState;
+	private final CrossWordProvider crossWordProvider;
+	private final BlanksProvider blanksProvider;
+	private final DecryptProvider decryptProvider;
+	private final Map<GameProgressState.Phase, RiddleProvider<? extends Riddle>> phaseProviders;
 
 	@Override
 	public boolean save() {
@@ -32,22 +46,43 @@ public enum GameController implements Storable {
 
 	@Override
 	public void load() {
-		//TODO
+		CsvRiddleImporter importer = new CsvRiddleImporter("./RiddleTableDummy.txt");
+		Map<Class<? extends Riddle>, List<Riddle>> byTypes = importer.byTypes();
+		System.out.println(byTypes);
+		crossWordProvider.setRiddles(byTypes.get(CrossWordRiddle.class).stream().map(r -> (CrossWordRiddle) r).
+				collect(Collectors.toList()));
+		blanksProvider.setRiddles(byTypes.get(BlanksRiddle.class).stream().map(r -> (BlanksRiddle) r).
+				collect(Collectors.toList()));
+		List<Riddle> decrypt = byTypes.get(DecryptRiddle.class);
+		assert (!decrypt.isEmpty());
+		decryptProvider.setRiddle((DecryptRiddle) decrypt.get(0));
 	}
 
 	public static class GameProgressState {
-		enum Phase {
+
+		public enum Phase {
 			CROSSWORD, BLANKS, DECRYPT, SOLVED
 		}
 
+		private Riddle actual;
 		private Phase phase;
+
+		public Riddle getActualRiddle() {
+			if (phase == SOLVED)
+				return null;
+			if (actual == null)
+				actual = INSTANCE.phaseProviders.get(phase).getNewRiddle();
+			return actual;
+		}
 
 		public GameProgressState() {
 			phase = CROSSWORD;
+			actual = null;
 		}
 
 		public GameProgressState(Phase phase) {
 			this.phase = phase;
+			actual = null;
 		}
 
 		public Phase getPhase() {
@@ -58,7 +93,20 @@ public enum GameController implements Storable {
 			if (phase == SOLVED)
 				return false;
 			phase = Phase.values()[phase.ordinal() + 1];
+			actual = INSTANCE.phaseProviders.get(phase).getNewRiddle();
 			return true;
 		}
 	}
+
+	public Riddle getRiddleOfTeam(Team team) {
+		if (team == null)
+			return null;
+		GameProgressState state;
+		if (!gameState.containsKey(team)) {
+			state = new GameProgressState();
+			gameState.put(team, state);
+		} else state = gameState.get(team);
+		return state.getActualRiddle();
+	}
+
 }
