@@ -52,14 +52,19 @@ public enum TeamRepository implements Storable {
 		//.thenApply(v -> InviteManager.getInstance().save());
 	}
 
+	@NotNull
 	public Optional<Team> getTeamByMember(@NotNull Member member) {
 		Set<Long> roles = member.getRoles().stream().map(ISnowflake::getIdLong).collect(Collectors.toSet());
-		for (Team team : teams) {
-			if (roles.contains(team.getRoleID())) {
-				return Optional.of(team);
-			}
-		}
-		return Optional.empty();
+		return teams.stream()
+				.filter(team -> roles.contains(team.getRoleID()))
+				.findFirst();
+	}
+
+	@NotNull
+	public Optional<Team> getTeamByHotId(int hotId) {
+		return teams.stream()
+				.filter(team -> team.getHotID() == hotId)
+				.findFirst();
 	}
 
 	@Override
