@@ -2,6 +2,7 @@ package de.fll.regiom.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
 
@@ -12,20 +13,23 @@ public class RobotGameAttempt {
 	private final LocalDateTime startTime;
 
 	@JsonCreator
-	public RobotGameAttempt(@JsonProperty("code") String code, @JsonProperty("team") Team team, @JsonProperty("startTime") LocalDateTime startTime) {
+	public RobotGameAttempt(@JsonProperty("code") @NotNull String code, @JsonProperty("team") @NotNull Team team, @JsonProperty("startTime") @NotNull LocalDateTime startTime) {
 		this.code = code;
 		this.team = team;
 		this.startTime = startTime;
 	}
 
+	@NotNull
 	public String getCode() {
 		return code;
 	}
 
+	@NotNull
 	public Team getTeam() {
 		return team;
 	}
 
+	@NotNull
 	public LocalDateTime getStartTime() {
 		return startTime;
 	}

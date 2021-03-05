@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.requests.restaction.ChannelAction;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -47,7 +48,8 @@ public enum DiscordTeamStructureManager {
 		}
 	}
 
-	public CompletableFuture<?> createAllTeamareas(JDA jda, List<Team> teams) {
+	@NotNull
+	public CompletableFuture<?> createAllTeamareas(@NotNull JDA jda, @NotNull List<Team> teams) {
 		Guild guild = jda.getGuildById(Constants.GUILD_ID);
 		Category teamarea = jda.getCategoryById(Constants.TEAMAREA_CATEGORY_ID);
 		Objects.requireNonNull(guild);
@@ -69,7 +71,7 @@ public enum DiscordTeamStructureManager {
 	/**
 	 * Updates the welcome text which was sent to every channel of every team.
 	 */
-	public void updateAllWelcomeMessages(JDA jda, List<Team> teams) {
+	public void updateAllWelcomeMessages(@NotNull JDA jda, @NotNull List<Team> teams) {
 		Guild guild = jda.getGuildById(Constants.GUILD_ID);
 		Objects.requireNonNull(jda);
 		for (Team team : teams) {
@@ -84,7 +86,7 @@ public enum DiscordTeamStructureManager {
 		}
 	}
 
-	public void removeAllTeamareas(JDA jda, List<Team> teams) {
+	public void removeAllTeamareas(@NotNull JDA jda, @NotNull List<Team> teams) {
 		Guild guild = jda.getGuildById(Constants.GUILD_ID);
 		Objects.requireNonNull(guild);
 		for (Team team : teams) {
@@ -103,14 +105,15 @@ public enum DiscordTeamStructureManager {
 		}
 	}
 
-	public void createTeamRole(Guild guild, Team team, Role teamBaseRole) {
+	public void createTeamRole(@NotNull Guild guild, @NotNull Team team, @NotNull Role teamBaseRole) {
 		guild.createCopyOfRole(teamBaseRole)
 				.setName(team.getName())
 				.setColor((Integer) null)
 				.queue(role -> team.setRoleID(role.getIdLong()));
 	}
 
-	public CompletableFuture<?> createTeamArea(Guild guild, Category teamarea, Team team, int i) {
+	@NotNull
+	public CompletableFuture<?> createTeamArea(@NotNull Guild guild, @NotNull Category teamarea, @NotNull Team team, int i) {
 		return creatTeamCategory(guild, teamarea, team, i).thenComposeAsync(category -> {
 			team.setCategoryID(category.getIdLong());
 			return CompletableFuture.allOf(createTeamTextChannel(category, team),
@@ -120,14 +123,16 @@ public enum DiscordTeamStructureManager {
 		});
 	}
 
-	private CompletableFuture<Category> creatTeamCategory(Guild guild, Category teamarea, Team team, int offset) {
+	@NotNull
+	private CompletableFuture<Category> creatTeamCategory(@NotNull Guild guild, @NotNull Category teamarea, @NotNull Team team, int offset) {
 		return setEveryonePermission(guild.createCategory(team.toString()))
 				.addRolePermissionOverride(team.getRoleID(), PERMISSIONS_VIEW_TEXT_AND_VOICE_CHANNEL, Collections.emptySet())
 				.setPosition(teamarea.getPosition() + offset + 1) //+1 for Game-Category (may change later)
 				.submit();
 	}
 
-	private CompletableFuture<?> createTeamTextChannel(Category teamCategory, Team team) {
+	@NotNull
+	private CompletableFuture<?> createTeamTextChannel(@NotNull Category teamCategory, @NotNull Team team) {
 		return setPermissions(teamCategory.createTextChannel("\uD83D\uDCAC┇team-textchat"), team, false)
 				.setTopic(TEAM_CHANNEL_TOPIC_TEXT)
 				.submit().thenComposeAsync(channel -> {
@@ -136,21 +141,25 @@ public enum DiscordTeamStructureManager {
 				});
 	}
 
-	private CompletableFuture<?> createTeamPrivateVoiceChannel(Category teamCategory, Team team) {
+	@NotNull
+	private CompletableFuture<?> createTeamPrivateVoiceChannel(@NotNull Category teamCategory, @NotNull Team team) {
 		return setPermissions(teamCategory.createVoiceChannel("\uD83D\uDD0A┇Team Voicechat"), team, false)
 				.submit().thenAccept(channel -> team.setVoiceChannelID(channel.getIdLong()));
 	}
 
-	private CompletableFuture<?> createTeamEvaluationVoiceChannel(Category teamCategory, Team team) {
+	@NotNull
+	private CompletableFuture<?> createTeamEvaluationVoiceChannel(@NotNull Category teamCategory, @NotNull Team team) {
 		return setPermissions(teamCategory.createVoiceChannel("\uD83D\uDCCB┇Bewertung"), team, true)
 				.submit().thenAccept(channel -> team.setEvaluationChannelID(channel.getIdLong()));
 	}
 
-	private String createWelcomeTeamText(Team team) {
+	@NotNull
+	private String createWelcomeTeamText(@NotNull Team team) {
 		return String.format(TEAM_WELCOME_TEXT, team.getName());
 	}
 
-	private <T extends GuildChannel> ChannelAction<T> setPermissions(ChannelAction<T> channelAction, Team team, boolean volunteerAccess) {
+	@NotNull
+	private <T extends GuildChannel> ChannelAction<T> setPermissions(@NotNull ChannelAction<T> channelAction, @NotNull Team team, boolean volunteerAccess) {
 		ChannelAction<T> channel = setEveryonePermission(channelAction)
 				.addRolePermissionOverride(team.getRoleID(), PERMISSIONS_VIEW_TEXT_AND_VOICE_CHANNEL, Collections.emptySet());
 		if (volunteerAccess)
@@ -158,7 +167,8 @@ public enum DiscordTeamStructureManager {
 		return channel;
 	}
 
-	private <T extends GuildChannel> ChannelAction<T> setEveryonePermission(ChannelAction<T> channelAction) {
+	@NotNull
+	private <T extends GuildChannel> ChannelAction<T> setEveryonePermission(@NotNull ChannelAction<T> channelAction) {
 		return channelAction.addRolePermissionOverride(channelAction.getGuild().getPublicRole().getIdLong(), Collections.emptySet(), PERMISSIONS_VIEW_TEXT_AND_VOICE_CHANNEL);
 	}
 }

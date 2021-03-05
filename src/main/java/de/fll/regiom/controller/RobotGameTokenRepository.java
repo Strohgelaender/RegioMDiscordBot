@@ -6,6 +6,8 @@ import de.fll.regiom.model.RobotGameAttempt;
 import de.fll.regiom.model.Storable;
 import de.fll.regiom.model.Team;
 import net.dv8tion.jda.api.entities.Member;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -29,7 +31,8 @@ public enum RobotGameTokenRepository implements Storable {
 	private final Random random = new SecureRandom();
 	private final Map<String, RobotGameAttempt> attempts = new HashMap<>();
 
-	public RobotGameAttempt startRobotGame(Member member) {
+	@Nullable
+	public RobotGameAttempt startRobotGame(@NotNull Member member) {
 		Optional<Team> team = TeamRepository.INSTANCE.getTeamByMember(member);
 		if (team.isEmpty()) {
 			System.out.println("[StartRobotGame] No Team found for Member " + member.getEffectiveName());
@@ -46,10 +49,12 @@ public enum RobotGameTokenRepository implements Storable {
 		return attempt;
 	}
 
+	@Nullable
 	public RobotGameAttempt findByToken(String token) {
 		return attempts.getOrDefault(token, null);
 	}
 
+	@NotNull
 	private String generateRandomCode() {
 		return random.ints('A', 'Z' + 1)
 				.limit(CODE_LENGTH)
@@ -57,7 +62,8 @@ public enum RobotGameTokenRepository implements Storable {
 				.toString();
 	}
 
-	public String formatMessage(RobotGameAttempt attempt) {
+	@NotNull
+	public String formatMessage(@NotNull RobotGameAttempt attempt) {
 		return String.format("Code: %s Team: %s \uD83D\uDD52 %s", attempt.getCode(), attempt.getTeam().getName(), attempt.getStartTime().format(FORMATTER));
 	}
 

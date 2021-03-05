@@ -11,10 +11,11 @@ import java.util.stream.Stream;
 import static de.fll.regiom.controller.RobotGameTokenRepository.FORMATTER;
 import static de.fll.regiom.model.Constants.CODE_LOG_CHANNEL;
 
+@Deprecated
 public class StartRobotGameCommand implements Command {
 
 	@Override
-	public boolean execute(@NotNull MessageReceivedEvent event, String command) {
+	public boolean execute(@NotNull MessageReceivedEvent event, @NotNull String command) {
 		RobotGameAttempt attempt = RobotGameTokenRepository.INSTANCE.startRobotGame(event.getMember());
 
 		String now = attempt.getStartTime().format(FORMATTER);
@@ -25,12 +26,12 @@ public class StartRobotGameCommand implements Command {
 	}
 
 	@Override
-	public boolean canBeCalledBy(Member member) {
+	public boolean canBeCalledBy(@NotNull Member member) {
 		return RoleHelper.isTeam(member);
 	}
 
 	@Override
-	public boolean isCalled(String command) {
+	public boolean isCalled(@NotNull String command) {
 		return Stream.of("startgame", "startrobotgame", "robotgame").anyMatch(command::startsWith);
 	}
 

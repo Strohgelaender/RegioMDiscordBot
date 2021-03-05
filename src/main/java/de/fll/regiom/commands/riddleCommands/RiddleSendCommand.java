@@ -9,7 +9,7 @@ public class RiddleSendCommand extends RiddleCommand {
 	private static final String COMMAND = RIDDLE_PREFIX + "current";
 
 	@Override
-	public boolean execute(@NotNull MessageReceivedEvent event, String command) {
+	public boolean execute(@NotNull MessageReceivedEvent event, @NotNull String command) {
 		Riddle riddle = stateFromMember(event).getActualRiddle();
 		if (riddle == null) {
 			event.getChannel().sendMessage("Glückwunsch! Ihr seid schon mit dem Rätsel fertig!").queue();
@@ -20,7 +20,7 @@ public class RiddleSendCommand extends RiddleCommand {
 	}
 
 	@Override
-	public boolean isCalled(String command) {
+	public boolean isCalled(@NotNull String command) {
 		return command.startsWith(COMMAND);
 	}
 

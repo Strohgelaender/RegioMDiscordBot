@@ -16,9 +16,7 @@ public abstract class RiddleCommand implements Command {
 	protected static final String RIDDLE_PREFIX = "riddle ";
 
 	@Override
-	public boolean canBeCalledBy(Member member) {
-		if (member == null)
-			return false;
+	public boolean canBeCalledBy(@NotNull Member member) {
 		Optional<Team> team = TeamRepository.INSTANCE.getTeamByMember(member);
 		return team.isPresent();
 	}

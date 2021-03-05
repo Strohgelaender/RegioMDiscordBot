@@ -14,7 +14,7 @@ public class RebootCommand implements Command {
 	private static final File BOT_FILE = new File("RegioMDiscordBot-1.0-jar-with-dependencies.jar");
 
 	@Override
-	public boolean execute(@NotNull MessageReceivedEvent event, String command) {
+	public boolean execute(@NotNull MessageReceivedEvent event, @NotNull String command) {
 		if (!BOT_FILE.exists())
 			return false;
 
@@ -36,12 +36,12 @@ public class RebootCommand implements Command {
 	}
 
 	@Override
-	public boolean canBeCalledBy(Member member) {
+	public boolean canBeCalledBy(@NotNull Member member) {
 		return member.getIdLong() == 138584634710687745L;
 	}
 
 	@Override
-	public boolean isCalled(String command) {
+	public boolean isCalled(@NotNull String command) {
 		return Stream.of("restart", "reboot").anyMatch(command::startsWith);
 	}
 

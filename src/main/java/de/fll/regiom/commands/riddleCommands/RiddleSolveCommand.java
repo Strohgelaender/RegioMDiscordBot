@@ -10,7 +10,7 @@ public class RiddleSolveCommand extends RiddleCommand {
 	private static final String COMMAND = RIDDLE_PREFIX + "solve ";
 
 	@Override
-	public boolean execute(@NotNull MessageReceivedEvent event, String command) {
+	public boolean execute(@NotNull MessageReceivedEvent event, @NotNull String command) {
 		GameController.GameProgressState state = stateFromMember(event);
 		Riddle riddle = state.getActualRiddle();
 		if (riddle == null) {
@@ -27,7 +27,7 @@ public class RiddleSolveCommand extends RiddleCommand {
 	}
 
 	@Override
-	public boolean isCalled(String command) {
+	public boolean isCalled(@NotNull String command) {
 		return command.startsWith(COMMAND);
 	}
 

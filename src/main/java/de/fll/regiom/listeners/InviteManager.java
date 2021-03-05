@@ -4,6 +4,7 @@ import de.fll.regiom.io.json.JsonExporter;
 import de.fll.regiom.model.Constants;
 import de.fll.regiom.model.Roleable;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Invite;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
@@ -30,7 +31,7 @@ public class InviteManager extends ListenerAdapter {
 		this(new HashMap<>());
 	}
 
-	public InviteManager(Map<String, Roleable> roles) {
+	public InviteManager(@NotNull Map<String, Roleable> roles) {
 		if (INSTANCE != null)
 			throw new IllegalStateException();
 		this.roles = roles;
@@ -38,9 +39,11 @@ public class InviteManager extends ListenerAdapter {
 		INSTANCE = this;
 	}
 
-	public void setup(JDA jda) {
+	public void setup(@NotNull JDA jda) {
 		inviteUses.clear();
-		jda.getGuildById(Constants.GUILD_ID).retrieveInvites().queue(invites -> {
+		Guild guild = jda.getGuildById(Constants.GUILD_ID);
+		Objects.requireNonNull(guild);
+		guild.retrieveInvites().queue(invites -> {
 			for (Invite invite : invites) {
 				inviteUses.put(invite.getCode(), invite.getUses());
 			}
@@ -71,6 +74,7 @@ public class InviteManager extends ListenerAdapter {
 		});
 	}
 
+	@NotNull
 	public Map<String, Roleable> getRoles() {
 		return roles;
 	}

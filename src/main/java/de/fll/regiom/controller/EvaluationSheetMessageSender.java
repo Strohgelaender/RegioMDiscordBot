@@ -7,26 +7,26 @@ import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.internal.utils.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class EvaluationSheetMessageSender {
 
-	public void sendSheet(MessageChannel channel, EvaluationSheet sheet) {
-		if (channel == null || sheet == null)
-			return;
+	public void sendSheet(@NotNull MessageChannel channel, @NotNull EvaluationSheet sheet) {
 		sendTitle(channel, sheet);
 		for (EvaluationCategory category : sheet.getCategories()) {
 			sendCategory(channel, category);
 		}
 	}
 
-	private void sendTitle(MessageChannel channel, EvaluationSheet sheet) {
+	private void sendTitle(@NotNull MessageChannel channel, @NotNull EvaluationSheet sheet) {
 		EmbedBuilder builder = new EmbedBuilder();
 		builder.setTitle(sheet.getTitle());
 		builder.setDescription(sheet.getTeam().toString());
 		channel.sendMessage(builder.build()).complete();
 	}
 
-	private void sendCategory(MessageChannel channel, EvaluationCategory category) {
+	private void sendCategory(@NotNull MessageChannel channel, @NotNull EvaluationCategory category) {
 		MessageBuilder builder = new MessageBuilder();
 		builder.append(category.getTitle(), MessageBuilder.Formatting.BOLD);
 		builder.append("\n");
@@ -46,11 +46,11 @@ public class EvaluationSheetMessageSender {
 		channel.sendMessage(builder.build()).queue(message -> addVotingReactions(category, message));
 	}
 
-	private void addVotingReactions(EvaluationCategory category, Message message) {
+	private void addVotingReactions(@NotNull EvaluationCategory category, @NotNull Message message) {
 		addVotingReaction(category, message, 0, 0);
 	}
 
-	private void addVotingReaction(EvaluationCategory category, Message message, int i, int j) {
+	private void addVotingReaction(@NotNull EvaluationCategory category, @NotNull Message message, int i, int j) {
 		Pair<Integer, Integer> nextIndex = nextIndex(category, i, j);
 		if (nextIndex == null)
 			message.addReaction(indexToReactionEmoji(i, j)).queue();
@@ -59,7 +59,7 @@ public class EvaluationSheetMessageSender {
 					addVotingReaction(category, message, nextIndex.getLeft(), nextIndex.getRight()));
 	}
 
-	private Pair<Integer, Integer> nextIndex(EvaluationCategory category, int i, int j) {
+	private Pair<Integer, Integer> nextIndex(@NotNull EvaluationCategory category, int i, int j) {
 		if (j < category.getEntries()[i].getOptions().length - 1) {
 			return Pair.of(i, j + 1);
 		} else if (i < category.getEntries().length - 1)
@@ -75,7 +75,8 @@ public class EvaluationSheetMessageSender {
 		}
 	}
 
-	private String freitext(String text) {
+	@NotNull
+	private String freitext(@Nullable String text) {
 		return text == null ? "Freitext" : text;
 	}
 }

@@ -3,6 +3,7 @@ package de.fll.regiom.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -14,5 +15,6 @@ import java.util.List;
 public interface Roleable {
 
 	@JsonIgnore
+	@NotNull
 	List<Long> getRoles();
 }

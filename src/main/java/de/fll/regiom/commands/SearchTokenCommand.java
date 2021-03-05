@@ -11,7 +11,7 @@ import java.util.Locale;
 public class SearchTokenCommand implements Command {
 
 	@Override
-	public boolean execute(@NotNull MessageReceivedEvent event, String command) {
+	public boolean execute(@NotNull MessageReceivedEvent event, @NotNull String command) {
 		String[] parts = command.split(" ");
 		if (parts.length < 2)
 			return false;
@@ -34,12 +34,12 @@ public class SearchTokenCommand implements Command {
 	}
 
 	@Override
-	public boolean canBeCalledBy(Member member) {
+	public boolean canBeCalledBy(@NotNull Member member) {
 		return RoleHelper.isAdmin(member) || RoleHelper.isReferee(member);
 	}
 
 	@Override
-	public boolean isCalled(String command) {
+	public boolean isCalled(@NotNull String command) {
 		return command.matches(String.format("((search|find)? ?(token|game)) [A-Za-z]{%d}", RobotGameTokenRepository.CODE_LENGTH));
 	}
 

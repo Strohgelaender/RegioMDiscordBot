@@ -20,7 +20,7 @@ public class EvaluationSheetMessageCommand implements Command {
 	private static final EvaluationSheetMessageSender sheetMessageSender = new EvaluationSheetMessageSender();
 
 	@Override
-	public boolean execute(@NotNull MessageReceivedEvent event, String command) {
+	public boolean execute(@NotNull MessageReceivedEvent event, @NotNull String command) {
 		Team randomTeam = getRandomTeam();
 		switch (command) {
 			case "robotdesign" -> sheetMessageSender.sendSheet(event.getChannel(), new RobotDesignEvaluationSheet(randomTeam));
@@ -34,12 +34,12 @@ public class EvaluationSheetMessageCommand implements Command {
 	}
 
 	@Override
-	public boolean canBeCalledBy(Member member) {
+	public boolean canBeCalledBy(@NotNull Member member) {
 		return RoleHelper.isAdmin(member);
 	}
 
 	@Override
-	public boolean isCalled(String command) {
+	public boolean isCalled(@NotNull String command) {
 		return Stream.of("robotdesign", "research", "corevalues").anyMatch(command::startsWith);
 	}
 

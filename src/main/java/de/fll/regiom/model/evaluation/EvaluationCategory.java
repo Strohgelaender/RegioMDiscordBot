@@ -1,5 +1,7 @@
 package de.fll.regiom.model.evaluation;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 
 public final class EvaluationCategory {
@@ -8,21 +10,22 @@ public final class EvaluationCategory {
 	private final String description;
 	private final EvaluationEntry[] entries;
 
-	public EvaluationCategory(String title, String description, EvaluationEntry lineOne, EvaluationEntry lineTwo) {
+	public EvaluationCategory(@NotNull String title, @NotNull String description, @NotNull EvaluationEntry lineOne, @NotNull EvaluationEntry lineTwo) {
 		this(title, description, new EvaluationEntry[]{lineOne, lineTwo});
 	}
 
-	public EvaluationCategory(String title, String description, EvaluationEntry[] entries) {
+	public EvaluationCategory(@NotNull String title, @NotNull String description, @NotNull EvaluationEntry[] entries) {
 		this.title = title;
 		this.description = description;
 		this.entries = entries;
 	}
 
-	public EvaluationCategory(String title, String description, EvaluationEntry entry) {
+	public EvaluationCategory(@NotNull String title, @NotNull String description, @NotNull EvaluationEntry entry) {
 		this(title, description, new EvaluationEntry[]{entry});
 	}
 
-	public static EvaluationCategory of(String title, String description, int entriesFirstLine, String... entries) {
+	@NotNull
+	public static EvaluationCategory of(@NotNull String title, @NotNull String description, int entriesFirstLine, @NotNull String... entries) {
 		String[] lineOne = new String[4];
 		String[] lineTwo = new String[4];
 		String[] titles = new String[2];
@@ -43,33 +46,23 @@ public final class EvaluationCategory {
 
 	}
 
-	public static EvaluationCategory of(String title, String description, String... entries) {
+	@NotNull
+	public static EvaluationCategory of(@NotNull String title, @NotNull String description, @NotNull String... entries) {
 		return new EvaluationCategory(title, description, new EvaluationEntry(entries[0], Arrays.copyOfRange(entries, 1, entries.length)));
 	}
 
+	@NotNull
 	public String getTitle() {
 		return title;
 	}
 
+	@NotNull
 	public String getDescription() {
 		return description;
 	}
 
+	@NotNull
 	public EvaluationEntry[] getEntries() {
 		return entries;
-	}
-
-	public void check(int line, int index) {
-		if (line < 0 || line >= 2 || index < 0 || index >= 4)
-			return;
-		entries[line].setChecked(index);
-	}
-
-	public int evaluate() {
-		int sum = 0;
-		for (EvaluationEntry entry : entries) {
-			sum += entry.getChecked();
-		}
-		return sum;
 	}
 }

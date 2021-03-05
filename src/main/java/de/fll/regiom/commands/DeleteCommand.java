@@ -22,7 +22,7 @@ public class DeleteCommand implements Command {
 	);
 
 	@Override
-	public boolean execute(@NotNull MessageReceivedEvent event, String command) {
+	public boolean execute(@NotNull MessageReceivedEvent event, @NotNull String command) {
 		command = command.substring(COMMAND.length());
 		if (actions.containsKey(command)) {
 			actions.get(command).accept(event);
@@ -32,12 +32,12 @@ public class DeleteCommand implements Command {
 	}
 
 	@Override
-	public boolean canBeCalledBy(Member member) {
+	public boolean canBeCalledBy(@NotNull Member member) {
 		return RoleHelper.isAdmin(member);
 	}
 
 	@Override
-	public boolean isCalled(String command) {
+	public boolean isCalled(@NotNull String command) {
 		return command.startsWith(COMMAND) && actions.containsKey(command.substring(COMMAND.length()));
 	}
 

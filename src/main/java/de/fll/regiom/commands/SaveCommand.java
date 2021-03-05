@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 public class SaveCommand implements Command {
 
 	@Override
-	public boolean execute(@NotNull MessageReceivedEvent event, String command) {
+	public boolean execute(@NotNull MessageReceivedEvent event, @NotNull String command) {
 		if (StorageManager.INSTANCE.saveAll()) {
 			event.getChannel().sendMessage("Data saved successfully").queue();
 			return true;
@@ -19,12 +19,12 @@ public class SaveCommand implements Command {
 	}
 
 	@Override
-	public boolean isCalled(String command) {
+	public boolean isCalled(@NotNull String command) {
 		return command.equals("save");
 	}
 
 	@Override
-	public boolean canBeCalledBy(Member member) {
+	public boolean canBeCalledBy(@NotNull Member member) {
 		return RoleHelper.isAdmin(member);
 	}
 

@@ -11,7 +11,7 @@ public class PurgeCommand implements Command {
 	private static final String COMMAND = "purge";
 
 	@Override
-	public boolean execute(@NotNull MessageReceivedEvent event, String command) {
+	public boolean execute(@NotNull MessageReceivedEvent event, @NotNull String command) {
 		if (!event.isFromType(ChannelType.TEXT))
 			return false;
 
@@ -31,12 +31,12 @@ public class PurgeCommand implements Command {
 	}
 
 	@Override
-	public boolean canBeCalledBy(Member member) {
+	public boolean canBeCalledBy(@NotNull Member member) {
 		return RoleHelper.isAdmin(member);
 	}
 
 	@Override
-	public boolean isCalled(String command) {
+	public boolean isCalled(@NotNull String command) {
 		return command.matches(COMMAND + " \\d+");
 	}
 

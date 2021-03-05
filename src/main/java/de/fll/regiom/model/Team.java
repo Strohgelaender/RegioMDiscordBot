@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -20,13 +21,13 @@ public class Team implements Roleable {
 	private long voiceChannelID = -1;
 	private long evaluationChannelID = -1;
 
-	public Team(String name, int hotID) {
+	public Team(@NotNull String name, int hotID) {
 		this.name = name;
 		this.hotID = hotID;
 	}
 
 	@JsonCreator
-	public Team(@JsonProperty("name") String name, @JsonProperty("roleID") long roleID, @JsonProperty("hotID") int hotID) {
+	public Team(@JsonProperty("name") @NotNull String name, @JsonProperty("roleID") long roleID, @JsonProperty("hotID") int hotID) {
 		this(name, hotID);
 		this.roleID = roleID;
 	}
@@ -81,6 +82,7 @@ public class Team implements Roleable {
 
 	@JsonIgnore
 	@Override
+	@NotNull
 	public List<Long> getRoles() {
 		return List.of(roleID, Constants.TEAM_ROLE_ID);
 	}

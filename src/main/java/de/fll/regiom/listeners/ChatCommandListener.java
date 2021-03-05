@@ -23,6 +23,7 @@ public class ChatCommandListener extends ListenerAdapter {
 
 	private final Set<Command> commands = setupCommands();
 
+	@NotNull
 	private static Set<Command> setupCommands() {
 		Reflections reflections = new Reflections("de.fll.regiom.commands");
 		return reflections.getSubTypesOf(Command.class).stream()
@@ -68,7 +69,12 @@ public class ChatCommandListener extends ListenerAdapter {
 
 		Member member = event.getMember();
 		if (member == null) {
+			//DM -> retrieve Member-Information from Server
 			member = RoleHelper.toMember(event.getAuthor());
+			if (member == null)
+				//DM from User who is not on the Server
+				//ignore this (this would lead to errors in some modules otherwise)
+				return;
 		}
 
 		for (Command command : commands) {
@@ -76,6 +82,5 @@ public class ChatCommandListener extends ListenerAdapter {
 				command.execute(event, msg);
 			}
 		}
-		//TODO !join teamid
 	}
 }

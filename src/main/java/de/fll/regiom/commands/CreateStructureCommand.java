@@ -21,7 +21,7 @@ public class CreateStructureCommand implements Command {
 	);
 
 	@Override
-	public boolean execute(@NotNull MessageReceivedEvent event, String command) {
+	public boolean execute(@NotNull MessageReceivedEvent event, @NotNull String command) {
 		String request = command.substring(COMMAND.length());
 		var action = actions.entrySet().stream()
 				.filter(e -> e.getKey().contains(request))
@@ -36,12 +36,12 @@ public class CreateStructureCommand implements Command {
 	}
 
 	@Override
-	public boolean canBeCalledBy(Member member) {
+	public boolean canBeCalledBy(@NotNull Member member) {
 		return RoleHelper.isAdmin(member);
 	}
 
 	@Override
-	public boolean isCalled(String command) {
+	public boolean isCalled(@NotNull String command) {
 		return command.startsWith(COMMAND) && actions.keySet().stream().flatMap(Set::stream).anyMatch(command::endsWith);
 	}
 

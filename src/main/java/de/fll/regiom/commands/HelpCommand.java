@@ -17,7 +17,7 @@ public class HelpCommand implements Command {
 	}
 
 	@Override
-	public boolean execute(@NotNull MessageReceivedEvent event, String msg) {
+	public boolean execute(@NotNull MessageReceivedEvent event, @NotNull String msg) {
 		MessageBuilder builder = new MessageBuilder();
 		Member member = event.getMember();
 		if (member == null)
@@ -37,7 +37,7 @@ public class HelpCommand implements Command {
 	}
 
 	@Override
-	public boolean isCalled(String command) {
+	public boolean isCalled(@NotNull String command) {
 		return Stream.of("help", "hilfe").anyMatch(command::startsWith);
 	}
 

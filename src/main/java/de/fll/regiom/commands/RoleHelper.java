@@ -6,17 +6,19 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class RoleHelper {
 
 	private RoleHelper() {
 	}
 
-	public static Member toMember(User user) {
+	@Nullable
+	public static Member toMember(@NotNull User user) {
 		return user.getJDA().getGuildById(Constants.GUILD_ID).getMember(user);
 	}
 
-	private static boolean hasRole(Member member, long roleID) {
+	private static boolean hasRole(@NotNull Member member, long roleID) {
 		return member.getRoles().stream().map(Role::getIdLong).anyMatch(id -> id == roleID);
 	}
 
