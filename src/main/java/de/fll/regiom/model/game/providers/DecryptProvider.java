@@ -11,6 +11,11 @@ public class DecryptProvider implements RiddleProvider<DecryptRiddle> {
 		return riddle;
 	}
 
+	@Override
+	public DecryptRiddle getByID(int id) {
+		return riddle;
+	}
+
 	public void setRiddle(DecryptRiddle riddle) {
 		this.riddle = riddle;
 	}

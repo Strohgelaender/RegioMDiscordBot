@@ -15,6 +15,11 @@ public class BlanksProvider implements RiddleProvider<BlanksRiddle> {
 		return byID.get(prev.getId() / 2);
 	}
 
+	@Override
+	public BlanksRiddle getByID(int id) {
+		return byID.get(id);
+	}
+
 	public void setRiddles(List<BlanksRiddle> riddles) {
 		byID = riddles.stream().collect(Collectors.toMap(BlanksRiddle::getId, r -> r));
 	}

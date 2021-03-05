@@ -1,5 +1,7 @@
 package de.fll.regiom.controller;
 
+import de.fll.regiom.io.csv.CsvGameStateExporter;
+import de.fll.regiom.io.csv.CsvGameStateImporter;
 import de.fll.regiom.model.game.BlanksRiddle;
 import de.fll.regiom.model.game.CrossWordRiddle;
 import de.fll.regiom.model.game.DecryptRiddle;
@@ -11,6 +13,7 @@ import de.fll.regiom.model.game.providers.RiddleProvider;
 import de.fll.regiom.io.csv.CsvRiddleImporter;
 import de.fll.regiom.model.Storable;
 import de.fll.regiom.model.Team;
+import de.fll.regiom.util.Directories;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +25,8 @@ import static de.fll.regiom.controller.GameController.GameProgressState.Phase.*;
 public enum GameController implements Storable {
 	INSTANCE;
 
+	private final String riddlePath = Directories.getDataDir().getPath() + "/riddles.csv";
+	private final String backupPath = Directories.getDataDir().getPath() + "/gameState.csv";
 	private final Map<Team, GameProgressState> gameState;
 	private final CrossWordProvider crossWordProvider;
 	private final BlanksProvider blanksProvider;
@@ -40,13 +45,26 @@ public enum GameController implements Storable {
 
 	@Override
 	public boolean save() {
-		//TODO
-		return false;
+		List<Object[]> toSave = gameState.entrySet().stream().map(e -> {
+			int teamID = e.getKey().getHotID();
+			GameProgressState.Phase phase = e.getValue().getPhase();
+			Riddle r = e.getValue().getActualRiddle();
+			if (r == null)
+				return new Object[]{teamID, phase, -1};
+			else return new Object[]{teamID, phase, r.getId()};
+		}).collect(Collectors.toList());
+		try {
+			CsvGameStateExporter exporter = new CsvGameStateExporter(backupPath);
+			exporter.save(toSave);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	@Override
 	public void load() {
-		CsvRiddleImporter importer = new CsvRiddleImporter("./RiddleTableDummy.txt");
+		CsvRiddleImporter importer = new CsvRiddleImporter(riddlePath);
 		Map<Class<? extends Riddle>, List<Riddle>> byTypes = importer.byTypes();
 		System.out.println(byTypes);
 		crossWordProvider.setRiddles(byTypes.get(CrossWordRiddle.class).stream().map(r -> (CrossWordRiddle) r).
@@ -56,6 +74,7 @@ public enum GameController implements Storable {
 		List<Riddle> decrypt = byTypes.get(DecryptRiddle.class);
 		assert (!decrypt.isEmpty());
 		decryptProvider.setRiddle((DecryptRiddle) decrypt.get(0));
+		CsvGameStateImporter stateImporter = new CsvGameStateImporter(backupPath, phaseProviders, gameState);
 	}
 
 	public static class GameProgressState {
@@ -68,12 +87,12 @@ public enum GameController implements Storable {
 		private Phase phase;
 
 		public GameProgressState() {
-			this(CROSSWORD);
+			this(CROSSWORD, null);
 		}
 
-		public GameProgressState(Phase phase) {
+		public GameProgressState(Phase phase, Riddle actual) {
 			this.phase = phase;
-			actual = null;
+			this.actual = actual;
 		}
 
 		public Riddle getActualRiddle() {
@@ -82,6 +101,10 @@ public enum GameController implements Storable {
 			if (actual == null)
 				actual = INSTANCE.phaseProviders.get(phase).getNewRiddle(actual);
 			return actual;
+		}
+
+		public void setActual(Riddle actual) {
+			this.actual = actual;
 		}
 
 		public Phase getPhase() {
