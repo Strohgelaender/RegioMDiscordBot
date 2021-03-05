@@ -1,8 +1,6 @@
 package de.fll.regiom.commands;
 
 import de.fll.regiom.controller.EvaluationSheetMessageSender;
-import de.fll.regiom.controller.TeamRepository;
-import de.fll.regiom.model.Team;
 import de.fll.regiom.model.evaluation.CoreValueEvaluationSheet;
 import de.fll.regiom.model.evaluation.ResearchEvaluationSheet;
 import de.fll.regiom.model.evaluation.RobotDesignEvaluationSheet;
@@ -10,7 +8,6 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
 
@@ -21,11 +18,10 @@ public class EvaluationSheetMessageCommand implements Command {
 
 	@Override
 	public boolean execute(@NotNull MessageReceivedEvent event, @NotNull String command) {
-		Team randomTeam = getRandomTeam();
 		switch (command) {
-			case "robotdesign" -> sheetMessageSender.sendSheet(event.getChannel(), new RobotDesignEvaluationSheet(randomTeam));
-			case "research" -> sheetMessageSender.sendSheet(event.getChannel(), new ResearchEvaluationSheet(randomTeam));
-			case "corevalues" -> sheetMessageSender.sendSheet(event.getChannel(), new CoreValueEvaluationSheet(randomTeam));
+			case "robotdesign" -> sheetMessageSender.sendSheet(event.getChannel(), new RobotDesignEvaluationSheet());
+			case "research" -> sheetMessageSender.sendSheet(event.getChannel(), new ResearchEvaluationSheet());
+			case "corevalues" -> sheetMessageSender.sendSheet(event.getChannel(), new CoreValueEvaluationSheet());
 			default -> {
 				return false;
 			}
@@ -46,10 +42,5 @@ public class EvaluationSheetMessageCommand implements Command {
 	@Override
 	public String getInfo() {
 		return "**robotdesign | research | corevalues**\n\tSendet einen Bewertungsbogen in den Channel.\n\tNutzt diesen, um eure Gedanken festzuhalten und um euch abzustimmen. **Judge only**";
-	}
-
-	Team getRandomTeam() {
-		List<Team> teams = TeamRepository.INSTANCE.getTeams();
-		return teams.get(random.nextInt(teams.size()));
 	}
 }

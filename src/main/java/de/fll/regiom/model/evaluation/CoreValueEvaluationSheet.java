@@ -1,20 +1,18 @@
 package de.fll.regiom.model.evaluation;
 
-import de.fll.regiom.model.Team;
-
 import java.util.List;
 
 public class CoreValueEvaluationSheet extends EvaluationSheet {
-	private static final String[] ENTRIES = {"... Beispiele, die im ganzen Team beobachtet wurden", "Wenige", "Einige", "Mehrere", null};
+	private static final EvaluationEntry ENTRY = new EvaluationEntryBuilder().title("... Beispiele, die im ganzen Team beobachtet wurden").options("Wenige", "Einige", "Mehrere", null).build();
 
-	public CoreValueEvaluationSheet(Team team) {
-		super(team, "BEWERTUNGSBOGEN GRUNDWERTE", List.of(
-				EvaluationCategory.of("Entdeckung", "Das Team hat neue Talente und Ideen entdeckt.", ENTRIES),
-				EvaluationCategory.of("Innovation", "Das Team war kreativ und ausdauernd bei der Lösung von Problemen.", ENTRIES),
-				EvaluationCategory.of("Wirkung", "Das Team hat das Gelernte angewendet, um seine Welt zu verbessern.", ENTRIES),
-				EvaluationCategory.of("Inklusion", "Das Team verhält sich respektvoll und akzeptiert seine Unterschiede.", ENTRIES),
-				EvaluationCategory.of("Teamwork", "Das Team zeigte klar, dass sie gut zusammenarbeiten.", ENTRIES),
-				EvaluationCategory.of("Spaß", "Das Team hatte eindeutig Spaß miteinander und feierte seine Erfolge.", ENTRIES)
+	public CoreValueEvaluationSheet() {
+		super("BEWERTUNGSBOGEN GRUNDWERTE", List.of(
+				new EvaluationCategoryBuilder().title("Entdeckung").description("Das Team hat neue Talente und Ideen entdeckt.").entry(ENTRY).build(),
+				new EvaluationCategoryBuilder().title("Innovation").description("Das Team war kreativ und ausdauernd bei der Lösung von Problemen.").entry(ENTRY).build(),
+				new EvaluationCategoryBuilder().title("Wirkung").description("Das Team hat das Gelernte angewendet, um seine Welt zu verbessern.").entry(ENTRY).build(),
+				new EvaluationCategoryBuilder().title("Inklusion").description("Das Team verhält sich respektvoll und akzeptiert seine Unterschiede.").entry(ENTRY).build(),
+				new EvaluationCategoryBuilder().title("Teamwork").description("Das Team zeigte klar, dass sie gut zusammenarbeiten.").entry(ENTRY).build(),
+				new EvaluationCategoryBuilder().title("Spaß").description("Das Team hatte eindeutig Spaß miteinander und feierte seine Erfolge.").entry(ENTRY).build()
 		));
 	}
 }

@@ -1,18 +1,15 @@
 package de.fll.regiom.model.evaluation;
 
-import de.fll.regiom.model.Team;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public abstract class EvaluationSheet {
 
-	private final Team team;
 	private final String title;
 	private final List<EvaluationCategory> categories;
 
-	EvaluationSheet(@NotNull Team team, @NotNull String title, @NotNull List<EvaluationCategory> categories) {
-		this.team = team;
+	EvaluationSheet(@NotNull String title, @NotNull List<EvaluationCategory> categories) {
 		this.title = title;
 		this.categories = categories;
 	}
@@ -25,10 +22,5 @@ public abstract class EvaluationSheet {
 	@NotNull
 	public String getTitle() {
 		return title;
-	}
-
-	@NotNull
-	public Team getTeam() {
-		return team;
 	}
 }

@@ -2,7 +2,6 @@ package de.fll.regiom.controller;
 
 import de.fll.regiom.model.evaluation.EvaluationCategory;
 import de.fll.regiom.model.evaluation.EvaluationSheet;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -10,23 +9,29 @@ import net.dv8tion.jda.internal.utils.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.concurrent.CompletableFuture;
+
 public class EvaluationSheetMessageSender {
 
-	public void sendSheet(@NotNull MessageChannel channel, @NotNull EvaluationSheet sheet) {
-		sendTitle(channel, sheet);
-		for (EvaluationCategory category : sheet.getCategories()) {
-			sendCategory(channel, category);
+	@NotNull
+	public CompletableFuture<?> sendSheet(@NotNull MessageChannel channel, @NotNull EvaluationSheet sheet) {
+		int categoriesSize = sheet.getCategories().size();
+		var allFutures = new CompletableFuture[categoriesSize + 1];
+		allFutures[0] = sendTitle(channel, sheet);
+		for (int i = 0; i < categoriesSize; i++) {
+			EvaluationCategory category = sheet.getCategories().get(i);
+			allFutures[i + 1] = sendCategory(channel, category);
 		}
+		return CompletableFuture.allOf(allFutures);
 	}
 
-	private void sendTitle(@NotNull MessageChannel channel, @NotNull EvaluationSheet sheet) {
-		EmbedBuilder builder = new EmbedBuilder();
-		builder.setTitle(sheet.getTitle());
-		builder.setDescription(sheet.getTeam().toString());
-		channel.sendMessage(builder.build()).complete();
+	@NotNull
+	private CompletableFuture<Message> sendTitle(@NotNull MessageChannel channel, @NotNull EvaluationSheet sheet) {
+		return channel.sendMessage("**" + sheet.getTitle() + "**").submit();
 	}
 
-	private void sendCategory(@NotNull MessageChannel channel, @NotNull EvaluationCategory category) {
+	@NotNull
+	private CompletableFuture<?> sendCategory(@NotNull MessageChannel channel, @NotNull EvaluationCategory category) {
 		MessageBuilder builder = new MessageBuilder();
 		builder.append(category.getTitle(), MessageBuilder.Formatting.BOLD);
 		builder.append("\n");
@@ -43,20 +48,23 @@ public class EvaluationSheetMessageSender {
 			builder.append(category.getEntries()[i].getTitle());
 			builder.append("\n");
 		}
-		channel.sendMessage(builder.build()).queue(message -> addVotingReactions(category, message));
+		return channel.sendMessage(builder.build()).submit()
+				.thenComposeAsync(message -> addVotingReactions(category, message));
 	}
 
-	private void addVotingReactions(@NotNull EvaluationCategory category, @NotNull Message message) {
-		addVotingReaction(category, message, 0, 0);
+	@NotNull
+	private CompletableFuture<?> addVotingReactions(@NotNull EvaluationCategory category, @NotNull Message message) {
+		return addVotingReaction(category, message, 0, 0);
 	}
 
-	private void addVotingReaction(@NotNull EvaluationCategory category, @NotNull Message message, int i, int j) {
+	@NotNull
+	private CompletableFuture<?> addVotingReaction(@NotNull EvaluationCategory category, @NotNull Message message, int i, int j) {
 		Pair<Integer, Integer> nextIndex = nextIndex(category, i, j);
 		if (nextIndex == null)
-			message.addReaction(indexToReactionEmoji(i, j)).queue();
+			return message.addReaction(indexToReactionEmoji(i, j)).submit();
 		else
-			message.addReaction(indexToReactionEmoji(i, j)).queue(v ->
-					addVotingReaction(category, message, nextIndex.getLeft(), nextIndex.getRight()));
+			return message.addReaction(indexToReactionEmoji(i, j)).submit()
+					.thenComposeAsync(v -> addVotingReaction(category, message, nextIndex.getLeft(), nextIndex.getRight()));
 	}
 
 	private Pair<Integer, Integer> nextIndex(@NotNull EvaluationCategory category, int i, int j) {
