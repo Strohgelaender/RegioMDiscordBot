@@ -1,4 +1,4 @@
-package de.fll.regiom.game;
+package de.fll.regiom.model.game;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;

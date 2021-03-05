@@ -1,4 +1,4 @@
-package de.fll.regiom.game;
+package de.fll.regiom.model.game;
 
 public class DecryptRiddle extends Riddle {
 	private final String solution;

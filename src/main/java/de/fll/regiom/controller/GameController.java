@@ -1,13 +1,13 @@
 package de.fll.regiom.controller;
 
-import de.fll.regiom.game.BlanksRiddle;
-import de.fll.regiom.game.CrossWordRiddle;
-import de.fll.regiom.game.DecryptRiddle;
-import de.fll.regiom.game.Riddle;
-import de.fll.regiom.game.providers.BlanksProvider;
-import de.fll.regiom.game.providers.CrossWordProvider;
-import de.fll.regiom.game.providers.DecryptProvider;
-import de.fll.regiom.game.providers.RiddleProvider;
+import de.fll.regiom.model.game.BlanksRiddle;
+import de.fll.regiom.model.game.CrossWordRiddle;
+import de.fll.regiom.model.game.DecryptRiddle;
+import de.fll.regiom.model.game.Riddle;
+import de.fll.regiom.model.game.providers.BlanksProvider;
+import de.fll.regiom.model.game.providers.CrossWordProvider;
+import de.fll.regiom.model.game.providers.DecryptProvider;
+import de.fll.regiom.model.game.providers.RiddleProvider;
 import de.fll.regiom.io.csv.CsvRiddleImporter;
 import de.fll.regiom.model.Storable;
 import de.fll.regiom.model.Team;
@@ -88,13 +88,12 @@ public enum GameController implements Storable {
 			return phase;
 		}
 
-		public boolean makeProgress() {
+		public void makeProgress() {
 			if (phase == SOLVED)
-				return false;
+				return;
 			phase = Phase.values()[phase.ordinal() + 1];
 			if (phase != SOLVED)
 				actual = INSTANCE.phaseProviders.get(phase).getNewRiddle();
-			return true;
 		}
 	}
 

@@ -1,10 +1,10 @@
 package de.fll.regiom.io.csv;
 
 import de.fll.regiom.controller.GameController.GameProgressState.Phase;
-import de.fll.regiom.game.BlanksRiddle;
-import de.fll.regiom.game.CrossWordRiddle;
-import de.fll.regiom.game.DecryptRiddle;
-import de.fll.regiom.game.Riddle;
+import de.fll.regiom.model.game.BlanksRiddle;
+import de.fll.regiom.model.game.CrossWordRiddle;
+import de.fll.regiom.model.game.DecryptRiddle;
+import de.fll.regiom.model.game.Riddle;
 
 import java.nio.file.Path;
 import java.util.Arrays;
