@@ -21,14 +21,13 @@ public class ChatCommandListener extends ListenerAdapter {
 
 	private static final String PREFIX = "!";
 
-	//TODO find better way for this!
 	private final Set<Command> commands = setupCommands();
 
 	private static Set<Command> setupCommands() {
 		Reflections reflections = new Reflections("de.fll.regiom.commands");
 		return reflections.getSubTypesOf(Command.class).stream()
 				//remove abstract classes
-				.filter(command -> !Modifier.isAbstract(command.getModifiers()))
+				.filter(command -> !Modifier.isAbstract(command.getModifiers()) && !Modifier.isInterface(command.getModifiers()))
 				//make sure the default constructor exists (to remove classes like HelpCommand)
 				.filter(command -> Stream.of(command.getDeclaredConstructors()).anyMatch(constructor -> constructor.getParameterCount() == 0))
 				//create a new instance using this constructor
