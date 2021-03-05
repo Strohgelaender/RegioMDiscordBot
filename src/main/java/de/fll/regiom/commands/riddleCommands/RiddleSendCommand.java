@@ -1,6 +1,6 @@
 package de.fll.regiom.commands.riddleCommands;
 
-import de.fll.regiom.game.Riddle;
+import de.fll.regiom.model.game.Riddle;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 

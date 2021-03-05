@@ -1,4 +1,4 @@
-package de.fll.regiom.game;
+package de.fll.regiom.model.game;
 
 import org.jetbrains.annotations.NotNull;
 

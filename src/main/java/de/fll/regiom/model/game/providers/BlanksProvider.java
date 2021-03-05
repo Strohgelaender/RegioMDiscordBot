@@ -1,6 +1,6 @@
-package de.fll.regiom.game.providers;
+package de.fll.regiom.model.game.providers;
 
-import de.fll.regiom.game.BlanksRiddle;
+import de.fll.regiom.model.game.BlanksRiddle;
 
 import java.util.Iterator;
 import java.util.List;

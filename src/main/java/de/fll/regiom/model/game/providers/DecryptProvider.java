@@ -1,6 +1,6 @@
-package de.fll.regiom.game.providers;
+package de.fll.regiom.model.game.providers;
 
-import de.fll.regiom.game.DecryptRiddle;
+import de.fll.regiom.model.game.DecryptRiddle;
 
 public class DecryptProvider implements RiddleProvider<DecryptRiddle> {
 	private DecryptRiddle riddle;
