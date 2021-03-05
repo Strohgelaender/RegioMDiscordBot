@@ -4,10 +4,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class CrossWordRiddle extends Riddle {
 	private final String solution;
-	private final String url = "https://cdn.discordapp.com/attachments/795627126232449034/806979930910228580/unknown.png";
 
-	public CrossWordRiddle(@NotNull String url, @NotNull String solution) {
-		super(url);
+	public CrossWordRiddle(@NotNull String url, int id, @NotNull String solution) {
+		super(url, id);
 		this.solution = solution;
 	}
 

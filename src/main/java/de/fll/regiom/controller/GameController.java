@@ -80,7 +80,7 @@ public enum GameController implements Storable {
 			if (phase == SOLVED)
 				return null;
 			if (actual == null)
-				actual = INSTANCE.phaseProviders.get(phase).getNewRiddle();
+				actual = INSTANCE.phaseProviders.get(phase).getNewRiddle(actual);
 			return actual;
 		}
 
@@ -93,7 +93,7 @@ public enum GameController implements Storable {
 				return;
 			phase = Phase.values()[phase.ordinal() + 1];
 			if (phase != SOLVED)
-				actual = INSTANCE.phaseProviders.get(phase).getNewRiddle();
+				actual = INSTANCE.phaseProviders.get(phase).getNewRiddle(actual);
 		}
 	}
 
@@ -109,7 +109,7 @@ public enum GameController implements Storable {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(INSTANCE.phaseProviders.get(DECRYPT).getNewRiddle());
+		System.out.println(INSTANCE.phaseProviders.get(DECRYPT).getNewRiddle(null));
 	}
 
 }

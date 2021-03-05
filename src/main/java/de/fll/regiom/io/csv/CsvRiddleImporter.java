@@ -26,21 +26,20 @@ public class CsvRiddleImporter extends AbstractCsvImporter<Riddle> {
 	@Override
 	protected Riddle fromStrings(String[] line) {
 		try {
-			String url = line[1];
-			System.out.println(line[2]);
+			int id = Integer.parseInt(line[1]);
+			String url = line[2];
 			return switch (Phase.valueOf(line[0])) {
-				case BLANKS -> new BlanksRiddle(url,
-						Arrays.stream(Arrays.copyOfRange(line, 2, line.length)).
+				case BLANKS -> new BlanksRiddle(url, id,
+						Arrays.stream(Arrays.copyOfRange(line, 3, line.length)).
 								map(Integer::parseInt).collect(Collectors.toSet())
 				);
-				case DECRYPT -> new DecryptRiddle(url, line[2]);
-				case CROSSWORD -> new CrossWordRiddle(url, line[2]);
-				default -> null;
+				case DECRYPT -> new DecryptRiddle(url, id, line[2]);
+				case CROSSWORD -> new CrossWordRiddle(url, id, line[3]);
+				default -> throw new IllegalArgumentException("Invalid Type!");
 			};
 		} catch (Exception e) {
-			System.err.println("Error parsing this Array:");
+			System.err.println("Error parsing this Array: " + e.getMessage());
 			System.err.println(Arrays.toString(line));
-			System.err.println(e.getMessage());
 			return null;
 		}
 	}

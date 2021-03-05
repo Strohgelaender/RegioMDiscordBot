@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 public class BlanksRiddle extends Riddle {
 	private final Set<Integer> solutionNumbers;
 
-	public BlanksRiddle(String url, Set<Integer> solutionNumbers) {
-		super(url);
+	public BlanksRiddle(String url, int id, Set<Integer> solutionNumbers) {
+		super(url, id);
 		this.solutionNumbers = solutionNumbers;
 	}
 

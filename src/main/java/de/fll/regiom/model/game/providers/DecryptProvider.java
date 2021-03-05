@@ -1,12 +1,13 @@
 package de.fll.regiom.model.game.providers;
 
 import de.fll.regiom.model.game.DecryptRiddle;
+import de.fll.regiom.model.game.Riddle;
 
 public class DecryptProvider implements RiddleProvider<DecryptRiddle> {
 	private DecryptRiddle riddle;
 
 	@Override
-	public DecryptRiddle getNewRiddle() {
+	public DecryptRiddle getNewRiddle(Riddle prev) {
 		return riddle;
 	}
 
