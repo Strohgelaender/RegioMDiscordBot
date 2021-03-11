@@ -61,6 +61,9 @@ public class ChatCommandListener extends ListenerAdapter {
 					event.getMessage().getContentDisplay());
 		}
 
+		if (event.getAuthor().isBot())
+			return;
+
 		String msg = event.getMessage().getContentRaw().toLowerCase(Locale.ROOT).strip();
 
 		if (!msg.startsWith(PREFIX))
