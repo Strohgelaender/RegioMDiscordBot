@@ -17,22 +17,20 @@ public class CreateStructureCommand implements Command {
 	private final Map<Set<String>, Consumer<JDA>> actions = Map.of(
 			Set.of("roles"), TeamRepository.INSTANCE::createAllTeamRoles,
 			Set.of("channels", "teamareas"), TeamRepository.INSTANCE::createAllTeamareas,
-			Set.of("welcometext", "teammessage", "text", "message"), TeamRepository.INSTANCE::updateAllWelcomeMessages
+			Set.of("welcometext", "teammessage", "text", "message"), TeamRepository.INSTANCE::updateAllWelcomeMessages,
+			Set.of("invites", "codes"), TeamRepository.INSTANCE::createAllInvites
 	);
 
 	@Override
 	public boolean execute(@NotNull MessageReceivedEvent event, @NotNull String command) {
 		String request = command.substring(COMMAND.length());
-		var action = actions.entrySet().stream()
+		var optional = actions.entrySet().stream()
 				.filter(e -> e.getKey().contains(request))
 				.limit(1)
 				.map(Map.Entry::getValue)
 				.findAny();
-		if (action.isPresent()) {
-			action.get().accept(event.getJDA());
-			return true;
-		}
-		return false;
+		optional.ifPresent(action -> action.accept(event.getJDA()));
+		return optional.isPresent();
 	}
 
 	@Override
@@ -47,6 +45,6 @@ public class CreateStructureCommand implements Command {
 
 	@Override
 	public String getInfo() {
-		return "**create** roles|invites|channels\n\tErstellt die Bereiche, die für jedes Team notwendig sind. **Admin only**";
+		return "**create** roles|invites|channels|text\n\tErstellt die Bereiche, die für jedes Team notwendig sind. **Admin only**";
 	}
 }

@@ -1,8 +1,8 @@
 package de.fll.regiom.commands;
 
+import de.fll.regiom.controller.InviteManager;
 import de.fll.regiom.controller.RobotGameTokenRepository;
 import de.fll.regiom.controller.TeamRepository;
-import de.fll.regiom.listeners.InviteManager;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +18,7 @@ public class DeleteCommand implements Command {
 			"tokens", e -> RobotGameTokenRepository.INSTANCE.clear(),
 			"channels", e -> TeamRepository.INSTANCE.removeAllTeamareas(e.getJDA()),
 			"teamareas", e -> TeamRepository.INSTANCE.removeAllTeamareas(e.getJDA()),
-			"invites", e -> InviteManager.getInstance().clear()
+			"invites", e -> InviteManager.INSTANCE.clear()
 	);
 
 	@Override

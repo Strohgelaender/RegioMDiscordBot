@@ -31,11 +31,14 @@ public enum TeamRepository implements Storable {
 
 	public void createAllTeamRoles(@NotNull JDA jda) {
 		DiscordTeamStructureManager.INSTANCE.createAllTeamRoles(jda, teams);
+		System.out.println("[TeamRepository] created Roles");
 	}
 
 	public void createAllTeamareas(@NotNull JDA jda) {
 		DiscordTeamStructureManager.INSTANCE.createAllTeamareas(jda, teams)
-				.thenApply(v -> save());
+				.thenAccept(v -> save())
+				.thenAccept(v -> System.out.println("[TeamRepository] created Teamareas"));
+
 	}
 
 	public void updateAllWelcomeMessages(@NotNull JDA jda) {
@@ -48,8 +51,8 @@ public enum TeamRepository implements Storable {
 	}
 
 	public void createAllInvites(@NotNull JDA jda) {
-		//DiscordTeamStructureManager.INSTANCE.createAllInvites(jda, teams, InviteManager.getInstance());
-		//.thenApply(v -> InviteManager.getInstance().save());
+		InviteManager.INSTANCE.createAllInvites(jda, teams)
+				.thenAccept(v -> System.out.println("[TeamRepository] created Invites."));
 	}
 
 	@NotNull
