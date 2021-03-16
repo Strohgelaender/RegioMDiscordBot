@@ -2,6 +2,9 @@ package de.fll.regiom.controller;
 
 import de.fll.regiom.io.csv.CsvGameStateExporter;
 import de.fll.regiom.io.csv.CsvGameStateImporter;
+import de.fll.regiom.io.csv.CsvRiddleImporter;
+import de.fll.regiom.model.Storable;
+import de.fll.regiom.model.Team;
 import de.fll.regiom.model.game.BlanksRiddle;
 import de.fll.regiom.model.game.CrossWordRiddle;
 import de.fll.regiom.model.game.DecryptRiddle;
@@ -10,9 +13,6 @@ import de.fll.regiom.model.game.providers.BlanksProvider;
 import de.fll.regiom.model.game.providers.CrossWordProvider;
 import de.fll.regiom.model.game.providers.DecryptProvider;
 import de.fll.regiom.model.game.providers.RiddleProvider;
-import de.fll.regiom.io.csv.CsvRiddleImporter;
-import de.fll.regiom.model.Storable;
-import de.fll.regiom.model.Team;
 import de.fll.regiom.util.Directories;
 
 import java.util.HashMap;
@@ -20,7 +20,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static de.fll.regiom.controller.GameController.GameProgressState.Phase.*;
+import static de.fll.regiom.controller.GameController.GameProgressState.Phase.BLANKS;
+import static de.fll.regiom.controller.GameController.GameProgressState.Phase.CROSSWORD;
+import static de.fll.regiom.controller.GameController.GameProgressState.Phase.DECRYPT;
+import static de.fll.regiom.controller.GameController.GameProgressState.Phase.SOLVED;
 
 public enum GameController implements Storable {
 	INSTANCE;

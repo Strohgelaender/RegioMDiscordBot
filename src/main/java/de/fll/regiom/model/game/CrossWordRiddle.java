@@ -3,6 +3,7 @@ package de.fll.regiom.model.game;
 import org.jetbrains.annotations.NotNull;
 
 public class CrossWordRiddle extends Riddle {
+
 	private final String solution;
 
 	public CrossWordRiddle(@NotNull String url, int id, @NotNull String solution) {

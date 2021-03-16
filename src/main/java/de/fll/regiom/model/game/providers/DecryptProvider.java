@@ -4,6 +4,7 @@ import de.fll.regiom.model.game.DecryptRiddle;
 import de.fll.regiom.model.game.Riddle;
 
 public class DecryptProvider implements RiddleProvider<DecryptRiddle> {
+
 	private DecryptRiddle riddle;
 
 	@Override

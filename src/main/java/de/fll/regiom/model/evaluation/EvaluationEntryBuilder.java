@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-class EvaluationEntryBuilder implements Builder<EvaluationEntry> {
+final class EvaluationEntryBuilder implements Builder<EvaluationEntry> {
 
 	private String title;
 	private List<String> options = new ArrayList<>();

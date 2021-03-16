@@ -15,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 public class Bot {
 
@@ -29,7 +30,7 @@ public class Bot {
 				token = null;
 			} catch (LoginException ignore) {
 				System.out.println("Enter Bot Token: ");
-				try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+				try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8))) {
 					token = reader.readLine();
 				} catch (IOException e) {
 					return;
@@ -39,6 +40,7 @@ public class Bot {
 	}
 
 	private static final class ReadyListener extends ListenerAdapter {
+
 		@Override
 		public void onReady(@NotNull ReadyEvent event) {
 			ListenerManager listenerManager = new ListenerManager(event.getJDA());

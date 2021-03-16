@@ -3,6 +3,7 @@ package de.fll.regiom.model.evaluation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 
 public final class EvaluationEntry {
 
@@ -10,6 +11,8 @@ public final class EvaluationEntry {
 	private final String[] options;
 
 	public EvaluationEntry(@NotNull String title, @NotNull String... options) {
+		Objects.requireNonNull(title);
+		Objects.requireNonNull(options);
 		this.title = title;
 		this.options = options;
 	}

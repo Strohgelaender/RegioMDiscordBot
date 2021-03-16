@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class BlanksProvider implements RiddleProvider<BlanksRiddle> {
+
 	private Map<Integer, BlanksRiddle> byID;
 
 	@Override

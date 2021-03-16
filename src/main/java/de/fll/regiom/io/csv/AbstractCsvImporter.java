@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public abstract class AbstractCsvImporter<T> {
+
 	private final Path filePath;
 	private final String regex;
 

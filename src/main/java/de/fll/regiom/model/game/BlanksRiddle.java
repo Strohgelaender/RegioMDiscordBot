@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class BlanksRiddle extends Riddle {
+
 	private final Set<Integer> solutionNumbers;
 
 	public BlanksRiddle(String url, int id, Set<Integer> solutionNumbers) {

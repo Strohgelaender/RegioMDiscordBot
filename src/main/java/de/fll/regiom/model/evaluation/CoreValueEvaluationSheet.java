@@ -2,7 +2,8 @@ package de.fll.regiom.model.evaluation;
 
 import java.util.List;
 
-public class CoreValueEvaluationSheet extends EvaluationSheet {
+public final class CoreValueEvaluationSheet extends EvaluationSheet {
+
 	private static final EvaluationEntry ENTRY = new EvaluationEntryBuilder().title("... Beispiele, die im ganzen Team beobachtet wurden").options("Wenige", "Einige", "Mehrere", null).build();
 
 	public CoreValueEvaluationSheet() {

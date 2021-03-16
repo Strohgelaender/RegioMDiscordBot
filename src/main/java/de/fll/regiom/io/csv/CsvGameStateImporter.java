@@ -1,8 +1,8 @@
 package de.fll.regiom.io.csv;
 
 import de.fll.regiom.controller.GameController;
-import de.fll.regiom.controller.GameController.GameProgressState.Phase;
 import de.fll.regiom.controller.GameController.GameProgressState;
+import de.fll.regiom.controller.GameController.GameProgressState.Phase;
 import de.fll.regiom.controller.TeamRepository;
 import de.fll.regiom.model.Team;
 import de.fll.regiom.model.game.Riddle;

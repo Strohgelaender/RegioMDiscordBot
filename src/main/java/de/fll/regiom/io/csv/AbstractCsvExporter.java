@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 public abstract class AbstractCsvExporter<T> implements StandardCSVConfig {
+
 	private final Path filePath;
 
 	protected AbstractCsvExporter(Path filePath) {

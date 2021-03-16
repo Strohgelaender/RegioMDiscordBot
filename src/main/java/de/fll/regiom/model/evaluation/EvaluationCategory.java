@@ -2,6 +2,8 @@ package de.fll.regiom.model.evaluation;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public final class EvaluationCategory {
 
 	private final String title;
@@ -13,6 +15,9 @@ public final class EvaluationCategory {
 	}
 
 	public EvaluationCategory(@NotNull String title, @NotNull String description, @NotNull EvaluationEntry[] entries) {
+		Objects.requireNonNull(title);
+		Objects.requireNonNull(description);
+		Objects.requireNonNull(entries);
 		this.title = title;
 		this.description = description;
 		this.entries = entries;

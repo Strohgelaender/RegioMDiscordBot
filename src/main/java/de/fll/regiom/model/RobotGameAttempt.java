@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class RobotGameAttempt {
 
@@ -14,6 +15,9 @@ public class RobotGameAttempt {
 
 	@JsonCreator
 	public RobotGameAttempt(@JsonProperty("code") @NotNull String code, @JsonProperty("team") @NotNull Team team, @JsonProperty("startTime") @NotNull LocalDateTime startTime) {
+		Objects.requireNonNull(code);
+		Objects.requireNonNull(team);
+		Objects.requireNonNull(startTime);
 		this.code = code;
 		this.team = team;
 		this.startTime = startTime;

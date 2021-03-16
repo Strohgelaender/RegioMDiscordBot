@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CrossWordProvider implements RiddleProvider<CrossWordRiddle> {
+
 	private Map<Integer, CrossWordRiddle> byID;
 	private List<CrossWordRiddle> riddles;
 	private Iterator<CrossWordRiddle> provider;

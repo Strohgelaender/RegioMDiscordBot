@@ -3,7 +3,10 @@ package de.fll.regiom.model.evaluation;
 import de.fll.regiom.model.Builder;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 class EvaluationCategoryBuilder implements Builder<EvaluationCategory> {
+
 	private String title;
 	private String description;
 	private EvaluationEntry lineOne;
@@ -11,18 +14,21 @@ class EvaluationCategoryBuilder implements Builder<EvaluationCategory> {
 
 	@NotNull
 	EvaluationCategoryBuilder title(@NotNull String title) {
+		Objects.requireNonNull(title);
 		this.title = title;
 		return this;
 	}
 
 	@NotNull
 	EvaluationCategoryBuilder description(@NotNull String description) {
+		Objects.requireNonNull(description);
 		this.description = description;
 		return this;
 	}
 
 	@NotNull
 	EvaluationCategoryBuilder entry(@NotNull EvaluationEntry entry) {
+		Objects.requireNonNull(entry);
 		if (lineOne == null)
 			lineOne = entry;
 		else if (lineTwo == null)

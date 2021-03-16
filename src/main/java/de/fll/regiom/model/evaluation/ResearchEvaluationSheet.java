@@ -2,7 +2,7 @@ package de.fll.regiom.model.evaluation;
 
 import java.util.List;
 
-public class ResearchEvaluationSheet extends EvaluationSheet {
+public final class ResearchEvaluationSheet extends EvaluationSheet {
 
 	public ResearchEvaluationSheet() {
 		super("BEWERTUNGSBOGEN FORSCHUNG", List.of(
