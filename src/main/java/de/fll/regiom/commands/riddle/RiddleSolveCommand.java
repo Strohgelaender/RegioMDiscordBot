@@ -1,4 +1,4 @@
-package de.fll.regiom.commands.riddleCommands;
+package de.fll.regiom.commands.riddle;
 
 import de.fll.regiom.controller.GameController;
 import de.fll.regiom.model.game.Riddle;

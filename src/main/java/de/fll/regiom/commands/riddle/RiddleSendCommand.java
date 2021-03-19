@@ -1,4 +1,4 @@
-package de.fll.regiom.commands.riddleCommands;
+package de.fll.regiom.commands.riddle;
 
 import de.fll.regiom.model.game.Riddle;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
