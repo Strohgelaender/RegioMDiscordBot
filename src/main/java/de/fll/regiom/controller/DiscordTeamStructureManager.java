@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.Category;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.requests.restaction.ChannelAction;
 import org.jetbrains.annotations.NotNull;
 
@@ -73,15 +74,19 @@ public enum DiscordTeamStructureManager {
 	 */
 	public void updateAllWelcomeMessages(@NotNull JDA jda, @NotNull List<Team> teams) {
 		Guild guild = jda.getGuildById(Constants.GUILD_ID);
-		Objects.requireNonNull(jda);
+		Objects.requireNonNull(guild);
 		for (Team team : teams) {
 			if (team.getTextChannelID() <= 0)
 				continue;
 
-			guild.getTextChannelById(team.getTextChannelID()).getHistoryFromBeginning(1).queue(messageHistory -> {
+			var channel = guild.getTextChannelById(team.getTextChannelID());
+			if (channel == null)
+				continue;
+
+			channel.getHistoryFromBeginning(1).queue(messageHistory -> {
 				if (messageHistory.getRetrievedHistory().isEmpty())
 					return;
-				messageHistory.getRetrievedHistory().get(0).editMessage(createWelcomeTeamText(team)).queue();
+				messageHistory.getRetrievedHistory().get(0).editMessage(createWelcomeTeamText(team, channel)).queue();
 			});
 		}
 	}
@@ -137,7 +142,7 @@ public enum DiscordTeamStructureManager {
 				.setTopic(TEAM_CHANNEL_TOPIC_TEXT)
 				.submit().thenComposeAsync(channel -> {
 					team.setTextChannelID(channel.getIdLong());
-					return channel.sendMessage(createWelcomeTeamText(team)).submit();
+					return channel.sendMessage(createWelcomeTeamText(team, channel)).submit();
 				});
 	}
 
@@ -154,8 +159,10 @@ public enum DiscordTeamStructureManager {
 	}
 
 	@NotNull
-	private String createWelcomeTeamText(@NotNull Team team) {
-		return String.format(TEAM_WELCOME_TEXT, team.getName());
+	private String createWelcomeTeamText(@NotNull Team team, @NotNull TextChannel channel) {
+		Role role = channel.getJDA().getRoleById(team.getRoleID());
+		String roleMention = role == null ? team.getName() : role.getAsMention();
+		return String.format(TEAM_WELCOME_TEXT, roleMention);
 	}
 
 	@NotNull
