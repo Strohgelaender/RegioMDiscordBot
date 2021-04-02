@@ -37,7 +37,8 @@ public class DeleteCommand implements Command {
 	public boolean execute(@NotNull MessageReceivedEvent event, @NotNull String command) {
 		command = command.substring(COMMAND.length());
 		if (actions.containsKey(command)) {
-			actions.get(command).apply(event.getJDA());
+			actions.get(command).apply(event.getJDA())
+					.thenAccept(v -> CommandUtils.reactWithCheckbox(event.getMessage()));
 			return true;
 		}
 		return false;
