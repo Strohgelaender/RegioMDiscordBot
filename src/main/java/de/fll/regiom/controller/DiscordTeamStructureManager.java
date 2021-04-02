@@ -112,7 +112,13 @@ public enum DiscordTeamStructureManager {
 	}
 
 	@NotNull
-	public CompletableFuture<?> createTeamRole(@NotNull Guild guild, @NotNull Team team, @NotNull Role teamBaseRole) {
+	public CompletableFuture<?> removeAllTeamRoles(@NotNull JDA jda, @NotNull List<Team> teams) {
+		Guild guild = Objects.requireNonNull(jda.getGuildById(Constants.GUILD_ID));
+		return combineAllFutures(teams, team -> removeTeamRole(team, guild));
+	}
+
+	@NotNull
+	private CompletableFuture<?> createTeamRole(@NotNull Guild guild, @NotNull Team team, @NotNull Role teamBaseRole) {
 		return guild.createCopyOfRole(teamBaseRole)
 				.setName(team.getName())
 				.setColor((Integer) null)
@@ -121,7 +127,17 @@ public enum DiscordTeamStructureManager {
 	}
 
 	@NotNull
-	public CompletableFuture<?> createTeamArea(@NotNull Guild guild, @NotNull Category teamarea, @NotNull Team team, int i) {
+	private CompletableFuture<?> removeTeamRole(@NotNull Team team, @NotNull Guild guild) {
+		if (team.getRoleID() < 0)
+			return CompletableFuture.completedFuture(null);
+		var role = guild.getRoleById(team.getRoleID());
+		if (role == null)
+			return CompletableFuture.completedFuture(null);
+		return role.delete().submit();
+	}
+
+	@NotNull
+	private CompletableFuture<?> createTeamArea(@NotNull Guild guild, @NotNull Category teamarea, @NotNull Team team, int i) {
 		return createTeamCategory(guild, teamarea, team, i).thenComposeAsync(category -> {
 			team.setCategoryID(category.getIdLong());
 			return CompletableFuture.allOf(createTeamTextChannel(category, team),

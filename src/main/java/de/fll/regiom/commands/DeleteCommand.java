@@ -3,29 +3,41 @@ package de.fll.regiom.commands;
 import de.fll.regiom.controller.InviteManager;
 import de.fll.regiom.controller.RobotGameTokenRepository;
 import de.fll.regiom.controller.TeamRepository;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class DeleteCommand implements Command {
 
 	private static final String COMMAND = "delete ";
 
-	private final Map<String, Consumer<MessageReceivedEvent>> actions = Map.of(
-			"tokens", e -> RobotGameTokenRepository.INSTANCE.clear(),
-			"channels", e -> TeamRepository.INSTANCE.removeAllTeamareas(e.getJDA()),
-			"teamareas", e -> TeamRepository.INSTANCE.removeAllTeamareas(e.getJDA()),
-			"invites", e -> InviteManager.INSTANCE.clear()
+	private final Map<String, Function<JDA, CompletableFuture<?>>> actions = Map.of(
+			"tokens", makeFuture(RobotGameTokenRepository.INSTANCE::clear),
+			"channels", TeamRepository.INSTANCE::removeAllTeamareas,
+			"teamareas", TeamRepository.INSTANCE::removeAllTeamareas,
+			"invites", makeFuture(InviteManager.INSTANCE::clear),
+			"roles", TeamRepository.INSTANCE::removeAllRoles
 	);
+
+	private static Function<JDA, CompletableFuture<?>> makeFuture(Consumer<JDA> consumer) {
+		return event -> CompletableFuture.runAsync(() -> consumer.accept(event));
+	}
+
+	private static Function<JDA, CompletableFuture<?>> makeFuture(Runnable runnable) {
+		return event -> CompletableFuture.runAsync(runnable);
+	}
 
 	@Override
 	public boolean execute(@NotNull MessageReceivedEvent event, @NotNull String command) {
 		command = command.substring(COMMAND.length());
 		if (actions.containsKey(command)) {
-			actions.get(command).accept(event);
+			actions.get(command).apply(event.getJDA());
 			return true;
 		}
 		return false;

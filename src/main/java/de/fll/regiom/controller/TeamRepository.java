@@ -57,6 +57,12 @@ public enum TeamRepository implements Storable {
 	}
 
 	@NotNull
+	public CompletableFuture<?> removeAllRoles(@NotNull JDA jda) {
+		return DiscordTeamStructureManager.INSTANCE.removeAllTeamRoles(jda, teams)
+				.thenAccept(v -> save());
+	}
+
+	@NotNull
 	public CompletableFuture<?> createAllInvites(@NotNull JDA jda) {
 		return InviteManager.INSTANCE.createAllInvites(jda, teams)
 				.thenAccept(v -> System.out.println("[TeamRepository] created Invites."));
