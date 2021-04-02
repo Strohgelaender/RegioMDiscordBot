@@ -65,9 +65,7 @@ public enum DiscordTeamStructureManager {
 			allFutures[i] = createTeamArea(guild, teamarea, teams.get(i), i);
 		}
 
-		return CompletableFuture.allOf(allFutures)
-				.thenComposeAsync(v -> guild.getTextChannelById(Constants.LOG_CHANNEL_ID)
-						.sendMessage("All Teamareas created successfully.").submit());
+		return CompletableFuture.allOf(allFutures);
 	}
 
 	/**

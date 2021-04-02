@@ -30,8 +30,12 @@ public class CreateStructureCommand implements Command {
 				.limit(1)
 				.map(Map.Entry::getValue)
 				.findAny();
-		optional.ifPresent(action -> action.apply(event.getJDA())
-				.thenCompose(v -> CommandUtils.reactWithCheckbox(event.getMessage())));
+		optional.ifPresent(action -> {
+			event.getMessage().addReaction("\uD83D\uDEA7").queue();
+			action.apply(event.getJDA())
+					.thenCompose(v -> event.getMessage().removeReaction("\uD83D\uDEA7").submit())
+					.thenCompose(v -> CommandUtils.reactWithCheckbox(event.getMessage()));
+		});
 		return optional.isPresent();
 	}
 

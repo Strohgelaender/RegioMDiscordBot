@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class DeleteCommand implements Command {
@@ -19,17 +18,9 @@ public class DeleteCommand implements Command {
 	private final Map<String, Function<JDA, CompletableFuture<?>>> actions = Map.of(
 			"channels", TeamRepository.INSTANCE::removeAllTeamareas,
 			"teamareas", TeamRepository.INSTANCE::removeAllTeamareas,
-			"invites", makeFuture(InviteManager.INSTANCE::clear),
-			"roles", TeamRepository.INSTANCE::removeAllRoles
+			"roles", TeamRepository.INSTANCE::removeAllRoles,
+			"invites", InviteManager.INSTANCE::removeAllInvites
 	);
-
-	private static Function<JDA, CompletableFuture<?>> makeFuture(Consumer<JDA> consumer) {
-		return event -> CompletableFuture.runAsync(() -> consumer.accept(event));
-	}
-
-	private static Function<JDA, CompletableFuture<?>> makeFuture(Runnable runnable) {
-		return event -> CompletableFuture.runAsync(runnable);
-	}
 
 	@Override
 	public boolean execute(@NotNull MessageReceivedEvent event, @NotNull String command) {

@@ -3,9 +3,9 @@ package de.fll.regiom.controller;
 import de.fll.regiom.io.json.JsonExporter;
 import de.fll.regiom.io.json.JsonImporter;
 import de.fll.regiom.model.Constants;
+import de.fll.regiom.model.Storable;
 import de.fll.regiom.model.members.Roleable;
 import de.fll.regiom.model.members.Spectator;
-import de.fll.regiom.model.Storable;
 import de.fll.regiom.model.members.Team;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Invite;
@@ -49,8 +49,6 @@ public enum InviteManager implements Storable {
 		Objects.requireNonNull(channel);
 		return CompletableFuture.allOf(
 				Stream.concat(teams.stream()
-								//TODO limited for testing
-								.limit(2)
 								.map(team -> createInvite(channel, team)),
 						Stream.of(createInvite(channel, new Spectator()))
 				).toArray(CompletableFuture[]::new))
@@ -62,6 +60,19 @@ public enum InviteManager implements Storable {
 	private CompletableFuture<?> createInvite(@NotNull TextChannel channel, @NotNull Roleable roleable) {
 		return channel.createInvite().setUnique(true).submit()
 				.thenAccept(invite -> roles.put(invite.getCode(), roleable));
+	}
+
+	@NotNull
+	public CompletableFuture<?> removeAllInvites(@NotNull JDA jda) {
+		var channel = Objects.requireNonNull(jda.getTextChannelById(Constants.WELCOME_CHANNEL));
+		return channel.retrieveInvites().submit()
+				.thenCompose(invites ->
+						CompletableFuture.allOf(invites.stream()
+								.filter(invite -> roles.containsKey(invite.getCode()))
+								.peek(invite -> roles.remove(invite.getCode()))
+								.map(invite -> invite.delete().submit())
+								.toArray(CompletableFuture[]::new))
+				);
 	}
 
 	@NotNull
