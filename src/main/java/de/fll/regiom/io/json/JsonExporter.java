@@ -1,6 +1,5 @@
 package de.fll.regiom.io.json;
 
-import de.fll.regiom.model.RobotGameAttempt;
 import de.fll.regiom.model.members.Roleable;
 import de.fll.regiom.model.members.Team;
 
@@ -42,14 +41,6 @@ public class JsonExporter extends AbstractJsonIO {
 	public void exportInvites(Map<String, Roleable> roles) {
 		try {
 			exportStuff(invitesFile, roles);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void exportTokens(Map<String, RobotGameAttempt> attempts) {
-		try {
-			exportStuff(tokensFile, attempts);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

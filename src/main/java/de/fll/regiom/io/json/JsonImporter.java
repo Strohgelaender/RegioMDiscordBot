@@ -1,7 +1,6 @@
 package de.fll.regiom.io.json;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import de.fll.regiom.model.RobotGameAttempt;
 import de.fll.regiom.model.members.Roleable;
 import de.fll.regiom.model.members.Team;
 
@@ -56,15 +55,6 @@ public class JsonImporter extends AbstractJsonIO {
 	public Map<String, Roleable> importInvites() {
 		try {
 			return importMap(invitesFile, String.class, Roleable.class);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return new HashMap<>();
-	}
-
-	public Map<String, RobotGameAttempt> loadTokens() {
-		try {
-			return importMap(tokensFile, String.class, RobotGameAttempt.class);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

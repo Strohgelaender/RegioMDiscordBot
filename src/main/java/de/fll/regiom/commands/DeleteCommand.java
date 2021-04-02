@@ -1,7 +1,6 @@
 package de.fll.regiom.commands;
 
 import de.fll.regiom.controller.InviteManager;
-import de.fll.regiom.controller.RobotGameTokenRepository;
 import de.fll.regiom.controller.TeamRepository;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
@@ -18,7 +17,6 @@ public class DeleteCommand implements Command {
 	private static final String COMMAND = "delete ";
 
 	private final Map<String, Function<JDA, CompletableFuture<?>>> actions = Map.of(
-			"tokens", makeFuture(RobotGameTokenRepository.INSTANCE::clear),
 			"channels", TeamRepository.INSTANCE::removeAllTeamareas,
 			"teamareas", TeamRepository.INSTANCE::removeAllTeamareas,
 			"invites", makeFuture(InviteManager.INSTANCE::clear),
@@ -38,7 +36,7 @@ public class DeleteCommand implements Command {
 		command = command.substring(COMMAND.length());
 		if (actions.containsKey(command)) {
 			actions.get(command).apply(event.getJDA())
-					.thenAccept(v -> CommandUtils.reactWithCheckbox(event.getMessage()));
+					.thenCompose(v -> CommandUtils.reactWithCheckbox(event.getMessage()));
 			return true;
 		}
 		return false;
