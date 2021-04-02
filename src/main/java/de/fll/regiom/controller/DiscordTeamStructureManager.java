@@ -18,6 +18,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 
 public enum DiscordTeamStructureManager {
 	INSTANCE;
@@ -39,14 +40,14 @@ public enum DiscordTeamStructureManager {
 
 			Viel Spaß und Erfolg wünscht euch das Team der FLL München!""".formatted(Constants.SUPPORT_CHANNEL);
 
-	public void createAllTeamRoles(JDA jda, List<Team> teams) {
+	@NotNull
+	public CompletableFuture<?> createAllTeamRoles(JDA jda, List<Team> teams) {
 		Guild guid = jda.getGuildById(Constants.GUILD_ID);
 		Objects.requireNonNull(guid);
 		Role teamBaseRole = guid.getRoleById(Constants.TEAM_ROLE_ID);
 		Objects.requireNonNull(teamBaseRole);
-		for (Team team : teams) {
-			createTeamRole(guid, team, teamBaseRole);
-		}
+
+		return combineAllFutures(teams, team -> createTeamRole(guid, team, teamBaseRole));
 	}
 
 	@NotNull
@@ -72,54 +73,56 @@ public enum DiscordTeamStructureManager {
 	/**
 	 * Updates the welcome text which was sent to every channel of every team.
 	 */
-	public void updateAllWelcomeMessages(@NotNull JDA jda, @NotNull List<Team> teams) {
+	@NotNull
+	public CompletableFuture<?> updateAllWelcomeMessages(@NotNull JDA jda, @NotNull List<Team> teams) {
 		Guild guild = jda.getGuildById(Constants.GUILD_ID);
 		Objects.requireNonNull(guild);
-		for (Team team : teams) {
+
+		return combineAllFutures(teams, team -> {
 			if (team.getTextChannelID() <= 0)
-				continue;
+				return CompletableFuture.completedFuture(null);
 
 			var channel = guild.getTextChannelById(team.getTextChannelID());
 			if (channel == null)
-				continue;
+				return CompletableFuture.completedFuture(null);
 
-			channel.getHistoryFromBeginning(1).queue(messageHistory -> {
-				if (messageHistory.getRetrievedHistory().isEmpty())
-					return;
-				messageHistory.getRetrievedHistory().get(0).editMessage(createWelcomeTeamText(team, channel)).queue();
-			});
-		}
+			return channel.getHistoryFromBeginning(1).submit()
+					.thenCompose(messageHistory -> {
+						if (messageHistory.getRetrievedHistory().isEmpty())
+							return CompletableFuture.completedFuture(null);
+						return messageHistory.getRetrievedHistory().get(0).editMessage(createWelcomeTeamText(team, channel)).submit();
+					});
+		});
 	}
 
-	public void removeAllTeamareas(@NotNull JDA jda, @NotNull List<Team> teams) {
+	@NotNull
+	private CompletableFuture<?> combineAllFutures(List<Team> teams, Function<Team, CompletableFuture<?>> teamFunction) {
+		var allFutures = new CompletableFuture[teams.size()];
+		for (int i = 0; i < teams.size(); i++) {
+			allFutures[i] = teamFunction.apply(teams.get(i));
+		}
+		return CompletableFuture.allOf(allFutures);
+	}
+
+	@NotNull
+	public CompletableFuture<?> removeAllTeamareas(@NotNull JDA jda, @NotNull List<Team> teams) {
 		Guild guild = jda.getGuildById(Constants.GUILD_ID);
 		Objects.requireNonNull(guild);
-		for (Team team : teams) {
-			if (team.getCategoryID() <= 0)
-				continue;
-
-			guild.getCategoryById(team.getCategoryID()).delete().queue();
-			guild.getTextChannelById(team.getTextChannelID()).delete().queue();
-			guild.getVoiceChannelById(team.getVoiceChannelID()).delete().queue();
-			guild.getVoiceChannelById(team.getEvaluationChannelID()).delete().queue();
-
-			team.setCategoryID(-1);
-			team.setTextChannelID(-1);
-			team.setVoiceChannelID(-1);
-			team.setEvaluationChannelID(-1);
-		}
+		return combineAllFutures(teams, team -> removeTeamarea(team, guild));
 	}
 
-	public void createTeamRole(@NotNull Guild guild, @NotNull Team team, @NotNull Role teamBaseRole) {
-		guild.createCopyOfRole(teamBaseRole)
+	@NotNull
+	public CompletableFuture<?> createTeamRole(@NotNull Guild guild, @NotNull Team team, @NotNull Role teamBaseRole) {
+		return guild.createCopyOfRole(teamBaseRole)
 				.setName(team.getName())
 				.setColor((Integer) null)
-				.queue(role -> team.setRoleID(role.getIdLong()));
+				.submit()
+				.thenAccept(role -> team.setRoleID(role.getIdLong()));
 	}
 
 	@NotNull
 	public CompletableFuture<?> createTeamArea(@NotNull Guild guild, @NotNull Category teamarea, @NotNull Team team, int i) {
-		return creatTeamCategory(guild, teamarea, team, i).thenComposeAsync(category -> {
+		return createTeamCategory(guild, teamarea, team, i).thenComposeAsync(category -> {
 			team.setCategoryID(category.getIdLong());
 			return CompletableFuture.allOf(createTeamTextChannel(category, team),
 					createTeamPrivateVoiceChannel(category, team),
@@ -129,7 +132,7 @@ public enum DiscordTeamStructureManager {
 	}
 
 	@NotNull
-	private CompletableFuture<Category> creatTeamCategory(@NotNull Guild guild, @NotNull Category teamarea, @NotNull Team team, int offset) {
+	private CompletableFuture<Category> createTeamCategory(@NotNull Guild guild, @NotNull Category teamarea, @NotNull Team team, int offset) {
 		return setEveryonePermission(guild.createCategory(team.toString()))
 				.addRolePermissionOverride(team.getRoleID(), PERMISSIONS_VIEW_TEXT_AND_VOICE_CHANNEL, Collections.emptySet())
 				.setPosition(teamarea.getPosition() + offset + 1) //+1 for Game-Category (may change later)
@@ -163,6 +166,25 @@ public enum DiscordTeamStructureManager {
 		Role role = channel.getJDA().getRoleById(team.getRoleID());
 		String roleMention = role == null ? team.getName() : role.getAsMention();
 		return String.format(TEAM_WELCOME_TEXT, roleMention);
+	}
+
+	@NotNull
+	private CompletableFuture<?> removeTeamarea(@NotNull Team team, @NotNull Guild guild) {
+		if (team.getCategoryID() <= 0)
+			return CompletableFuture.completedFuture(null);
+
+		//TODO handle null case!
+		return CompletableFuture.allOf(
+				guild.getCategoryById(team.getCategoryID()).delete().submit(),
+				guild.getTextChannelById(team.getTextChannelID()).delete().submit(),
+				guild.getVoiceChannelById(team.getVoiceChannelID()).delete().submit(),
+				guild.getVoiceChannelById(team.getEvaluationChannelID()).delete().submit()
+		).thenAccept(v -> {
+			team.setCategoryID(-1);
+			team.setTextChannelID(-1);
+			team.setVoiceChannelID(-1);
+			team.setEvaluationChannelID(-1);
+		});
 	}
 
 	@NotNull

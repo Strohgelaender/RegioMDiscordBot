@@ -28,7 +28,7 @@ public class RegisterInviteMappingCommand implements Command {
 		GenericRoleHolder holder = new GenericRoleHolder(mentionedRoles.stream().map(ISnowflake::getIdLong).collect(Collectors.toList()));
 		InviteManager.INSTANCE.putInvite(code, holder);
 
-		event.getMessage().addReaction("✔").queue();
+		CommandUtils.reactWithCheckbox(event.getMessage());
 		return true;
 	}
 

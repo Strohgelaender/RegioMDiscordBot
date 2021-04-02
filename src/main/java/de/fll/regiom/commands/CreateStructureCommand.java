@@ -8,13 +8,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 
 public class CreateStructureCommand implements Command {
 
 	private static final String COMMAND = "create ";
 
-	private final Map<Set<String>, Consumer<JDA>> actions = Map.of(
+	private final Map<Set<String>, Function<JDA, CompletableFuture<?>>> actions = Map.of(
 			Set.of("roles"), TeamRepository.INSTANCE::createAllTeamRoles,
 			Set.of("channels", "teamareas"), TeamRepository.INSTANCE::createAllTeamareas,
 			Set.of("welcometext", "teammessage", "text", "message"), TeamRepository.INSTANCE::updateAllWelcomeMessages,
@@ -29,7 +30,8 @@ public class CreateStructureCommand implements Command {
 				.limit(1)
 				.map(Map.Entry::getValue)
 				.findAny();
-		optional.ifPresent(action -> action.accept(event.getJDA()));
+		optional.ifPresent(action -> action.apply(event.getJDA())
+				.thenCompose(v -> CommandUtils.reactWithCheckbox(event.getMessage())));
 		return optional.isPresent();
 	}
 
