@@ -3,6 +3,7 @@ package de.fll.regiom.io.csv;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -32,7 +33,7 @@ public abstract class AbstractCsvImporter<T> {
 	public List<T> fromLines() {
 		try {
 			return Files.lines(filePath).map(s -> s.split(regex)).filter(this::filter)
-					.map(this::fromStrings).filter(Objects::nonNull).collect(Collectors.toList());
+					.map(this::fromStrings).filter(Objects::nonNull).collect(Collectors.toCollection(ArrayList::new));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

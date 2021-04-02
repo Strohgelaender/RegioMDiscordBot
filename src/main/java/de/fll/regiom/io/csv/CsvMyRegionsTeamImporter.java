@@ -4,22 +4,17 @@ import de.fll.regiom.io.json.JsonExporter;
 import de.fll.regiom.model.members.Team;
 
 import java.nio.file.Path;
-import java.util.List;
 
 /**
- * Imports Teamdata from FLL-CSV.
+ * Imports Teamdata from FLL-CSV provided by hands on technology.
  * <b>Use this for one-time imports.</b>
  *
  * @see JsonExporter for regualar Imports (on Restarts)
  */
-public class CsvTeamImporter extends AbstractCsvImporter<Team> {
+public class CsvMyRegionsTeamImporter extends AbstractCsvImporter<Team> {
 
-	public CsvTeamImporter(String path) {
+	public CsvMyRegionsTeamImporter(String path) {
 		super(Path.of(path), StandardCSVConfig.DELIMITER);
-	}
-
-	public List<Team> importTeams() {
-		return fromLines();
 	}
 
 	@Override

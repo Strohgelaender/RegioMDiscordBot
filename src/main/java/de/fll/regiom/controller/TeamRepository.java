@@ -1,6 +1,6 @@
 package de.fll.regiom.controller;
 
-import de.fll.regiom.io.csv.CsvTeamImporter;
+import de.fll.regiom.io.csv.CsvTeamOverviewTeamImporter;
 import de.fll.regiom.io.json.JsonExporter;
 import de.fll.regiom.io.json.JsonImporter;
 import de.fll.regiom.model.Storable;
@@ -95,6 +95,6 @@ public enum TeamRepository implements Storable {
 	public void load() {
 		teams = JsonImporter.getInstance().importTeams();
 		if (teams.isEmpty()) //Fallback: Read Teams from HoT-Export
-			teams = new CsvTeamImporter("./myregions.csv").importTeams();
+			teams = new CsvTeamOverviewTeamImporter("./Teamliste.csv").fromLines();
 	}
 }
