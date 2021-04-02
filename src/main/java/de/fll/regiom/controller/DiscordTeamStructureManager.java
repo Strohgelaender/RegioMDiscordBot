@@ -1,7 +1,7 @@
 package de.fll.regiom.controller;
 
 import de.fll.regiom.model.Constants;
-import de.fll.regiom.model.Team;
+import de.fll.regiom.model.members.Team;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Category;

@@ -1,8 +1,8 @@
 package de.fll.regiom.io.json;
 
 import de.fll.regiom.model.RobotGameAttempt;
-import de.fll.regiom.model.Roleable;
-import de.fll.regiom.model.Team;
+import de.fll.regiom.model.members.Roleable;
+import de.fll.regiom.model.members.Team;
 
 import java.io.File;
 import java.io.IOException;

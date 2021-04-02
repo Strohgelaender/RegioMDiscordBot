@@ -2,6 +2,7 @@ package de.fll.regiom.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.fll.regiom.model.members.Team;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;

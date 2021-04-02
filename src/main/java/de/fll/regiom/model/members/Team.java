@@ -1,16 +1,17 @@
-package de.fll.regiom.model;
+package de.fll.regiom.model.members;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import de.fll.regiom.model.Constants;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
+@JsonTypeInfo(use = JsonTypeInfo.Id.MINIMAL_CLASS)
 public class Team implements Roleable {
 
 	private final String name;
