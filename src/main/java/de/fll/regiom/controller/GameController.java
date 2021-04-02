@@ -4,7 +4,7 @@ import de.fll.regiom.io.csv.CsvGameStateExporter;
 import de.fll.regiom.io.csv.CsvGameStateImporter;
 import de.fll.regiom.io.csv.CsvRiddleImporter;
 import de.fll.regiom.model.Storable;
-import de.fll.regiom.model.Team;
+import de.fll.regiom.model.members.Team;
 import de.fll.regiom.model.game.BlanksRiddle;
 import de.fll.regiom.model.game.CrossWordRiddle;
 import de.fll.regiom.model.game.DecryptRiddle;

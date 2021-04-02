@@ -4,7 +4,7 @@ import de.fll.regiom.io.json.JsonExporter;
 import de.fll.regiom.io.json.JsonImporter;
 import de.fll.regiom.model.RobotGameAttempt;
 import de.fll.regiom.model.Storable;
-import de.fll.regiom.model.Team;
+import de.fll.regiom.model.members.Team;
 import net.dv8tion.jda.api.entities.Member;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

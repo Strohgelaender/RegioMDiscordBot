@@ -1,11 +1,14 @@
-package de.fll.regiom.model;
+package de.fll.regiom.model.members;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import de.fll.regiom.model.Constants;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
 public class Spectator implements Roleable {
 
 	@JsonIgnore

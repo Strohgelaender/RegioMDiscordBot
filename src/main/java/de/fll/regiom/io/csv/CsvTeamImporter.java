@@ -1,7 +1,7 @@
 package de.fll.regiom.io.csv;
 
 import de.fll.regiom.io.json.JsonExporter;
-import de.fll.regiom.model.Team;
+import de.fll.regiom.model.members.Team;
 
 import java.nio.file.Path;
 import java.util.List;
