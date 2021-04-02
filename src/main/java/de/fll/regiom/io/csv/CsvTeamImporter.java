@@ -15,7 +15,7 @@ import java.util.List;
 public class CsvTeamImporter extends AbstractCsvImporter<Team> {
 
 	public CsvTeamImporter(String path) {
-		super(Path.of(path), ";");
+		super(Path.of(path), StandardCSVConfig.DELIMITER);
 	}
 
 	public List<Team> importTeams() {
