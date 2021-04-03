@@ -13,7 +13,7 @@ public class GenericRoleHolder implements Roleable {
 	private final List<Long> roles;
 
 	@JsonCreator
-	public GenericRoleHolder(@JsonProperty("roles") List<Long> roles) {
+	public GenericRoleHolder(@JsonProperty("roles") @NotNull List<Long> roles) {
 		this.roles = roles;
 	}
 
@@ -24,6 +24,6 @@ public class GenericRoleHolder implements Roleable {
 
 	@Override
 	public String toString() {
-		return "RoleHolder[" + roles + ']';
+		return "RoleHolder" + roles;
 	}
 }
