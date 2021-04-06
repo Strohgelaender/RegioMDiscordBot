@@ -58,7 +58,11 @@ public enum InviteManager implements Storable {
 
 	@NotNull
 	private CompletableFuture<?> createInvite(@NotNull TextChannel channel, @NotNull Roleable roleable) {
-		return channel.createInvite().setUnique(true).submit()
+		return channel.createInvite()
+				.setUnique(true)
+				.setMaxAge(0)
+				.setMaxUses(0)
+				.submit()
 				.thenAccept(invite -> roles.put(invite.getCode(), roleable));
 	}
 
