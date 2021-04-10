@@ -19,11 +19,10 @@ public class MatchInfoCommand implements Command {
 	public boolean execute(@NotNull MessageReceivedEvent event, @NotNull String command) {
 		try {
 			EmbedBuilder builder = new EmbedBuilder();
-			builder.setTitle("Aktuelles Robot-Game");
+			builder.setTitle("Aktuell im Robot-Game");
 			command = command.substring(COMMAND_NAME.length());
 			Team team1 = byString(command.strip().substring(0, 4));
-			Team team2 = byString(command.strip().substring(5, 9));
-			builder.setDescription(CommandUtils.getTaggedTeam(team1) + " - " + CommandUtils.getTaggedTeam(team2));
+			builder.setDescription(CommandUtils.getTaggedTeam(team1));
 			event.getJDA().getTextChannelById(CHANNEL_ID).sendMessage(builder.build()).queue();
 			return true;
 		} catch (Exception e) {
@@ -47,6 +46,6 @@ public class MatchInfoCommand implements Command {
 
 	@Override
 	public @Nullable String getInfo() {
-		return "matchinfo hotID1 hotID2 - Sendet eine Indo, dass das RobotGame vom Team mit id1 gegen das Team mit id2 läuft";
+		return "matchinfo <hotID> - Sendet eine Info, dass das RobotGame vom Team mit dieser id läuft";
 	}
 }
