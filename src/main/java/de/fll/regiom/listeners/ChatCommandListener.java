@@ -86,4 +86,8 @@ public class ChatCommandListener extends ListenerAdapter {
 			}
 		}
 	}
+
+	public static String getPREFIX() {
+		return PREFIX;
+	}
 }

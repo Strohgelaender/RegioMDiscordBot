@@ -18,7 +18,7 @@ public abstract class AbstractCsvExporter<T> implements StandardCSVConfig {
 
 	/**
 	 * @param data A Collection containing the Data which has to be saved
-	 */
+	 */ 
 	public void save(Collection<T> data) {
 		String allData = data.stream().map(this::map).collect(Collectors.joining(DELIMITER));
 		try {

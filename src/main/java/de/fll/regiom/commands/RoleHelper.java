@@ -33,4 +33,9 @@ public final class RoleHelper {
 	static boolean isReferee(@NotNull Member member) {
 		return hasRole(member, Constants.REFEREE_ROLE_ID);
 	}
+
+	static boolean isVolunteer(@NotNull Member member) {
+		return hasRole(member, Constants.VOLUNTEER_ROLE_ID);
+	}
+
 }
