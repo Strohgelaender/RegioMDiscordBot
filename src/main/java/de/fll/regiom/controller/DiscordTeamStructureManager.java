@@ -1,5 +1,6 @@
 package de.fll.regiom.controller;
 
+import de.fll.regiom.commands.CommandUtils;
 import de.fll.regiom.model.Constants;
 import de.fll.regiom.model.members.Team;
 import net.dv8tion.jda.api.JDA;
@@ -27,16 +28,14 @@ public enum DiscordTeamStructureManager {
 
 	private static final String TEAM_CHANNEL_TOPIC_TEXT = "Dieser Channel ist nur für euch. Hier könnt ihr euch unterhalten, eine kleine Linkliste führen oder, oder, oder ... Einfach worauf auch immer ihr gerade Lust habt.";
 	private static final String TEAM_WELCOME_TEXT = """
-			Liebes Team **%%s**
+			Liebes Team **<TeamName>**
 
 			dieser Channel ist privat und nur für euch!
 			Keine Juroren können lesen, was ihr hier schreibt oder hören, was ihr in eurem Sprachkanal besprecht.
 			Nutzt diesen Channel für alles, was gerade anfällt. Ihr könnt Notizen schreiben, Linklisten führen oder einfach Emotes spammen.
 
 			Im anderen Sprachkanal "Bewertung" findet eure Jury-Session statt. Dort wird die Jury euch besuchen kommen.
-			Sobald ihr bereit seid, tretet einfach diesem Sprachkanal bei oder nutzt den Bot-Command '!ready', um euch verschieben zu lassen, falls ihr im Team-Sprachkanal seid.
-
-			Bei Fragen oder Problemen könnt ihr den <#%d>-Channel nutzen. Dort findet ihr auch ein FAQ.
+			Sobald ihr bereit seid, tretet einfach diesem Sprachkanal bei.
 
 			Viel Spaß und Erfolg wünscht euch das Team der FLL München!""".formatted(Constants.SUPPORT_CHANNEL);
 
@@ -177,9 +176,7 @@ public enum DiscordTeamStructureManager {
 
 	@NotNull
 	private String createWelcomeTeamText(@NotNull Team team, @NotNull TextChannel channel) {
-		Role role = channel.getJDA().getRoleById(team.getRoleID());
-		String roleMention = role == null ? team.getName() : role.getAsMention();
-		return String.format(TEAM_WELCOME_TEXT, roleMention);
+		return CommandUtils.replaceTeamTags(TEAM_WELCOME_TEXT, team, channel.getJDA());
 	}
 
 	@NotNull

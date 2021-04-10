@@ -16,11 +16,12 @@ public class SendToTeamCommand implements Command {
 
 	@Override
 	public boolean execute(@NotNull MessageReceivedEvent event, @NotNull String command) {
-		String hotID = command.substring(COMMAND_NAME.length()).strip().substring(0,4);
+		String hotID = command.substring(COMMAND_NAME.length()).strip().substring(0, 4);
 		try {
 			Team team = TeamRepository.INSTANCE.getTeamByHotId(Integer.parseInt(hotID)).orElseThrow();
 			String message = event.getMessage().getContentRaw().strip()
 					.substring(ChatCommandListener.getPREFIX().length() + COMMAND_NAME.length() + 5).strip();
+			message = CommandUtils.replaceTeamTags(message, team, event.getJDA());
 			event.getGuild().getTextChannelById(team.getTextChannelID()).sendMessage(message).queue();
 			return true;
 		} catch (NumberFormatException | NoSuchElementException | NullPointerException e) {
