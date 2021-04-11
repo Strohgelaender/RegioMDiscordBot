@@ -18,7 +18,8 @@ public final class ListenerManager {
 		memberJoinListener.setup(jda);
 		return new EventListener[]{
 				memberJoinListener,
-				new ChatCommandListener()
+				new ChatCommandListener(),
+				new WaitingRoomMover()
 		};
 	}
 
