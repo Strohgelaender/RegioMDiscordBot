@@ -20,13 +20,13 @@ public class WaitingRoomMover extends ListenerAdapter {
 		System.out.println("Update: " + event);
 		if (event.getChannelJoined() == null)
 			return;
-		if (event.getChannelLeft() == null) {
-			unmute(event.getEntity());
-			return;
-		}
 		long joinID = event.getChannelJoined().getIdLong();
 		if (WAITING_ROOM_MAP.containsKey(joinID)) {
 			moveToRoom(event.getEntity(), WAITING_ROOM_MAP.get(joinID));
+			return;
+		}
+		if (event.getChannelLeft() == null) {
+			unmute(event.getEntity());
 			return;
 		}
 		long leaveID = event.getChannelLeft().getIdLong();
