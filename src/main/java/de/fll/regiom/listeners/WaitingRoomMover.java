@@ -6,12 +6,14 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
+
 
 public class WaitingRoomMover extends ListenerAdapter {
 
-	private static final long WAITING_ROOM_ID = 830514879919685652L;
-	private static final long MAIN_ROOM_ID = 830514021516967976L;
-
+	private static final Map<Long, Long> WAITING_ROOM_MAP =
+			Map.of(830514879919685652L, 830514021516967976L, 831098421351022603L, 795634259091390504L);
+	private static final Map<Long, Boolean> MUTE_MAP = Map.of(830514879919685652L, true, 831098421351022603L, false);
 
 	@Override
 	public void onGuildVoiceUpdate(@NotNull GuildVoiceUpdateEvent event) {
@@ -23,12 +25,14 @@ public class WaitingRoomMover extends ListenerAdapter {
 			return;
 		}
 		long joinID = event.getChannelJoined().getIdLong();
-		if (joinID == WAITING_ROOM_ID) {
-			moveToMainRoom(event.getEntity(), event.getChannelJoined().getGuild());
+		if (WAITING_ROOM_MAP.containsKey(joinID)) {
+			moveToRoom(event.getEntity(), WAITING_ROOM_MAP.get(joinID));
 			return;
 		}
-		if (joinID == MAIN_ROOM_ID && event.getChannelLeft().getIdLong() == WAITING_ROOM_ID) {
-			mute(event.getEntity());
+		long leaveID = event.getChannelLeft().getIdLong();
+		if (WAITING_ROOM_MAP.containsValue(joinID) && WAITING_ROOM_MAP.containsKey(leaveID)
+				&& WAITING_ROOM_MAP.get(leaveID) == joinID) {
+			setMuted(event.getEntity(), MUTE_MAP.getOrDefault(leaveID, false));
 			return;
 		}
 		unmute(event.getEntity());
@@ -46,8 +50,9 @@ public class WaitingRoomMover extends ListenerAdapter {
 		member.getGuild().mute(member, isMute).queue();
 	}
 
-	private static void moveToMainRoom(Member member, Guild guild) {
-		guild.moveVoiceMember(member, guild.getVoiceChannelById(MAIN_ROOM_ID)).queue();
+	private static void moveToRoom(Member member, long room) {
+		Guild guild = member.getGuild();
+		guild.moveVoiceMember(member, guild.getVoiceChannelById(room)).queue();
 	}
 
 }
