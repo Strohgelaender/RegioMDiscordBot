@@ -66,9 +66,12 @@ public class ChatCommandListener extends ListenerAdapter {
 
 		String msg = event.getMessage().getContentRaw().toLowerCase(Locale.ROOT).strip();
 
-		if (!msg.startsWith(PREFIX))
+		if (!msg.startsWith(PREFIX) && !event.isFromType(ChannelType.PRIVATE))
+			//Feedback -> private without prefix is allowed
 			return;
-		msg = msg.substring(PREFIX.length());
+
+		if (msg.startsWith(PREFIX))
+			msg = msg.substring(PREFIX.length());
 
 		Member member = event.getMember();
 		if (member == null) {

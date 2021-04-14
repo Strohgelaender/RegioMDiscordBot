@@ -19,14 +19,15 @@ public class HelpCommand implements Command {
 	@Override
 	public boolean execute(@NotNull MessageReceivedEvent event, @NotNull String msg) {
 		MessageBuilder builder = new MessageBuilder();
-		Member member = event.getMember();
-		if (member == null)
-			member = RoleHelper.toMember(event.getAuthor());
+		Member member = RoleHelper.toMember(event.getAuthor());
 
 		builder.append("Der Regio-Bot verfügt über folgende Befehle:\n\n");
 		for (Command command : commands) {
 			if (command.canBeCalledBy(member)) {
-				builder.append(command.getInfo()).append("\n");
+				String info = command.getInfo();
+				if (info != null) {
+					builder.append(command.getInfo()).append("\n");
+				}
 			}
 		}
 		builder.append("\nIrgendwas klappt nicht? Du hast einen Verbesserungsvorschlag oder eine neue Idee? Schreib einfach einen der Admins an.");
