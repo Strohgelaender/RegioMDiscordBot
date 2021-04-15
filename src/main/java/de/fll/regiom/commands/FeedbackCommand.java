@@ -1,7 +1,9 @@
 package de.fll.regiom.commands;
 
+import de.fll.regiom.util.CompletableFutureUtil;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,7 +20,14 @@ public class FeedbackCommand implements Command {
 		if (feedbackChannel == null)
 			return false;
 
-		feedbackChannel.sendMessage(event.getMessage()).queue();
+		String message = command.isEmpty() ? "Fileupload:" : event.getMessage().getContentDisplay();
+		MessageAction action = feedbackChannel.sendMessage(message);
+
+		var attachments = event.getMessage().getAttachments();
+		CompletableFutureUtil.combineAllFutures(attachments, attachment ->
+				attachment.retrieveInputStream()
+						.thenAccept(in -> action.addFile(in, attachment.getFileName()))
+		).thenCompose(v -> action.submit());
 		return true;
 	}
 

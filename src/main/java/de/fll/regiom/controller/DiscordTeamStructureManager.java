@@ -19,7 +19,8 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
+
+import static de.fll.regiom.util.CompletableFutureUtil.combineAllFutures;
 
 public enum DiscordTeamStructureManager {
 	INSTANCE;
@@ -90,15 +91,6 @@ public enum DiscordTeamStructureManager {
 						return messageHistory.getRetrievedHistory().get(0).editMessage(createWelcomeTeamText(team, channel)).submit();
 					});
 		});
-	}
-
-	@NotNull
-	private CompletableFuture<?> combineAllFutures(List<Team> teams, Function<Team, CompletableFuture<?>> teamFunction) {
-		var allFutures = new CompletableFuture[teams.size()];
-		for (int i = 0; i < teams.size(); i++) {
-			allFutures[i] = teamFunction.apply(teams.get(i));
-		}
-		return CompletableFuture.allOf(allFutures);
 	}
 
 	@NotNull

@@ -15,7 +15,7 @@ public final class RoleHelper {
 
 	@Nullable
 	public static Member toMember(@NotNull User user) {
-		return user.getJDA().getGuildById(Constants.GUILD_ID).getMember(user);
+		return user.getJDA().getGuildById(Constants.GUILD_ID).retrieveMember(user).complete();
 	}
 
 	private static boolean hasRole(@NotNull Member member, long roleID) {
