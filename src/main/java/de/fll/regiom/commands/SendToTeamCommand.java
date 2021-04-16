@@ -22,7 +22,10 @@ public class SendToTeamCommand implements Command {
 			String message = event.getMessage().getContentRaw().strip()
 					.substring(ChatCommandListener.getPREFIX().length() + COMMAND_NAME.length() + 5).strip();
 			message = CommandUtils.replaceTeamTags(message, team, event.getJDA());
-			event.getGuild().getTextChannelById(team.getTextChannelID()).sendMessage(message).queue();
+			var teamChannel = event.getGuild().getTextChannelById(team.getTextChannelID());
+			if (teamChannel == null)
+				return false;
+			CommandUtils.sendDuplicatedMessageWithFiles(event.getMessage(), message, teamChannel);
 			return true;
 		} catch (NumberFormatException | NoSuchElementException | NullPointerException e) {
 			event.getChannel().sendMessage("Could not find the text channel of the team with ID " + hotID).queue();
