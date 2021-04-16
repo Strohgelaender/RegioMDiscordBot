@@ -22,19 +22,19 @@ public final class RoleHelper {
 		return member.getRoles().stream().map(Role::getIdLong).anyMatch(id -> id == roleID);
 	}
 
-	static boolean isAdmin(@NotNull Member member) {
+	public static boolean isAdmin(@NotNull Member member) {
 		return hasRole(member, Constants.ADMIN_ROLE_ID);
 	}
 
-	static boolean isTeam(@NotNull Member member) {
+	public static boolean isTeam(@NotNull Member member) {
 		return TeamRepository.INSTANCE.getTeamByMember(member).isPresent();
 	}
 
-	static boolean isReferee(@NotNull Member member) {
+	public static boolean isReferee(@NotNull Member member) {
 		return hasRole(member, Constants.REFEREE_ROLE_ID);
 	}
 
-	static boolean isVolunteer(@NotNull Member member) {
+	public static boolean isVolunteer(@NotNull Member member) {
 		return hasRole(member, Constants.VOLUNTEER_ROLE_ID);
 	}
 

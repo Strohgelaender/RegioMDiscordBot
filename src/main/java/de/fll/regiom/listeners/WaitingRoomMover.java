@@ -1,5 +1,6 @@
 package de.fll.regiom.listeners;
 
+import de.fll.regiom.commands.RoleHelper;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
@@ -32,7 +33,8 @@ public class WaitingRoomMover extends ListenerAdapter {
 		long leaveID = event.getChannelLeft().getIdLong();
 		if (WAITING_ROOM_MAP.containsValue(joinID) && WAITING_ROOM_MAP.containsKey(leaveID)
 				&& WAITING_ROOM_MAP.get(leaveID) == joinID) {
-			setMuted(event.getEntity(), MUTE_MAP.getOrDefault(leaveID, false));
+			if (RoleHelper.isTeam(event.getEntity()))
+				setMuted(event.getEntity(), MUTE_MAP.getOrDefault(leaveID, false));
 			return;
 		}
 		unmute(event.getEntity());
