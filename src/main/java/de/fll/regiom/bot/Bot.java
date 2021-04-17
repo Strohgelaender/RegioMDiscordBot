@@ -26,7 +26,7 @@ public class Bot {
 				JDA jda = JDABuilder.createDefault(token)
 						.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_INVITES)
 						.addEventListeners(new ReadyListener())
-						.setActivity(Activity.playing("mit Lego")).build();
+						.setActivity(Activity.playing("Eating Pizza")).build();
 				token = null;
 			} catch (LoginException ignore) {
 				System.out.println("Enter Bot Token: ");
