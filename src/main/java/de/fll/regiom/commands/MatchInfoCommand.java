@@ -23,7 +23,7 @@ public class MatchInfoCommand implements Command {
 			command = command.substring(COMMAND_NAME.length());
 			Team team1 = byString(command.strip().substring(0, 4));
 			builder.setDescription(CommandUtils.getTaggedTeam(team1));
-			event.getJDA().getTextChannelById(CHANNEL_ID).sendMessage(builder.build()).queue();
+			event.getJDA().getTextChannelById(CHANNEL_ID).sendMessageEmbeds(builder.build()).queue();
 			return true;
 		} catch (Exception e) {
 			return false;
