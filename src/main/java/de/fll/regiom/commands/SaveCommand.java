@@ -10,7 +10,7 @@ public class SaveCommand implements Command {
 	@Override
 	public boolean execute(@NotNull MessageReceivedEvent event, @NotNull String command) {
 		if (StorageManager.INSTANCE.saveAll()) {
-			event.getChannel().sendMessage("Data saved successfully").queue();
+			CommandUtils.reactWithCheckbox(event.getMessage());
 			return true;
 		} else {
 			event.getChannel().sendMessage("An error occurred while saving the data. Please check the logs.").queue();

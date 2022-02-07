@@ -39,7 +39,7 @@ public enum DiscordTeamStructureManager {
 			Im anderen Sprachkanal "Bewertung" findet eure Jury-Session statt. Dort wird die Jury euch besuchen kommen.
 			Sobald ihr bereit seid, tretet einfach diesem Sprachkanal bei.
 
-			Viel Spaß und Erfolg wünscht euch das Team der FLL München!""".formatted(Constants.SUPPORT_CHANNEL);
+			Viel Spaß und Erfolg wünscht euch das Team der FLL München!""";
 
 	@NotNull
 	public CompletableFuture<?> createAllTeamRoles(JDA jda, List<Team> teams) {

@@ -7,7 +7,7 @@ import java.nio.file.Path;
 public class CsvTeamOverviewTeamImporter extends AbstractCsvImporter<Team> {
 
 	public CsvTeamOverviewTeamImporter(String filePath) {
-		super(Path.of(filePath), ",");
+		super(Path.of(filePath), ";");
 	}
 
 	@Override

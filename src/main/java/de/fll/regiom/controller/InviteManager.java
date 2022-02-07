@@ -76,7 +76,7 @@ public enum InviteManager implements Storable {
 								.peek(invite -> roles.remove(invite.getCode()))
 								.map(invite -> invite.delete().submit())
 								.toArray(CompletableFuture[]::new))
-				);
+				).thenAccept(v -> save());
 	}
 
 	@NotNull
