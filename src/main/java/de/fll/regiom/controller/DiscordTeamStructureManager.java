@@ -19,6 +19,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Stream;
 
 import static de.fll.regiom.util.CompletableFutureUtil.combineAllFutures;
 
@@ -176,13 +177,16 @@ public enum DiscordTeamStructureManager {
 		if (team.getCategoryID() <= 0)
 			return CompletableFuture.completedFuture(null);
 
-		//TODO handle null case!
-		return CompletableFuture.allOf(
-				guild.getCategoryById(team.getCategoryID()).delete().submit(),
-				guild.getTextChannelById(team.getTextChannelID()).delete().submit(),
-				guild.getVoiceChannelById(team.getVoiceChannelID()).delete().submit(),
-				guild.getVoiceChannelById(team.getEvaluationChannelID()).delete().submit()
-		).thenAccept(v -> {
+		var deleteCommands = Stream.of(
+						guild.getCategoryById(team.getCategoryID()),
+						guild.getTextChannelById(team.getTextChannelID()),
+						guild.getVoiceChannelById(team.getVoiceChannelID()),
+						guild.getVoiceChannelById(team.getEvaluationChannelID())
+				).filter(Objects::nonNull)
+				.map(guildChannel -> guildChannel.delete().submit())
+				.toArray(CompletableFuture[]::new);
+
+		return CompletableFuture.allOf(deleteCommands).thenAccept(v -> {
 			team.setCategoryID(-1);
 			team.setTextChannelID(-1);
 			team.setVoiceChannelID(-1);
