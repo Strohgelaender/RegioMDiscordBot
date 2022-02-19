@@ -24,7 +24,7 @@ public class Bot {
 		while (token != null) {
 			try {
 				JDA jda = JDABuilder.createDefault(token)
-						.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_INVITES)
+						.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_INVITES, GatewayIntent.GUILD_VOICE_STATES)
 						.addEventListeners(new ReadyListener())
 						.setActivity(Activity.playing("mit Lego")).build();
 				token = null;
