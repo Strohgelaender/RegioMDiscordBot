@@ -3,12 +3,14 @@ package de.fll.regiom.listeners;
 import de.fll.regiom.commands.RoleHelper;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 
 public class WaitingRoomMover extends ListenerAdapter {
@@ -24,8 +26,18 @@ public class WaitingRoomMover extends ListenerAdapter {
 	@Override
 	public synchronized void onGuildVoiceUpdate(@NotNull GuildVoiceUpdateEvent event) {
 		System.out.println("Update: " + event);
-		if (event.getChannelJoined() == null)
+		if (event.getChannelJoined() == null) {
+			Optional.ofNullable(event.getChannelLeft()).map(VoiceChannel::getIdLong).ifPresent(id -> {
+				if (id == 795608993627242506L) {
+					long userID = event.getEntity().getIdLong();
+					String name = event.getEntity().getEffectiveName();
+					name = name.replaceFirst(namePrefix.get(userID) + " ", "");
+					name += removedNamePart.getOrDefault(userID, "");
+					event.getEntity().getGuild().modifyNickname(event.getEntity(), name).queue();
+				}
+			});
 			return;
+		}
 		long joinID = event.getChannelJoined().getIdLong();
 		if (joinID == 795608993627242506L) {
 			long entityID = event.getEntity().getIdLong();
